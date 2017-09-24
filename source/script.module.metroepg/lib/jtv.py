@@ -5,17 +5,22 @@
 import sys, os, shutil
 import re, urllib, zipfile, StringIO
 
-import xbmc
+import xbmc, xbmcaddon, xbmcgui
 
 import struct
 from ctypes import *
+from defines import *
 
 from datetime import datetime
 
-_IS_WIN = ((sys.platform == 'win32') or (sys.platform == 'win64')) 
+_DialogProgressBG = None
+_addon            = xbmcaddon.Addon(id = PLUGIN_ID)
+
+def lang(key):
+    return _addon.getLocalizedString(id=key).encode('utf-8')
 
 def check_win_path(path):
-    if _IS_WIN:
+    if IS_WIN:
         return path.decode('utf-8')
     else:
         return path
@@ -26,7 +31,9 @@ def filetime_to_dt(ft):
     dt = dt.replace(microsecond=(ns100 // 10))
     return dt
     
-def jtvtoxml(jtvunzip_path, urljtv, locat):
+def jtvtoxml(jtvunzip_path, urljtv, locat, show_progress=False):
+    global _DialogProgressBG
+
     jtvunzip_path = check_win_path(jtvunzip_path)
 
     if not os.path.exists(jtvunzip_path): os.makedirs(jtvunzip_path)
@@ -39,7 +46,19 @@ def jtvtoxml(jtvunzip_path, urljtv, locat):
     else:
         zip = zipfile.ZipFile(urljtv, 'r')
     
-    for name in zip.namelist():
+    zip_namelist = zip.namelist()
+
+    if show_progress:
+        _DialogProgressBG.update( message=lang(34007) )
+        i_per = 1
+        zip_namelist_count = len(zip_namelist)
+    
+    for name in zip_namelist:
+        
+        if show_progress:
+            _DialogProgressBG.update( (i_per * 25) // zip_namelist_count )
+            i_per += 1
+        
         try:
             unicode_name = name.decode('UTF-8').encode('UTF-8')
         except UnicodeDecodeError:
@@ -53,12 +72,20 @@ def jtvtoxml(jtvunzip_path, urljtv, locat):
     files = os.listdir(jtvunzip_path)
     jtvch=[]
     jtvprog=[]
+    
+    i_per = 1
+    zip_namelist_count = len(files)
+    
     for ndx in filter(lambda x: x.endswith('.ndx'), files):
     
+        if show_progress:
+            _DialogProgressBG.update( 25 + (((i_per * 25) // zip_namelist_count)) )
+            i_per += 1
+
         fndx = open(jtvunzip_path+ndx, 'rb')
         pdt = os.path.splitext(ndx)[0]
         
-        if _IS_WIN:
+        if IS_WIN:
             updt=pdt.encode('utf-8')
         else:
             updt=pdt
@@ -98,10 +125,16 @@ def jtvtoxml(jtvunzip_path, urljtv, locat):
     shutil.rmtree(jtvunzip_path)
     return (jtvch, jtvprog)
 
-def getjtv(urljtv, tmp_path, locat, urlm3u, nxmltv, codepage):
+def getjtv(urljtv, tmp_path, locat, urlm3u, nxmltv, codepage, show_progress=False):
+    global _DialogProgressBG
+    
+    if show_progress:
+        _DialogProgressBG = xbmcgui.DialogProgressBG()
+        _DialogProgressBG.create( FRIENDLY_NAME, lang(34005) )
+
     jtvunzip_path = xbmc.translatePath(os.path.join(tmp_path, 'jtvunzip/'))
     
-    prg = jtvtoxml(jtvunzip_path, urljtv, locat)
+    prg = jtvtoxml(jtvunzip_path, urljtv, locat, show_progress)
     
     xmlzag = '<?xml version="1.0" encoding="utf-8" ?>\n\n<tv>\n'
     xmlcan = '<channel id="%s"><display-name lang="ru">%s</display-name></channel>\n'
@@ -110,12 +143,24 @@ def getjtv(urljtv, tmp_path, locat, urlm3u, nxmltv, codepage):
     xmltv=''
     xmltv2=''
 
+    if show_progress:
+        _DialogProgressBG.update( message=lang(34004) )
+
     webFile = urllib.urlopen(urlm3u)
     buf = webFile.read()
     qqq=re.compile(' tvg-name="(.*)" group-title="(.*)",(.*)').findall(buf)
     webFile.close()
 
+    if show_progress:
+        _DialogProgressBG.update( message=lang(34006) )
+        i_per = 1
+        channel_count = len(qqq)
+ 
     for key, gp, title in qqq:
+        if show_progress:
+            _DialogProgressBG.update( 50 + (((i_per * 50) // channel_count)) )
+            i_per += 1
+
         try:
             ind = prg[0].index(key)            
         except:
@@ -129,3 +174,7 @@ def getjtv(urljtv, tmp_path, locat, urlm3u, nxmltv, codepage):
     fxmltv = open(nxmltv,'w')
     fxmltv.write(xmlzag+xmltv+xmltv2+'\n</tv>')
     fxmltv.close()
+    
+    if show_progress:
+        _DialogProgressBG.update(100)
+        _DialogProgressBG.close()

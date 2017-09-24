@@ -6,8 +6,7 @@ __all__ = ['MetroEPG']
 import os, io
 import sys
 
-import xbmc
-import xbmcaddon
+import xbmc, xbmcaddon, xbmcgui
 
 import math
 
@@ -36,6 +35,9 @@ class Base:
     
     _epgTimeShift    = '0.000000'
     _m3uUrl          = M3U_URL
+
+    def lang(self, key):
+        return Base._addon.getLocalizedString(id=key).encode('utf-8')
 
     def vbool(self, value):
         if value == 'true':
@@ -88,7 +90,7 @@ class MetroEPG(Base):
             if self.setting.enabled: self.addjob()
 
         elif sys.argv[1] == 'onTimer':    
-            getjtv( JTV_URL, self._tmp_path, '1', self._m3uUrl, self._xmltv_file_path, self.setting.codepage )
+            getjtv( JTV_URL, self._tmp_path, '1', self._m3uUrl, self._xmltv_file_path, self.setting.codepage, not self.setting.notalert)
             
             nextstart = datetime.now()+timedelta(days=self.setting.interval)
             self.setting.set("nextstart", nextstart.strftime('%Y-%m-%d %H:%M:%S'))
@@ -98,7 +100,7 @@ class MetroEPG(Base):
             if not self.setting.notalert: self.notification( self.lang(34002) )
             
         elif sys.argv[1] == 'update':
-            self.addjob()
+            self.addjob(s=1)
 
         elif sys.argv[1] == 'update_icon':
             xbmc.executebuiltin('PVR.SearchMissingChannelIcons')
@@ -120,9 +122,6 @@ class MetroEPG(Base):
     
     def deljob(self):
         xbmc.executebuiltin('XBMC.CancelAlarm(metroepg, True)')
-    
-    def lang(self, key):
-        return Base._addon.getLocalizedString(id=key).encode('utf-8')
 
 class Setting(Base):
     def __init__(self):
@@ -177,8 +176,7 @@ class Setting(Base):
         
         if os.path.isfile(fname_setting): os.remove(fname_setting)
         os.rename(fname_new_setting, fname_setting)
-        #xbmc.executebuiltin('XBMC.StartPVRManager')
-        #Base._iptv_simple_addon.setSetting('startNum', '1')
+        xbmcgui.Dialog().ok( FRIENDLY_NAME, self.lang(34008), self.lang(34009) )
         
     def read_setting(self):
         self.enabled        = self.vbool( self.get("enabled") )

@@ -30,5 +30,11 @@
     <string id="34001">Иконки обновлены</string>
     <string id="34002">Телепрограмма обновлена</string>
     <string id="34003">Ошибка! Выключен [B]PVR IPTV Simple Client[/B]</string>
-    
+    <string id="34004">Загрузка плейлиста ...</string>
+    <string id="34005">Загрузка телепрограммы ...</string>
+    <string id="34006">Формирую файл телепрограммы ...</string>
+    <string id="34007">Распаковка телепрограммы ...</string>
+    <string id="34008">Настройки МетроEPG и IPTV Simple Client выполнены.</string>
+    <string id="34009">Для применения изменений необходимо дождаться формировку телепрограммы и перезагрузить Kodi!</string>
+
 </strings>
