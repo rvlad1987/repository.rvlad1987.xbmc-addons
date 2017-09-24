@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addons>
+	<addon id="plugin.video.filmix.net.dev"
+       name="Filmix.Net"
+       version="0.1.3c"
+       provider-name="Evgenii Devisok aka evgen_dev">
+	<requires>
+		<import addon="xbmc.python" version="2.1.0"/>
+		<import addon="script.module.xbmcup" version="0.1.1"/>
+	</requires>
+	<extension point="xbmc.python.pluginsource" provides="video" library="addon.py">
+		<provides>video</provides>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary>Filmix.Net</summary>
+		<description>
+			 Filmix.Net - Вашему вниманию полнометражное кино и телесериалы, мультфильмы, трейлеры.
+		</description>
+		<platform>all</platform>
+		<license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
+		<forum>http://xbmc.ru/forum/showthread.php?t=11719</forum>
+		<email>xbmc@devisok.org</email>
+	</extension>
+</addon>
+
 <addon id="script.module.metroepg" name="MetroEPG" version="0.0.1" provider-name="Rudnitskii Vlad aka rvlad1987">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
@@ -7,7 +31,7 @@
         <provides>executable</provides>
     </extension>
 	<extension point="xbmc.addon.metadata">
-    <extension point="xbmc.python.module" library="lib"/>    
+    <extension point="xbmc.python.module" library="lib"/>
 		<summary>МетроEPG</summary>
 		<description>
 			 МетроEPG - сервис, который позволяет на автоматизировать настройку IPTV + EPG для Метросети. Настраиваются основные параметры IPTV Simple Client для получения списка канналов и телепрограммы.
@@ -18,3 +42,4 @@
 		<email>rvlad1987@mail.ru</email>
 	</extension>
 </addon>
+</addons>
