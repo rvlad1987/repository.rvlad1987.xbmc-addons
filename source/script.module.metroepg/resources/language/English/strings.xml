@@ -1,0 +1,33 @@
+<strings>
+    <string id="30106">Телепрограмма обновлена</string>
+
+    <!-- Settings -->
+    <string id="31001">Общие</string>
+    <string id="31002">Включить сервис</string>
+    <string id="31003">Обновлять телепрограмму при запуске Kodi</string>
+    <string id="31004">Интервал обновдения (дни)</string>
+    <string id="31005">[B]Применить настройки сразу[/B] ([I]иначе при следующем запуске[/I])</string>
+    <string id="31006">Город</string>
+    <string id="31007">[B]Применить настройки PVR[/B] ([I]иначе при следующем запуске[/I])</string>    
+    
+    <string id="31101">Нижневартовск</string>
+    <string id="31102">Сургут</string>
+    <string id="31103">Радужный</string>
+    <string id="31104">Нефтеюганск</string>
+    <string id="31105">Стрежевой</string>
+    <string id="31106">Ноябрьск</string>    
+    
+
+    <string id="32001">Дополнительно</string>
+    <string id="32002">Кодировка</string>
+    <string id="32003">Не оповещать об обновлении телепрограммы</string>
+    <string id="32004">Обновить телепрограмму сейчас</string>
+    <string id="32005">Искать недостающие значки</string>
+
+    <string id="33001">Быстрые команды</string>
+
+    <string id="34001">Иконки обновлены.</string>
+    <string id="34002">Телепрограмма обновлена.</string>
+    <string id="34003">Ошибка! Выключен [B]PVR IPTV Simple Client[B]</string>
+    
+</strings>

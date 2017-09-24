@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="script.module.metroepg" name="MetroEPG" version="0.0.1" provider-name="rvlad1987">
+    <requires>
+        <import addon="xbmc.python" version="2.1.0"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>executable</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+    <extension point="xbmc.python.module" library="lib"/>    
+        <platform>all</platform>
+    </extension>
+</addon>

@@ -1,0 +1,34 @@
+<strings>
+    <string id="30106">Телепрограмма обновлена</string>
+
+    <!-- Settings -->
+    <string id="31001">Общие</string>
+    <string id="31002">Включить сервис</string>
+    <string id="31003">Обновлять телепрограмму при запуске Kodi</string>
+    <string id="31004">Интервал обновдения (дни)</string>
+    <string id="31005">[B]МетроEPG[/B]</string>
+    <string id="31006">Город</string>
+    <string id="31007">[B]МетроEPG и PVR Simple Client[/B]</string>    
+    
+    <string id="31101">Нижневартовск</string>
+    <string id="31102">Сургут</string>
+    <string id="31103">Радужный</string>
+    <string id="31104">Нефтеюганск</string>
+    <string id="31105">Стрежевой</string>
+    <string id="31106">Ноябрьск</string>    
+    
+
+    <string id="32001">Дополнительно</string>
+    <string id="32002">Кодировка</string>
+    <string id="32003">Не оповещать об обновлении телепрограммы</string>
+    <string id="32004">[B]Обновить телепрограмму сейчас[/B]</string>
+    <string id="32005">[B]Искать недостающие значки[/B]</string>
+
+    <string id="33001">Быстрые команды:</string>
+    <string id="33002">Применить настройки для:</string>    
+
+    <string id="34001">Иконки обновлены</string>
+    <string id="34002">Телепрограмма обновлена</string>
+    <string id="34003">Ошибка! Выключен [B]PVR IPTV Simple Client[/B]</string>
+    
+</strings>
