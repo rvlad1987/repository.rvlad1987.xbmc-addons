@@ -3,7 +3,7 @@
 <settings>
     <category label="31001">
         <setting id="enabled"   label="31002" type="bool"   default="false" />
-        <setting id="onstart"   label="31003" type="bool"   enable="eq(-1,true)" default="false" />
+        <setting id="onstart"   label="31003" type="bool"   enable="eq(-1,true)" default="false" visible="false" />
         <setting id="interval"  label="31004" type="number" enable="eq(-2,true)" default="3" />
         <setting id="city"      type="select" label="31006" enable="eq(-3,true)" default="0" lvalues="31101|31102|31103|31104|31105|31106" />
         

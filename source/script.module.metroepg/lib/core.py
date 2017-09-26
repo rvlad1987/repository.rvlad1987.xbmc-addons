@@ -30,6 +30,8 @@ class Base:
         _tmp_path     = _tmp_path.decode('utf-8')
         _addon_data_path = _addon_data_path.decode('utf-8')    
     
+    if not os.path.exists(_tmp_path): os.makedirs(_tmp_path)
+    
     _xmltv_file_path = os.path.join( _addon_data_path, 'xmltv.xml' )
     _icon_           = _addon.getAddonInfo( 'icon' )
     
@@ -108,18 +110,13 @@ class MetroEPG(Base):
             
         elif sys.argv[1] == 'chsettingsiptv':
             self.deljob()
-            if self.setting.enabled: self.addjob(s=0)
+            self.downloadlogo()
+            if self.setting.enabled: self.addjob(s=1)
             self.setting.set_iptv_setting()
 
         elif sys.argv[1] == 'downloadlogo':
             self.downloadlogo()
 
-        elif sys.argv[1] == 'json':
-            #json_response = json.loads(xbmc.executeJSONRPC('{"jsonrpc":"2.0", "id":1, "method":"Settings.GetSettings","params":{"level":"advanced"}}'))
-            #json_response = json.loads( xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"Settings.GetSettingValue", "params":{"setting":"pvrmenu.iconpath"},"id":1}'))
-            
-            print json_response
-            
         else:
             self._addon.openSettings()
     
@@ -172,6 +169,10 @@ class MetroEPG(Base):
             f.close()            
 
         dp.close()        
+        zip.close()
+        
+        if IS_WIN: out_file = out_file.encode('utf-8')
+        os.remove(out_file)
         
         self.notification( self.lang(34010) )
 
