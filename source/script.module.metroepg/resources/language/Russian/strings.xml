@@ -9,6 +9,10 @@
     <string id="31005">[B]МетроEPG[/B]</string>
     <string id="31006">Город</string>
     <string id="31007">[B]МетроEPG и PVR Simple Client[/B]</string>    
+
+    <string id="31008">Логотипы</string>
+    <string id="31009">Брать логотипы каналов из папки МетроEPG</string>
+    <string id="31010">Брать логотипы каналов из папки:</string>
     
     <string id="31101">Нижневартовск</string>
     <string id="31102">Сургут</string>

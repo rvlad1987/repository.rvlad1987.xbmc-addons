@@ -144,10 +144,10 @@ class Setting(Base):
         
         if IS_WIN:
             f_xmltv = Base._xmltv_file_path.encode('utf-8')
-            f_logo  = 'C:\\iptv-data\\out\\'.encode('utf-8')
+            f_logo  = self.logo_path.encode('utf-8')
         else:
             f_xmltv = Base._xmltv_file_path
-            f_logo  = 'C:\\iptv-data\\out\\'
+            f_logo  = self.logo_path
         
         f_set = io.open(fname_new_setting , 'wb')
         f_set.write('<settings>\n')
@@ -185,6 +185,14 @@ class Setting(Base):
         self.nextstart      = self.get("nextstart")
         self.notalert       = self.vbool( self.get("notalert") )
         self.codepage       = self.get("codepage").strip()
+        self.myfolderlogo   = self.vbool( self.get("myfolderlogo") )
+        
+        if self.myfolderlogo:
+            self.logo_path = os.path.join( Base._addon_data_path, 'logo_tv' )
+        else:
+            self.logo_path = self.get("otherfolderlogo").strip()
+        
+        if not os.path.exists(self.logo_path): os.makedirs(self.logo_path)
         
         city_ = self.get("city")
         

@@ -18,6 +18,11 @@
         <setting id="notalert" label="32003" default="false"  type="bool" />
         <setting label="33001" type="lsep"/>
         <setting label="32004" type="action" action="RunScript(script.module.metroepg, update)" />
-        <setting label="32005" type="action" action="RunScript(script.module.metroepg, update_icon)" />
     </category>
+    <category label="31008">
+        <setting id="myfolderlogo"   label="31009" type="bool"   default="true" />
+        <setting label="31010" type="folder" id="otherfolderlogo" source="auto" option="writeable" enable="eq(-1,false)" />
+        <setting label="33001" type="lsep"/>
+        <setting label="32005" type="action" action="RunScript(script.module.metroepg, update_icon)" />
+    </category>    
 </settings>
