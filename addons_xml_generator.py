@@ -10,10 +10,13 @@ class Generator:
         and a new addons.xml.md5 hash file. Must be run from the root of
         the checked-out repo. Only handles single depth folder structure.
     """
+    ZIPS_PATH = "./repo/script.module.metroepg/"
+    
     def __init__( self ):
         # generate files
         self._generate_addons_file()
         self._generate_md5_file()
+        self._generate_md5_zipfiles()
         # notify user
         print "Finished updating addons xml and md5 files"
 
@@ -52,15 +55,16 @@ class Generator:
         # save file
         self._save_file( addons_xml.encode( "UTF-8" ), file="addons.xml" )
 
-    def _generate_md5_file( self ):
+    def _generate_md5_file( self, fname = None):
         try:
+            if fname is None: fname = "addons.xml"
             # create a new md5 hash
-            m = md5.new( open( "addons.xml" ).read() ).hexdigest()
+            m = md5.new( open( fname ).read() ).hexdigest()
             # save file
-            self._save_file( m, file="addons.xml.md5" )
+            self._save_file( m, file=fname+".md5" )
         except Exception, e:
             # oops
-            print "An error occurred creating addons.xml.md5 file!\n%s" % ( e, )
+            print "An error occurred creating md5 file!\n%s" % ( e, )
 
     def _save_file( self, data, file ):
         try:
@@ -69,7 +73,15 @@ class Generator:
         except Exception, e:
             # oops
             print "An error occurred saving %s file!\n%s" % ( file, e, )
-
+            
+    def _generate_md5_zipfiles( self ):
+        try:
+            zips = os.listdir( self.ZIPS_PATH )
+            for zip_name in zips:
+                if zip_name.endswith(".zip"):
+                    self._generate_md5_file (fname = os.path.join(self.ZIPS_PATH, zip_name ) )
+        except Exception, e:
+            print "An error occurred creating md5 zip files!\n%s" % ( e, )
 
 if ( __name__ == "__main__" ):
     # start

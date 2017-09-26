@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+
+# Copyright © 2017 Rudnitskii Vlad <rvlad1987@mail.ru>
+# License: GPL-2
+# Website: https://github.com/rvlad1987/repository.rvlad1987.xbmc-addons
+
 from sys import platform
 
 M3U_URL         = 'https://cabinet.metro-set.ru/get/iptv.m3u.php'

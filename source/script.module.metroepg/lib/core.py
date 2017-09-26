@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+# Copyright © 2017 Rudnitskii Vlad <rvlad1987@mail.ru>
+# License: GPL-2
+# Website: https://github.com/rvlad1987/repository.rvlad1987.xbmc-addons
+
 __author__ = 'rvlad1987'
 __all__ = ['MetroEPG']
 
@@ -17,7 +21,7 @@ from defines import *
 from jtv import *
 
 class Base:
-    _log_enabled     = True
+    _log_enabled     = False
     
     _addon           = xbmcaddon.Addon(id = PLUGIN_ID)
     _addon_patch     = xbmc.translatePath(_addon.getAddonInfo('path'))
@@ -172,7 +176,11 @@ class MetroEPG(Base):
         zip.close()
         
         if IS_WIN: out_file = out_file.encode('utf-8')
-        os.remove(out_file)
+        
+        try:
+            os.remove(out_file)
+        except:
+            print 'Can\'t delete zip ...'
         
         self.notification( self.lang(34010) )
 

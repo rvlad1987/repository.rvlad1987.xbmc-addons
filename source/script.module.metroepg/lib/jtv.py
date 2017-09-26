@@ -1,5 +1,10 @@
-﻿#!/usr/bin/python
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
+
+# Copyright © 3 Aug 2015 snakefishh, link: https://github.com/snakefishh/mnn-xbmc-repo/blob/master/script.service.jtvtoxmltv/resources/lib/jtv.py
+
+# Copyright © 2017 Rudnitskii Vlad <rvlad1987@mail.ru>
+# License: GPL-2
+# Website: https://github.com/rvlad1987/repository.rvlad1987.xbmc-addons
 
 
 import sys, os, shutil
