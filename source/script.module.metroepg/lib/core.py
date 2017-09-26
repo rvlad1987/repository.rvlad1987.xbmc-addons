@@ -4,7 +4,7 @@ __author__ = 'rvlad1987'
 __all__ = ['MetroEPG']
 
 import os, io
-import sys
+import sys, urllib, zipfile
 
 import xbmc, xbmcaddon, xbmcgui
 
@@ -111,6 +111,15 @@ class MetroEPG(Base):
             if self.setting.enabled: self.addjob(s=0)
             self.setting.set_iptv_setting()
 
+        elif sys.argv[1] == 'downloadlogo':
+            self.downloadlogo()
+
+        elif sys.argv[1] == 'json':
+            #json_response = json.loads(xbmc.executeJSONRPC('{"jsonrpc":"2.0", "id":1, "method":"Settings.GetSettings","params":{"level":"advanced"}}'))
+            #json_response = json.loads( xbmc.executeJSONRPC('{"jsonrpc":"2.0","method":"Settings.GetSettingValue", "params":{"setting":"pvrmenu.iconpath"},"id":1}'))
+            
+            print json_response
+            
         else:
             self._addon.openSettings()
     
@@ -122,6 +131,49 @@ class MetroEPG(Base):
     
     def deljob(self):
         xbmc.executebuiltin('XBMC.CancelAlarm(metroepg, True)')
+    
+    def downloadlogo(self):
+        def DownloaderClass(url,dest, dp):
+            urllib.urlretrieve(url,dest,lambda nb, bs, fs, url=url: _pbhook(nb,bs,fs,url,dp))
+         
+        def _pbhook(numblocks, blocksize, filesize, url=None,dp=None):
+            try:
+                percent = min((numblocks*blocksize*100)/filesize, 100)
+                dp.update(percent)
+            except:
+                percent = 100
+                dp.update(percent)
+        
+        out_file = os.path.join(self._tmp_path, 'downloadlogo.zip')
+        
+        dp = xbmcgui.DialogProgressBG()
+        dp.create( FRIENDLY_NAME, self.lang(34011) )
+        
+        DownloaderClass( LOGO_PACK_URL, out_file, dp)
+        
+        zip = zipfile.ZipFile(out_file, 'r')
+        zip_namelist = zip.namelist()
+        
+        dp.update(0, message=lang(34012) )
+        i_per = 1
+        zip_namelist_count = len(zip_namelist)
+
+        for name in zip_namelist:
+            dp.update( (i_per * 100) // zip_namelist_count )
+            i_per += 1
+            
+            try:
+                unicode_name = name.decode('UTF-8').encode('UTF-8')
+            except UnicodeDecodeError:
+                unicode_name = name.decode('cp866')
+            
+            f = open( os.path.join( self.setting.logo_path, unicode_name), 'wb')
+            f.write(zip.read(name))
+            f.close()            
+
+        dp.close()        
+        
+        self.notification( self.lang(34010) )
 
 class Setting(Base):
     def __init__(self):
@@ -176,6 +228,8 @@ class Setting(Base):
         
         if os.path.isfile(fname_setting): os.remove(fname_setting)
         os.rename(fname_new_setting, fname_setting)
+        
+        xbmc.executeJSONRPC( '{"jsonrpc":"2.0", "method":"Settings.SetSettingValue", "params":{"setting":"pvrmenu.iconpath","value":"%s"}, "id":1}' % f_logo.replace('\\','\\\\') ) 
         xbmcgui.Dialog().ok( FRIENDLY_NAME, self.lang(34008), self.lang(34009) )
         
     def read_setting(self):

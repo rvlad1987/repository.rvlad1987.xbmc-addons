@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.module.metroepg" name="MetroEPG" version="0.0.2" provider-name="Rudnitskii Vlad aka rvlad1987">
+<addon id="script.module.metroepg" name="MetroEPG" version="0.0.3" provider-name="Rudnitskii Vlad aka rvlad1987">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
     </requires>
@@ -10,7 +10,7 @@
     <extension point="xbmc.python.module" library="lib"/>    
 		<summary>МетроEPG</summary>
 		<description>
-			 МетроEPG - сервис, который позволяет на автоматизировать настройку IPTV + EPG для Метросети. Настраиваются основные параметры IPTV Simple Client для получения списка канналов и телепрограммы.
+			 МетроEPG - сервис, который позволяет автоматизировать настройку IPTV + EPG для Метросети. Настраиваются основные параметры IPTV Simple Client для получения списка канналов и телепрограммы.
 		</description>
 		<platform>all</platform>
 		<license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>

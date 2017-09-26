@@ -24,5 +24,6 @@
         <setting label="31010" type="folder" id="otherfolderlogo" source="auto" option="writeable" enable="eq(-1,false)" />
         <setting label="33001" type="lsep"/>
         <setting label="32005" type="action" action="RunScript(script.module.metroepg, update_icon)" />
+        <setting label="32006" type="action" action="RunScript(script.module.metroepg, downloadlogo)" />        
     </category>    
 </settings>
