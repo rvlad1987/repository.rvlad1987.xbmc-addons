@@ -171,7 +171,7 @@ class MetroEPG(Base):
                 if IS_WIN:
                     unicode_name = name.decode('cp866')
                 else:
-                    unicode_name = name.encode('utf-8')
+                    unicode_name = name.decode('cp866').encode('utf-8')
             
             f = open( os.path.join( self.setting.logo_path, unicode_name), 'wb')
             f.write(zip.read(name))
