@@ -67,7 +67,10 @@ def jtvtoxml(jtvunzip_path, urljtv, locat, show_progress=False):
         try:
             unicode_name = name.decode('UTF-8').encode('UTF-8')
         except UnicodeDecodeError:
-            unicode_name = name.decode('cp866')#.decode('cp866').encode('UTF-8')
+            if IS_WIN:
+                unicode_name = name.decode('cp866')
+            else:
+                unicode_name = name.encode('utf-8')
         
         f = open(jtvunzip_path+unicode_name, 'wb')
         f.write(zip.read(name))

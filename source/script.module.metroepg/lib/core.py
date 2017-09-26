@@ -159,6 +159,8 @@ class MetroEPG(Base):
         i_per = 1
         zip_namelist_count = len(zip_namelist)
 
+        #f_logo_path = check_win_path( self.setting.logo_path )
+        
         for name in zip_namelist:
             dp.update( (i_per * 100) // zip_namelist_count )
             i_per += 1
@@ -166,7 +168,10 @@ class MetroEPG(Base):
             try:
                 unicode_name = name.decode('UTF-8').encode('UTF-8')
             except UnicodeDecodeError:
-                unicode_name = name.decode('cp866')
+                if IS_WIN:
+                    unicode_name = name.decode('cp866')
+                else:
+                    unicode_name = name.encode('utf-8')
             
             f = open( os.path.join( self.setting.logo_path, unicode_name), 'wb')
             f.write(zip.read(name))
