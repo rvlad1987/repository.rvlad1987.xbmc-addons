@@ -12,7 +12,7 @@ import sys
 def run():
     sys.path = [os.path.dirname(__file__) + '/lib'] + sys.path
     from core import MetroEPG
-    MetroEPG().run()
+    MetroEPG().run(autostart=True)
 
 if __name__ == '__main__':
     run()
