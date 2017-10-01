@@ -10,7 +10,7 @@ class Generator:
         and a new addons.xml.md5 hash file. Must be run from the root of
         the checked-out repo. Only handles single depth folder structure.
     """
-    ZIPS_PATH = "./repo/script.module.metroepg/"
+    ZIPS_PATH = "./repo/"
     
     def __init__( self ):
         # generate files
@@ -76,10 +76,13 @@ class Generator:
             
     def _generate_md5_zipfiles( self ):
         try:
-            zips = os.listdir( self.ZIPS_PATH )
-            for zip_name in zips:
-                if zip_name.endswith(".zip"):
-                    self._generate_md5_file (fname = os.path.join(self.ZIPS_PATH, zip_name ) )
+            dirs = os.listdir( self.ZIPS_PATH )
+            for dir in dirs:
+                zips_path = os.path.join(self.ZIPS_PATH, dir)
+                zips = os.listdir( zips_path )
+                for zip_name in zips:
+                    if zip_name.endswith(".zip"):
+                        self._generate_md5_file (fname = os.path.join(zips_path, zip_name ) )
         except Exception, e:
             print "An error occurred creating md5 zip files!\n%s" % ( e, )
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+
+<settings>
+    <category label="31001">
+        <setting id="enabled"   label="31002" type="bool"   default="false" />
+        <setting id="onstart"   label="31003" type="bool"   enable="eq(-1,true)" default="false" />
+        <setting id="interval"  label="31004" type="number" enable="eq(-2,true)" default="3" />
+        <setting id="city"      type="select" label="31006" enable="eq(-3,true)" default="0" lvalues="31107" />
+        
+        <setting label="33002" type="lsep"/>
+        <setting label="31005" type="action" option="close" action="RunScript(script.module.metroepg.onenet, chsettings)" />
+        <setting label="31007" type="action" option="close" action="RunScript(script.module.metroepg.onenet, chsettingsiptv)" />
+        
+        <setting id="nextstart"  type="number"   visible="false"  />
+    </category>
+    <category label="32001">
+        <setting id="codepage" label="32002" default="cp1251" type="text" />
+        <setting id="notalert" label="32003" default="false"  type="bool" />
+        <setting label="33001" type="lsep"/>
+        <setting label="32004" type="action" action="RunScript(script.module.metroepg.onenet, update)" />
+    </category>
+    <category label="31008">
+        <setting id="myfolderlogo"   label="31009" type="bool"   default="true" />
+        <setting label="31010" type="folder" id="otherfolderlogo" source="auto" option="writeable" enable="eq(-1,false)" />
+        <setting label="33001" type="lsep"/>
+        <setting label="32005" type="action" action="RunScript(script.module.metroepg.onenet, update_icon)" />
+        <setting label="32006" type="action" action="RunScript(script.module.metroepg.onenet, downloadlogo)" />        
+    </category>    
+</settings>
