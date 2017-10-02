@@ -99,8 +99,8 @@ class MetroEPG(Base):
             if self.setting.enabled: self.addjob()
 
         elif sys.argv[1] == 'onTimer':    
-#            getjtv( JTV_URL, self._tmp_path, '1', self._m3uUrl, self._xmltv_file_path, self.setting.codepage, not self.setting.notalert)
-            getjtv( 'C:/test/jtv.zip', self._tmp_path, '11', 'C:/test/pl.m3u', self._xmltv_file_path, self.setting.codepage, not self.setting.notalert)
+            getjtv( JTV_URL, self._tmp_path, '1', self._m3uUrl, self._xmltv_file_path, self.setting.codepage, not self.setting.notalert)
+#            getjtv( 'C:/test/jtv.zip', self._tmp_path, '11', 'C:/test/pl.m3u', self._xmltv_file_path, self.setting.codepage, not self.setting.notalert)
             
             nextstart = datetime.now()+timedelta(days=self.setting.interval)
             self.setting.set("nextstart", nextstart.strftime('%Y-%m-%d %H:%M:%S'))
