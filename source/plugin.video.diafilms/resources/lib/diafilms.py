@@ -31,7 +31,7 @@ class Diafilm(xbmcgui.WindowXML):
     ACTION_MENU = [122]
     ACTION_PREVIOUS_MENU = [9]
     ACTION_SHOW_INFO = [11]
-    ACTION_EXIT_SCRIPT = [10, 13]
+    ACTION_EXIT_SCRIPT = [10, 13, 92]   # 10-ESC, 13-X,92-Backspace 
     ACTION_DOWN = [4]
     ACTION_UP = [3]
     ACTION_0 = [58]
