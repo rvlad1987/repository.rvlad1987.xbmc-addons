@@ -175,6 +175,7 @@ def getjtv(urljtv, tmp_path, locat, urlm3u, nxmltv, codepage, show_progress=Fals
     if show_progress:
         _DialogProgressBG.update( message=lang(34004) )
 
+#    webFile = open('c:/test/pl.m3u','r')
     webFile = urllib.urlopen(urlm3u)
     buf = webFile.read()
     qqq=re.compile(' tvg-name="(.*)",(.*)').findall(buf)
@@ -204,7 +205,7 @@ def getjtv(urljtv, tmp_path, locat, urlm3u, nxmltv, codepage, show_progress=Fals
             else:
                 j3 = ''
                 
-            xmltv2 = xmltv2+ xmlprog % (j[0], j[1], str(ind), j[2], j3)
+            xmltv2 = xmltv2+ xmlprog % (j[0], j[1], str(ind), j[2].decode(codepage).encode('UTF-8'), j3.decode(codepage).encode('UTF-8'))
     
     fxmltv = open(nxmltv,'w')
     fxmltv.write(xmlzag+xmltv+xmltv2+'\n</tv>')

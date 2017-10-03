@@ -14,7 +14,7 @@
         <setting id="nextstart"  type="number"   visible="false"  />
     </category>
     <category label="32001">
-        <setting id="codepage" label="32002" default="cp1251" type="text" />
+        <setting id="codepage" label="32002" default="utf-8" type="text" />
         <setting id="notalert" label="32003" default="false"  type="bool" />
         <setting label="33001" type="lsep"/>
         <setting label="32004" type="action" action="RunScript(script.module.metroepg.onenet, update)" />

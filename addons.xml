@@ -44,7 +44,7 @@
     </extension>
 </addon>
 
-<addon id="script.module.metroepg.onenet" name="MetroEPG (OneNet.By)" version="0.0.2" provider-name="Rudnitskii Vlad aka rvlad1987">
+<addon id="script.module.metroepg.onenet" name="MetroEPG (OneNet.By)" version="0.0.3" provider-name="Rudnitskii Vlad aka rvlad1987">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
     </requires>
