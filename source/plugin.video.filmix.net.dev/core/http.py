@@ -120,6 +120,8 @@ class HttpData:
                 href = div.find('div', class_='short')#.find('a')
 
                 movie_name = div.find('div', class_='full').find('h3', class_='name').find('a').get_text()
+                movie_url = href.find('a', class_='watch').get('href')
+                movie_id = re.compile('/([\d]+)-', re.S).findall(movie_url)[0]
 
                 not_movie = True
                 try:
@@ -133,6 +135,16 @@ class HttpData:
                     quality = ''
 
                 dop_information = []
+                try:
+                    likes = soup.find('div', class_='like', attrs={'data-id' : movie_id}).find('div').get_text()
+                    i_likes = int(likes)
+                    if i_likes != 0:
+                        if i_likes > 0: likes = '[COLOR green]' + likes + '[/COLOR]'
+                        if i_likes < 0: likes = '[COLOR red]' + likes + '[/COLOR]'
+                        dop_information.append(likes)
+                except:
+                    pass
+
                 try:
                     year = div.find('div', class_='item year').find('a').get_text().strip()
                     dop_information.append(year)
@@ -150,8 +162,6 @@ class HttpData:
                     information = '[COLOR white]['+', '.join(dop_information)+'][/COLOR]'
 
                 movieposter = href.find('img', class_='poster').get('src')
-                movie_url = href.find('a', class_='watch').get('href')
-                movie_id = re.compile('/([\d]+)-', re.S).findall(movie_url)[0]
 
                 result['data'].append({
                         'url': movie_url,
@@ -301,7 +311,19 @@ class HttpData:
                 movieInfo['originaltitle'] = ''
 
             try:
-                movieInfo['description'] = soup.find('div', class_='full-story').get_text().strip()
+                r_kinopoisk = soup.find('span', class_='kinopoisk btn-tooltip icon-kinopoisk').find('div').get_text().strip()
+                if r_kinopoisk == '0': r_kinopoisk = '-'
+            except:
+                r_kinopoisk = '-'
+
+            try:
+                r_imdb = soup.find('span', class_='imdb btn-tooltip icon-imdb').find('div').get_text().strip()
+                if r_imdb == '0': r_imdb = '-'
+            except:
+                r_imdb = '-'
+
+            try:
+                movieInfo['description'] = '[COLOR orange]Кинопоиск[/COLOR] : '.decode('cp1251') + r_kinopoisk + ' [COLOR yellow]IMDB[/COLOR] : ' +r_imdb + '\n' + soup.find('div', class_='full-story').get_text().strip()
             except:
                 movieInfo['description'] = ''
 
