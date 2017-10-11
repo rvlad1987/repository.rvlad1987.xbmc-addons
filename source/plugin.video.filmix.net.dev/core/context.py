@@ -58,5 +58,10 @@ class ContextMenu(xbmcup.app.Handler, HttpData, Render):
             xbmcup.gui.message(xbmcup.app.lang[34031].encode('utf8'))
             return
 
-        w = MovieInfo("movieinfo.xml", xbmcup.app.addon['path'], "Default")
+        skin_dir = xbmc.getSkinDir()
+        if skin_dir == 'skin.estuary':
+            movieinfo_xml = 'movieinfo_estuary.xml'
+        else:
+            movieinfo_xml = 'movieinfo.xml'
+        w = MovieInfo(movieinfo_xml, xbmcup.app.addon['path'], "Default")
         w.doModal(movieInfo)

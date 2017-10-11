@@ -21,8 +21,8 @@ from core.filter import Filter
 from core.context import ContextMenu
 from core.donate import Donate
 
-log = open(xbmcup.system.fs('sandbox://myprog.log'), "a")
-sys.stdout = log
+#log = open(xbmcup.system.fs('sandbox://myprog.log').decode('utf-8'), "a")
+#sys.stdout = log
 
 
 

@@ -139,8 +139,10 @@ class HttpData:
                     likes = soup.find('div', class_='like', attrs={'data-id' : movie_id}).find('div').get_text()
                     i_likes = int(likes)
                     if i_likes != 0:
-                        if i_likes > 0: likes = '[COLOR green]' + likes + '[/COLOR]'
-                        if i_likes < 0: likes = '[COLOR red]' + likes + '[/COLOR]'
+                        if i_likes > 0:
+                            likes = '[COLOR ff59C641]' + likes + '[/COLOR]'
+                        else:
+                            likes = '[COLOR ffDE4B64]' + likes + '[/COLOR]'
                         dop_information.append(likes)
                 except:
                     pass
@@ -487,7 +489,7 @@ class HttpData:
         return self.format_direct_link(link, str(avail_quality))
 
     def format_desc_item(self, text):
-        return re.compile(r'^([^:]+:)', re.S).sub('[COLOR blue]\\1[/COLOR] ', text)
+        return re.compile(r'^([^:]+:)', re.S).sub('[COLOR blue]\\1[/COLOR] ', re.sub(r'\s+', ' ', text) )
 
 
     def strip_scripts(self, html):

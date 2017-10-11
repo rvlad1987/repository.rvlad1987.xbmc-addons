@@ -7,7 +7,7 @@ from defines import *
 class Auth:
     def __init__(self):
         self.success = 'AUTH_OK'
-        self.cookie_file = xbmcup.system.fs('sandbox://'+COOKIE_FILE)
+        self.cookie_file = xbmcup.system.fs('sandbox://'+COOKIE_FILE).decode('utf-8')
         self.login = xbmcup.app.setting['username']
         self.password = xbmcup.app.setting['password']
         #xbmcup.system.fs.delete('sandbox://'+COOKIE_FILE)

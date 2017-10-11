@@ -6,10 +6,16 @@ from http import HttpData
 
 KEY_BUTTON_BACK = 275
 KEY_KEYBOARD_ESC = 61467
+KEY_BUTTON_LEFT = 61570
+KEY_BUTTON_RIGHT = 61571
+KEY_BUTTON_UP = 61568
+KEY_BUTTON_DOWN = 61569
 ACTION_PREVIOUS_MENU = 10
 ACTION_NAV_BACK = 92
 
 class MovieInfo(xbmcgui.WindowXMLDialog, HttpData):
+    scroll_pos = 0
+    row_count = 0
     def formatRating(self, rating):
         ratingcolor = 'green'
         rating = int(rating)
@@ -34,10 +40,17 @@ class MovieInfo(xbmcgui.WindowXMLDialog, HttpData):
 
     def onAction(self, action):
         buttonCode =  action.getButtonCode()
-        if (action == ACTION_NAV_BACK or action == ACTION_PREVIOUS_MENU):
-            self.close()
-        if (buttonCode == KEY_BUTTON_BACK or buttonCode == KEY_KEYBOARD_ESC):
-            self.close()
+        if action in [ACTION_NAV_BACK, ACTION_PREVIOUS_MENU, KEY_BUTTON_BACK, KEY_KEYBOARD_ESC]: self.close()
+        if buttonCode == KEY_BUTTON_LEFT and self.movieInfo['trailer'] != False: self.setFocus(self.getControl(33))
+        if buttonCode == KEY_BUTTON_RIGHT: self.setFocus(self.getControl(22))
+        if buttonCode == KEY_BUTTON_UP:
+            self.scroll_pos -= 1
+            if self.scroll_pos < 0: self.scroll_pos = 0
+            self.getControl(32).scroll(self.scroll_pos)
+        if buttonCode == KEY_BUTTON_DOWN:
+            self.scroll_pos += 1
+            if self.scroll_pos > self.row_count + 10: self.scroll_pos = self.row_count
+            self.getControl(32).scroll(self.scroll_pos)
 
     def onClick(self, controlID):
         if (controlID == 2 or controlID == 22):
@@ -59,4 +72,5 @@ class MovieInfo(xbmcgui.WindowXMLDialog, HttpData):
 
     def doModal(self, movieInfo):
         self.movieInfo = movieInfo
+        self.row_count = len(re.findall(r"[\n']+?", movieInfo['desc']))
         xbmcgui.WindowXMLDialog.doModal(self)
