@@ -16,7 +16,7 @@ except:
 
 import xbmcup.app, sys
 from core.index import Index
-from core.list import MovieList, BookmarkList, QualityList, SearchList
+from core.list import MovieList, BookmarkList, QualityList, SearchList, Watch_Later
 from core.filter import Filter
 from core.context import ContextMenu
 from core.donate import Donate
@@ -34,6 +34,7 @@ plugin.route('quality-list', QualityList)
 plugin.route('search', SearchList)
 plugin.route('filter', Filter)
 plugin.route('bookmarks', BookmarkList)
+plugin.route('watch_later', Watch_Later)
 plugin.route('context', ContextMenu)
 plugin.route('donate', Donate)
 

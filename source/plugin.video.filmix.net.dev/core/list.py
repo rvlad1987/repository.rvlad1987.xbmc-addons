@@ -26,6 +26,11 @@ class AbstactList(xbmcup.app.Handler, HttpData, Render):
                     menu.append([xbmcup.app.lang[30147], self.link('context', {'action': 'add_bookmark', 'id' : movie['id']})])
                 else:
                     menu.append([xbmcup.app.lang[30148], self.link('context', {'action': 'del_bookmark', 'id' : movie['id']})])
+                    
+                if(self.__class__.__name__ != 'Watch_Later'):
+                    menu.append([xbmcup.app.lang[30163], self.link('context', {'action': 'add_watch_later', 'id' : movie['id']})])
+                else:
+                    menu.append([xbmcup.app.lang[30164], self.link('context', {'action': 'del_watch_later', 'id' : movie['id']})])
 
                 not_movie = ''
                 if(movie['not_movie'] == True):
@@ -238,6 +243,56 @@ class BookmarkList(AbstactList):
         params['page'] = page+1
         if(response['page']['maxpage'] >= response['page']['pagenum']+1):
             self.item(u'[COLOR green]'+xbmcup.app.lang[30107]+'[/COLOR]', self.replace('bookmarks', params), cover=cover.next, folder=True)
+
+
+
+class Watch_Later(AbstactList):
+
+    def handle(self):
+        Auth().autorize()
+
+        try:
+            params = self.argv[0]
+        except:
+            params = {}
+
+        try:
+            url = params['url']
+        except:
+            url = ''
+
+        try:
+            page = params['page']
+        except:
+            page = 0
+
+        if(xbmcup.app.setting['is_logged'] == 'false'):
+            xbmcup.gui.message(xbmcup.app.lang[30149].encode('utf-8'))
+            return False
+
+        self.show_movies(url, page)
+        self._variables['is_item'] = False
+        self.render(cache=False)
+
+
+    def show_movies(self, url, page):
+        params = {}
+        params['url'] = url
+        url = 'watch_later'
+        md5 = hashlib.md5()
+        md5.update(url+'?v='+xbmcup.app.addon['version'])
+        response = CACHE(str(md5.hexdigest()), self.get_movies, url, page, 'dle-content', True)
+
+        if(page > 0):
+            params['page'] = page-1
+            self.item('[COLOR green]'+xbmcup.app.lang[30106]+'[/COLOR]', self.replace('watch_later', params), cover=cover.prev, folder=True)
+            params['page'] = page+1
+
+        self.add_movies(response, 30152)
+
+        params['page'] = page+1
+        if(response['page']['maxpage'] >= response['page']['pagenum']+1):
+            self.item(u'[COLOR green]'+xbmcup.app.lang[30107]+'[/COLOR]', self.replace('watch_later', params), cover=cover.next, folder=True)
 
 
 

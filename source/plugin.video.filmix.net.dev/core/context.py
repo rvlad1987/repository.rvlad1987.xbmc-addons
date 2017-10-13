@@ -24,7 +24,6 @@ class ContextMenu(xbmcup.app.Handler, HttpData, Render):
             xbmcup.gui.message('Addon internal error', title='Call to undefined method ContextMenu::%s()' % params['action'])
             print traceback.format_exc()
 
-
     def add_bookmark(self, params):
 
         if not self.is_logged:
@@ -48,6 +47,34 @@ class ContextMenu(xbmcup.app.Handler, HttpData, Render):
                 xbmcup.gui.message(xbmcup.app.lang[30151].encode('utf-8'))
             else:
                 xbmcup.gui.message(xbmcup.app.lang[30155].encode('utf-8'))
+        except:
+            pass
+        xbmc.executebuiltin('Container.Refresh()')
+
+    def add_watch_later(self, params):
+
+        if not self.is_logged:
+            xbmcup.gui.message(xbmcup.app.lang[30169].encode('utf-8'))
+            return False
+
+        post_data={'action' : 'add', 'post_id' : params['id']}
+        resp = self.ajax('%s/engine/ajax/watch_later.php' % SITE_URL, post_data)
+        try:
+            if(resp.find("watch_later('%s',false);" % params['id']) != -1):
+                xbmcup.gui.message(xbmcup.app.lang[30165].encode('utf-8'))
+            else:
+                xbmcup.gui.message(xbmcup.app.lang[30167].encode('utf-8'))
+        except:
+            pass
+
+    def del_watch_later(self, params):
+        post_data={'action' : 'rm', 'post_id' : params['id']}
+        resp = self.ajax('%s/engine/ajax/watch_later.php' % SITE_URL, post_data)
+        try:
+            if(resp.find("watch_later('%s',true);" % params['id']) != -1):
+                xbmcup.gui.message(xbmcup.app.lang[30166].encode('utf-8'))
+            else:
+                xbmcup.gui.message(xbmcup.app.lang[30168].encode('utf-8'))
         except:
             pass
         xbmc.executebuiltin('Container.Refresh()')

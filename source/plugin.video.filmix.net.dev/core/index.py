@@ -9,7 +9,8 @@ class Index(xbmcup.app.Handler):
         self.item(xbmcup.app.lang[30112], self.link('search'),                        folder=True, cover=cover.search)
         self.item(xbmcup.app.lang[30120], self.link('filter', {'window' : ''}),       folder=True, cover=cover.treetv)
         self.item(xbmcup.app.lang[30146], self.link('bookmarks',  {'url' : ''}),       folder=True, cover=cover.treetv)
-
+        self.item(xbmcup.app.lang[30162], self.link('watch_later',  {'url' : ''}),       folder=True, cover=cover.treetv)
+        
         self.item(xbmcup.app.lang[30160], self.link('null', {}),       folder=True, cover=cover.treetv)
 
         self.item(' - '+xbmcup.app.lang[30114], self.link('list', {'dir' : 'films'}),       folder=True, cover=cover.treetv)
