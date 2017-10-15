@@ -232,6 +232,9 @@ class HttpData:
         html = self.load(url)
 
         movieInfo = {}
+        
+        movieInfo['page_url'] = url
+        
         movieInfo['no_files'] = None
         movieInfo['episodes'] = True
         movieInfo['movies'] = []
@@ -254,7 +257,7 @@ class HttpData:
             try:
                 film_id = re.compile('film_id ?= ?([\d]+);', re.S).findall(html)[0].decode('string_escape').decode('utf-8')
                 js_string = self.ajax(SITE_URL+'/api/movies/player_data', {'post_id' : film_id}, url)
-                print js_string
+                # print js_string
                 player_data =  json.loads(js_string, 'utf-8')
                 # player_data = player_data['message']['translations']['flash']
                 player_data = player_data['message']['translations']['html5']
@@ -340,7 +343,7 @@ class HttpData:
 
             try:
                 movieInfo['genres'] = []
-                genres = soup.find('div', class_='item category').find_all('a')
+                genres = soup.find_all(attrs={'itemprop' : 'genre'})
                 for genre in genres:
                    movieInfo['genres'].append(genre.get_text().strip())
                 movieInfo['genres'] = ' / '.join(movieInfo['genres']).encode('utf-8')
@@ -576,3 +579,29 @@ class HttpData:
             print traceback.format_exc()
 
         return info
+
+class ResolveLink(xbmcup.app.Handler, HttpData):
+
+    playerKeyParams = {
+		'key' : '',
+        'g'	  : 2,
+        'p'	  : 293
+    }
+
+    def handle(self):
+        item_dict = self.parent.to_dict()
+        self.params = self.argv[0]
+        movieInfo = self.get_movie_info(self.params['page_url'])
+        item_dict['cover'] = movieInfo['cover']
+        item_dict['title'] = self.params['file']
+        folder = self.params['folder']
+        resolution = self.params['resolution']
+        if(len(movieInfo['movies']) > 0):
+            for movies in movieInfo['movies']:
+                for q in movies['movies']:
+                    if(q == resolution):
+                        if(movies['folder_title'] == folder or folder == ''):
+                            for episode in movies['movies'][q]:
+                                if episode.find(self.params['file']) != -1:
+                                    return episode
+        return None        

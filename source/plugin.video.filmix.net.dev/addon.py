@@ -2,6 +2,19 @@
 
 import urlparse, urllib,sys, xbmc,traceback
 
+#process STRM files
+split_vars = sys.argv[0].split('/')
+if(split_vars[-1] == 'play'):
+    split_vars[-1] = ''
+    params = urlparse.parse_qs(sys.argv[2].replace('?', ''))
+    try:
+        test = params['folder']
+    except:
+        params['folder'] = ['']
+    sys.argv[0] = '/'.join(split_vars)
+    toplay = '{"url": ["resolve", "resolve", [{"page_url": "'+params['page_url'][0]+'", "resolution": "'+params['resolution'][0]+'", "file": "'+params['file'][0]+'", "folder" : "'+params['folder'][0]+'"}]], "source": "item", "folder": false, "parent" : {}}'
+    sys.argv[2] = '?json'+urllib.quote_plus(toplay)
+
 # process United Search request
 try:
     search_vars = sys.argv[2].split('?')
@@ -17,6 +30,7 @@ except:
 import xbmcup.app, sys
 from core.index import Index
 from core.list import MovieList, BookmarkList, QualityList, SearchList, Watch_Later
+from core.http import ResolveLink
 from core.filter import Filter
 from core.context import ContextMenu
 from core.donate import Donate
@@ -36,6 +50,7 @@ plugin.route('filter', Filter)
 plugin.route('bookmarks', BookmarkList)
 plugin.route('watch_later', Watch_Later)
 plugin.route('context', ContextMenu)
+plugin.route('resolve', ResolveLink)
 plugin.route('donate', Donate)
 
 plugin.run()

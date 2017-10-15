@@ -306,8 +306,6 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
 
     def handle(self):
         self.params = self.argv[0]
-        print 'line 254 list py'
-        print self.argv[0]
         try:
             self.movieInfo = self.params['movieInfo']
         except:
@@ -451,13 +449,56 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                 # 'count' : 12
             }
 
+    def get_info_strm(self):
+        return {
+                'Genre'     : self.movieInfo['genres'],
+                'year'      : self.movieInfo['year'],
+                'director'  : self.movieInfo['director'],
+                #'rating'    : self.movieInfo['ratingValue'],
+                #'duration'  : self.movieInfo['durarion'],
+                #'votes'     : self.movieInfo['ratingCount'],
+                'plot'      : self.movieInfo['description'][:350]+u'...'
+                #'title'     : self.movieInfo['title'],
+                #'originaltitle' : self.movieInfo['title']
+                # 'playcount' : 1,
+                # 'date': '%d.%m.%Y',
+                # 'count' : 12
+            }
 
     def add_playable_item(self, movie):
-        self.item(os.path.basename(str(movie)),
-                           movie,
-                           folder=False,
-                           media='video',
-                           info=self.get_info(),
-                           cover = self.movieInfo['cover'],
-                           fanart = self.movieInfo['fanart']
-                    )
+        file_name = os.path.basename( os.path.splitext(str(movie))[0] )
+
+        if(xbmcup.app.setting['strm_url'] == 'false'):
+            self.item(file_name,
+                               movie,
+                               folder=False,
+                               media='video',
+                               info=self.get_info(),
+                               cover = self.movieInfo['cover'],
+                               fanart = self.movieInfo['fanart']
+            )
+        else:
+            for movies in self.movieInfo['movies']:
+                for q in movies['movies']:
+                    for episode in movies['movies'][q]:
+                        if episode == movie:
+                            quality      = q
+                            folder_title = movies['folder_title']
+
+            play_url = self.resolve('resolve',
+                        {
+                            'page_url'      : self.movieInfo['page_url'],
+                            'resolution'    : quality,
+                            'folder'        : folder_title,
+                            'file'          : file_name
+                        }
+            )
+
+            self.item(file_name,
+                               play_url,
+                               folder=False,
+                               media='video',
+                               info=self.get_info_strm(),
+                               cover = self.movieInfo['cover'],
+                               fanart = self.movieInfo['fanart']
+            )

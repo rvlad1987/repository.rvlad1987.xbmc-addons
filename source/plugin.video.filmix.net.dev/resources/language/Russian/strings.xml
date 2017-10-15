@@ -105,5 +105,6 @@
 	<string id="37000">[COLOR red]Нравится плагин?[/COLOR]</string>
 	<string id="37001">Дополнительные</string>
 	<string id="37002">Скрыть пункт "Нравится плагин?"</string>
+	<string id="37003">Формировать ссылки на видео для strm-файлов</string>
 
 </strings>
