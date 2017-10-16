@@ -119,7 +119,7 @@ class HttpData:
             for div in center_menu.find_all('article', class_=itemclassname):
                 href = div.find('div', class_='short')#.find('a')
 
-                movie_name = div.find('div', class_='full').find('h3', class_='name').find('a').get_text()
+                movie_name = div.find('div', class_='full').find('h2', class_='name').find('a').get_text()
                 movie_url = href.find('a', class_='watch').get('href')
                 movie_id = re.compile('/([\d]+)-', re.S).findall(movie_url)[0]
 
@@ -136,7 +136,7 @@ class HttpData:
 
                 dop_information = []
                 try:
-                    likes = soup.find('div', class_='like', attrs={'data-id' : movie_id}).find('div').get_text()
+                    likes = soup.find(class_='like', attrs={'data-id' : movie_id}).find('span').get_text()
                     i_likes = int(likes)
                     if i_likes != 0:
                         if i_likes > 0:
