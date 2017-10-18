@@ -310,7 +310,7 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
 
         # fix for old versions
         if 'movieInfo' in self.params and 'movie_page' not in self.params:
-            self.params['movie_page'] = self.params['movieInfo']['url'][2][0]['movieInfo']['page_url']
+            self.params['movie_page'] = self.params['movieInfo']['page_url']
             del self.params['movieInfo']
 
         cache_key = 'movieInfo:%s' % self.params['movie_page']
