@@ -503,7 +503,8 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
         return file_name
 
     def add_playable_item(self, movie):
-        file_name = os.path.basename( os.path.splitext(str(movie[0]))[0] )
+        file_name        = os.path.basename( os.path.splitext(str(movie[0]))[0] )
+        filmix_file_name = file_name
 
         try:
             file_name = self.get_name(file_name)
@@ -533,7 +534,7 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                             'page_url'      : self.movieInfo['page_url'],
                             'resolution'    : quality,
                             'folder'        : folder_title,
-                            'file'          : file_name
+                            'file'          : filmix_file_name
                         }
             )
 

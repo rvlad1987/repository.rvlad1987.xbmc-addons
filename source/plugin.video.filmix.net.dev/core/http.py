@@ -589,6 +589,7 @@ class HttpData:
 
         return info
 
+
 class ResolveLink(xbmcup.app.Handler, HttpData):
 
     playerKeyParams = {
@@ -611,8 +612,5 @@ class ResolveLink(xbmcup.app.Handler, HttpData):
                     if(q == resolution):
                         if(movies['folder_title'] == folder or folder == ''):
                             for episode in movies['movies'][q]:
-#                                if isinstance(episode, basestring):
-#                                    if episode.find(self.params['file']) != -1: return episode
-#                                else:
-                                if episode[0].find(self.params['file']) != -1: return episode[0]
+                                if episode[0].find( self.params['file'] ) != -1: return episode[0]
         return None        
