@@ -495,8 +495,20 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                 # 'count' : 12
             }
 
+    def get_name(self, file_name):
+        result = re.match(r'^(.*?)(?:s(?P<s>\d+))?(?:e(?P<e>[\d-]+))?(?:_(?P<q>\d+))?$', file_name)
+        if result and result.groupdict()['s'] and result.groupdict()['e']:
+            title = self.movieInfo.get('originaltitle', '') or self.movieInfo['title']
+            return '{title} S{s}E{e} [{q}]'.format(title=title.encode('utf8'), **result.groupdict(''))
+        return file_name
+
     def add_playable_item(self, movie):
         file_name = os.path.basename( os.path.splitext(str(movie[0]))[0] )
+
+        try:
+            file_name = self.get_name(file_name)
+        except Exception:
+            pass
 
         if(xbmcup.app.setting['strm_url'] == 'false'):
             self.item(file_name,
