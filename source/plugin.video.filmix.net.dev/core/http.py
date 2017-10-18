@@ -273,6 +273,7 @@ class HttpData:
                     playlist = self.decode_direct_media_url(self.load(js_string))
 
                     movies = json.loads(playlist, 'utf-8')
+
                     for season in movies['playlist']:
                         current_movie = {'folder_title' : season['comment']+' ('+translate+')', 'movies': {}}
 
@@ -281,12 +282,22 @@ class HttpData:
                             for q in avail_quality:
                                 if(q == ''): continue
                                 direct_link = self.format_direct_link(movie['file'], q) if q != 0 else movie['file']
+                                
                                 try:
-                                    current_movie['movies'][q].append(direct_link)
+                                    iseason = int(movie['season'])
+                                except:
+                                    iseason = 0
+                                
+                                try:
+                                    iserieId = int(movie['serieId'])
+                                except:
+                                    iserieId = 0
+
+                                try:
+                                    current_movie['movies'][q].append([direct_link, iseason, iserieId])
                                 except:
                                     current_movie['movies'][q] = []
-                                    current_movie['movies'][q].append(direct_link)
-
+                                    current_movie['movies'][q].append([direct_link, iseason, iserieId])
 
                         #for resulut in current_movie['movies']:
                         #    current_movie['movies'][resulut] = current_movie['movies'][resulut][0]
@@ -300,14 +311,12 @@ class HttpData:
                         if(q == ''): continue
                         direct_link = self.format_direct_link(js_string, q) if q != 0 else js_string
                         try:
-                            current_movie['movies'][q].append(direct_link)
+                            current_movie['movies'][q].append([direct_link, 1, 1])
                         except:
                             current_movie['movies'][q] = []
-                            current_movie['movies'][q].append(direct_link)
+                            current_movie['movies'][q].append([direct_link, 1, 1])
 
                     movieInfo['movies'].append(current_movie)
-             #   break
-            #print movieInfo['movies']
 
             movieInfo['title'] = soup.find('h1', class_='name').get_text()
             try:
@@ -602,6 +611,8 @@ class ResolveLink(xbmcup.app.Handler, HttpData):
                     if(q == resolution):
                         if(movies['folder_title'] == folder or folder == ''):
                             for episode in movies['movies'][q]:
-                                if episode.find(self.params['file']) != -1:
-                                    return episode
+#                                if isinstance(episode, basestring):
+#                                    if episode.find(self.params['file']) != -1: return episode
+#                                else:
+                                if episode[0].find(self.params['file']) != -1: return episode[0]
         return None        

@@ -329,8 +329,6 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
         else:
             self.def_dir=  self.params['sub_dir']
 
-        #print default_quality
-
         if(default_quality != None and self.params['quality_dir'] == None):
             try:
                 test = self.movieInfo['movies'][self.def_dir]['movies'][str(default_quality)]
@@ -352,7 +350,7 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                                     self.params['quality_dir'] = default_quality
                                 except:
                                     pass
-        #print self.movieInfo['movies']
+
         #если на сайте несколько папок с файлами
         if((len(self.movieInfo['movies']) > 1 and self.params['sub_dir'] == None) or self.movieInfo['no_files'] != None):
             self.show_folders()
@@ -369,7 +367,6 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
 
 
     def show_folders(self):
-        print self.movieInfo['no_files']
         if(self.movieInfo['no_files'] == None):
             i = 0
             for movie in self.movieInfo['movies']:
@@ -390,8 +387,31 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
 
     def show_episodes(self):
         show_first_quality = False
+
         if(self.params['quality_dir']):
-            movies = self.movieInfo['movies'][self.def_dir]['movies'][str(self.params['quality_dir'])]
+            if(xbmcup.app.setting['quality'] != '0' and xbmcup.app.setting['lowest_quality'] == 'true'):
+                movies = []
+                max_episode = 1
+                for quality in self.movieInfo['movies'][self.def_dir]['movies']:
+                    for movie in self.movieInfo['movies'][self.def_dir]['movies'][quality]:
+                        if max_episode < movie[2]: max_episode = movie[2]
+                for episode_num in xrange(1, max_episode + 1):
+                    for quality in self.movieInfo['movies'][self.def_dir]['movies']:
+                        if quality == '1080p':
+                            i_quality = 1080
+                        else:
+                            i_quality = int(quality)
+
+                        if int(self.params['quality_dir']) >= i_quality:
+                            for movie in self.movieInfo['movies'][self.def_dir]['movies'][quality]:
+                                episode_exist = False
+                                for _movie in movies:
+                                    if _movie[2] == episode_num:
+                                        episode_exist = True
+                                        break
+                                if episode_num == movie[2] and not episode_exist: movies.append(movie)
+            else:
+                movies = self.movieInfo['movies'][self.def_dir]['movies'][str(self.params['quality_dir'])]
         else:
             show_first_quality = True
             movies = self.movieInfo['movies'][self.def_dir]['movies']
@@ -466,11 +486,11 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
             }
 
     def add_playable_item(self, movie):
-        file_name = os.path.basename( os.path.splitext(str(movie))[0] )
+        file_name = os.path.basename( os.path.splitext(str(movie[0]))[0] )
 
         if(xbmcup.app.setting['strm_url'] == 'false'):
             self.item(file_name,
-                               movie,
+                               str(movie[0]),
                                folder=False,
                                media='video',
                                info=self.get_info(),
@@ -478,10 +498,11 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                                fanart = self.movieInfo['fanart']
             )
         else:
+            self.movieInfo['movies']
             for movies in self.movieInfo['movies']:
                 for q in movies['movies']:
                     for episode in movies['movies'][q]:
-                        if episode == movie:
+                        if episode[0] == movie[0]:
                             quality      = q
                             folder_title = movies['folder_title']
 
