@@ -297,6 +297,7 @@ class Watch_Later(AbstactList):
 
 
 class QualityList(xbmcup.app.Handler, HttpData, Render):
+    movieInfo = None
 
     def get_icon(self, quality):
         if(quality in cover.res_icon):
@@ -306,10 +307,12 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
 
     def handle(self):
         self.params = self.argv[0]
-        try:
-            self.movieInfo = self.params['movieInfo']
-        except:
+
+        cache_key = 'movieInfo:%s' % self.params['movie_page']
+        self.movieInfo = CACHE.get(cache_key)[cache_key]
+        if not self.params.get('cache') or not self.movieInfo:
             self.movieInfo = self.get_movie_info(self.params['movie_page'])
+            CACHE.set('movieInfo:%s' % self.params['movie_page'], self.movieInfo, 60*60)
 
         try:
             self.params['sub_dir'] = int(self.params['sub_dir'])
@@ -374,7 +377,8 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                            self.link('quality-list',
                                     {
                                         'sub_dir' : i,
-                                        'movieInfo' : self.movieInfo
+                                        'movie_page': self.params['movie_page'],
+                                        'cache': True,
                                     }
                            ),
                            folder=True,
@@ -446,7 +450,8 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                     {
                         'sub_dir' : self.params['sub_dir'],
                         'quality_dir' : str(movie),
-                        'movieInfo' : self.movieInfo
+                        'movie_page': self.params['movie_page'],
+                        'cache': True,
                     }
                 ),
                 folder=True,
