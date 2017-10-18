@@ -26,7 +26,7 @@ class AbstactList(xbmcup.app.Handler, HttpData, Render):
                     menu.append([xbmcup.app.lang[30147], self.link('context', {'action': 'add_bookmark', 'id' : movie['id']})])
                 else:
                     menu.append([xbmcup.app.lang[30148], self.link('context', {'action': 'del_bookmark', 'id' : movie['id']})])
-
+                    
                 if(self.__class__.__name__ != 'Watch_Later'):
                     menu.append([xbmcup.app.lang[30163], self.link('context', {'action': 'add_watch_later', 'id' : movie['id']})])
                 else:
@@ -145,7 +145,7 @@ class SearchList(AbstactList):
 
         if(len(history) >= req_count):
             SQL.set('DELETE FROM search WHERE `id` = (SELECT MIN(id) FROM search)')
-
+        
         '''
         #page_url = "search/index/index/usersearch/"+params['usersearch']
         page_url = "/engine/ajax/sphinx_search.php?story=%s&search_start=%s" % (params['usersearch'], page+1)
@@ -166,7 +166,7 @@ class SearchList(AbstactList):
             if(m['year'] != ''):
                 year_info = m['year']+', '
             year_info += re.sub(re_info, '', m['categories'])
-
+            
             response['data'].append({
                     'name': m['title'].strip(),
                     'img': m['poster'].replace('/w40/','/w220/'),
@@ -176,7 +176,7 @@ class SearchList(AbstactList):
                     'quality': '',
                     'id': m['id']
                 })
-
+        
         if(is_united_search == 0):
             self.item(u'[COLOR yellow]'+xbmcup.app.lang[30108]+'[/COLOR]', self.link('search'), folder=True, cover=cover.search)
             self.item('[COLOR blue]['+xbmcup.app.lang[30109]+': '+vsearch+'][/COLOR]',
