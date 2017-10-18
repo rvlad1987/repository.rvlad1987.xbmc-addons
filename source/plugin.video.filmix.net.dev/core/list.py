@@ -308,6 +308,11 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
     def handle(self):
         self.params = self.argv[0]
 
+        # fix for old versions
+        if 'movieInfo' in self.params and 'movie_page' not in self.params:
+            self.params['movie_page'] = self.params['movieInfo']['url'][2][0]['movieInfo']['page_url']
+            del self.params['movieInfo']
+
         cache_key = 'movieInfo:%s' % self.params['movie_page']
         self.movieInfo = CACHE.get(cache_key)[cache_key]
         if not self.params.get('cache') or not self.movieInfo:
