@@ -257,6 +257,7 @@ class HttpData:
         try:
             try:
                 film_id = re.compile('film_id ?= ?([\d]+);', re.S).findall(html)[0].decode('string_escape').decode('utf-8')
+                movieInfo['movie_id'] = int( film_id )
                 js_string = self.ajax(SITE_URL+'/api/movies/player_data', {'post_id' : film_id}, url)
                 # print js_string
                 player_data =  json.loads(js_string, 'utf-8')
@@ -274,7 +275,7 @@ class HttpData:
                     playlist = self.decode_direct_media_url(self.load(js_string))
 
                     movies = json.loads(playlist, 'utf-8')
-                    print movies
+                    # print movies
                     for season in movies['playlist']:
                         current_movie = {'folder_title' : season['comment']+' ('+translate+')', 'movies': {}}
 
@@ -590,6 +591,15 @@ class HttpData:
 
         return info
 
+    def get_movie_id(self, url):
+        result = re.findall(r'\/([\d]+)\-', url)
+        
+        try:
+            result = int(result[0])
+        except:
+            result = 0
+            
+        return result
 
 class ResolveLink(xbmcup.app.Handler, HttpData):
 
@@ -614,8 +624,8 @@ class ResolveLink(xbmcup.app.Handler, HttpData):
                         if(movies['folder_title'] == folder or folder == ''):
                             for episode in movies['movies'][q]:
                                 if episode[0].find( self.params['file'] ) != -1: 
-                                    movie_id = re.findall(r'\/([\d]+)\-', movieInfo['page_url'])
-                                    if movie_id != []:
-                                        Watched().set( int( movie_id[0] ), season=episode[1], episode=episode[2] )
+                                    movie_id = self.get_movie_id( movieInfo['page_url'] )
+                                    if movie_id != 0 and xbmcup.app.setting['watched_db'] == 'true' and xbmcup.app.setting['strm_url'] == 'true':
+                                        Watched().set_watched( movie_id, season=episode[1], episode=episode[2] )
                                     return episode[0]
         return None

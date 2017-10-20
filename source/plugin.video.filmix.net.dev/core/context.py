@@ -8,6 +8,7 @@ from auth import Auth
 from wmodal import MovieInfo
 from common import Render
 from defines import *
+from watched_db import Watched
 
 class ContextMenu(xbmcup.app.Handler, HttpData, Render):
 
@@ -35,7 +36,7 @@ class ContextMenu(xbmcup.app.Handler, HttpData, Render):
                 xbmcup.gui.message(xbmcup.app.lang[30150].encode('utf-8'))
             else:
                 xbmcup.gui.message(xbmcup.app.lang[30154].encode('utf-8'))
-                print resp
+                # print resp
         except:
             pass
 
@@ -92,3 +93,10 @@ class ContextMenu(xbmcup.app.Handler, HttpData, Render):
             movieinfo_xml = 'movieinfo.xml'
         w = MovieInfo(movieinfo_xml, xbmcup.app.addon['path'], "Default")
         w.doModal(movieInfo)
+
+    def add_episodes_to_watched_db(self, params):
+        movieInfo = self.get_movie_info( params['movie']['url'] )
+        if Watched().set_watched_all_episodes( int(params['movie']['id']), movieInfo ):
+            xbmcup.gui.message(xbmcup.app.lang[30172].encode('utf-8'))
+        else:
+            xbmcup.gui.message(xbmcup.app.lang[30171].encode('utf-8'))

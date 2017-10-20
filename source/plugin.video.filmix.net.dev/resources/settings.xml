@@ -30,5 +30,6 @@
 		<setting type="bool" id="united_search" visible="false" default="true"/>
 		<setting type="text" id="us_command" visible="false" default="keyword=" />
 		<setting id="strm_url" type="bool" visible="true" label="37003" default="false" />
+		<setting id="watched_db" type="bool" visible="true" enable="eq(-1,true)" label="37004" default="false" />
 	</category>
 </settings>

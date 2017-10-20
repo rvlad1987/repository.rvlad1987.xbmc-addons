@@ -7,6 +7,7 @@ from http import HttpData
 from auth import Auth
 from common import Render
 from defines import *
+from watched_db import Watched
 
 try:
     from sqlite3 import dbapi2 as sqlite
@@ -21,7 +22,11 @@ class AbstactList(xbmcup.app.Handler, HttpData, Render):
         if(len(response['data']) > 0):
             for movie in response['data']:
                 menu = []
+                
                 menu.append([xbmcup.app.lang[34033], self.link('context', {'action': 'show_movieinfo', 'movie' : movie})])
+                if xbmcup.app.setting['watched_db'] == 'true' and xbmcup.app.setting['strm_url'] == 'true':
+                    menu.append([xbmcup.app.lang[30170], self.link('context', {'action': 'add_episodes_to_watched_db', 'movie' : movie})])
+
                 if(self.__class__.__name__ != 'BookmarkList'):
                     menu.append([xbmcup.app.lang[30147], self.link('context', {'action': 'add_bookmark', 'id' : movie['id']})])
                 else:
@@ -313,11 +318,15 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
             self.params['movie_page'] = self.params['movieInfo']['page_url']
             del self.params['movieInfo']
 
-        cache_key = 'movieInfo:%s' % self.params['movie_page']
+        md5 = hashlib.md5()
+        md5.update( 'movieInfo:%s?v=%s' % (self.params['movie_page'], xbmcup.app.addon['version']) )
+        cache_key = str( md5.hexdigest() )
         self.movieInfo = CACHE.get(cache_key)[cache_key]
+        # print 'try get from cache :', cache_key
         if not self.params.get('cache') or not self.movieInfo:
             self.movieInfo = self.get_movie_info(self.params['movie_page'])
-            CACHE.set('movieInfo:%s' % self.params['movie_page'], self.movieInfo, 60*60)
+            CACHE.set(cache_key, self.movieInfo, 60*60)
+            # print 'set to cache :', cache_key
 
         try:
             self.params['sub_dir'] = int(self.params['sub_dir'])
@@ -479,21 +488,24 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                 # 'count' : 12
             }
 
-    def get_info_strm(self):
-        return {
+    def get_info_strm(self, movie):
+        info = {
                 'Genre'     : self.movieInfo['genres'],
                 'year'      : self.movieInfo['year'],
                 'director'  : self.movieInfo['director'],
-                #'rating'    : self.movieInfo['ratingValue'],
-                #'duration'  : self.movieInfo['durarion'],
-                #'votes'     : self.movieInfo['ratingCount'],
                 'plot'      : self.movieInfo['description'][:350]+u'...'
-                #'title'     : self.movieInfo['title'],
-                #'originaltitle' : self.movieInfo['title']
-                # 'playcount' : 1,
-                # 'date': '%d.%m.%Y',
-                # 'count' : 12
-            }
+                }
+
+        if xbmcup.app.setting['watched_db'] == 'true' and xbmcup.app.setting['strm_url'] == 'true':
+            try:
+                movie_id = self.movieInfo['movie_id']
+            except:
+                movie_id = self.get_movie_id( self.movieInfo['page_url'] )
+            
+            if Watched().is_watched( movie_id, movie[1], movie[2] ):
+                info['playcount'] = 1
+
+        return info
 
     def get_name(self, file_name):
         result = re.match(r'^(.*?)(?:s(?P<s>\d+))?(?:e(?P<e>[\d-]+))?(?:_(?P<q>\d+))?$', file_name)
@@ -542,7 +554,7 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                                play_url,
                                folder=False,
                                media='video',
-                               info=self.get_info_strm(),
+                               info=self.get_info_strm(movie),
                                cover = self.movieInfo['cover'],
                                fanart = self.movieInfo['fanart']
             )

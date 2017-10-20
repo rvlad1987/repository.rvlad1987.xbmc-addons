@@ -127,7 +127,7 @@ class Filter(FilterData, AbstactList):
         award       = filter.get('awards',   [xbmcup.app.lang[30136]])
         production  = filter.get('productions', [xbmcup.app.lang[30136]])
 
-        print filter
+        # print filter
 
         self.item(xbmcup.app.lang[30128] % rubric[0],      self.replace('filter', {'window' : 'rubrics', 'filter' : filter}),  folder=True, cover=cover.search)
         self.item(xbmcup.app.lang[30129] % genre[0],       self.replace('filter', {'window' : 'genre',   'filter' : filter}),  folder=True, cover=cover.search)
