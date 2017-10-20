@@ -6,6 +6,7 @@ import xbmc, cover, xbmcplugin, xbmcgui
 from common import Render
 from auth import Auth
 from defines import *
+from watched_db import Watched
 from itertools import izip_longest
 
 try:
@@ -273,7 +274,7 @@ class HttpData:
                     playlist = self.decode_direct_media_url(self.load(js_string))
 
                     movies = json.loads(playlist, 'utf-8')
-
+                    print movies
                     for season in movies['playlist']:
                         current_movie = {'folder_title' : season['comment']+' ('+translate+')', 'movies': {}}
 
@@ -612,5 +613,9 @@ class ResolveLink(xbmcup.app.Handler, HttpData):
                     if(q == resolution):
                         if(movies['folder_title'] == folder or folder == ''):
                             for episode in movies['movies'][q]:
-                                if episode[0].find( self.params['file'] ) != -1: return episode[0]
-        return None        
+                                if episode[0].find( self.params['file'] ) != -1: 
+                                    movie_id = re.findall(r'\/([\d]+)\-', movieInfo['page_url'])
+                                    if movie_id != []:
+                                        Watched().set( int( movie_id[0] ), season=episode[1], episode=episode[2] )
+                                    return episode[0]
+        return None
