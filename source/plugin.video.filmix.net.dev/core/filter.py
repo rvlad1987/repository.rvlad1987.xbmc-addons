@@ -10,6 +10,12 @@ from http import HttpData
 
 CACHE = xbmcup.db.Cache(xbmcup.system.fs('sandbox://'+CACHE_DATABASE))
 
+# fix if cache file delete
+SQL = xbmcup.db.SQL(xbmcup.system.fs('sandbox://'+CACHE_DATABASE))
+SQL.set('CREATE TABLE IF NOT EXISTS cache(id varchar(255) unique, expire integer, data blob)')
+SQL.set('CREATE INDEX IF NOT EXISTS dataindex ON cache(expire)')
+del SQL
+
 #кешируем загружаемые фильтры на неделю
 CACHE_TIME = 60*60*24*7
 

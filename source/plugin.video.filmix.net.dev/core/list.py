@@ -17,6 +17,10 @@ except:
 CACHE = xbmcup.db.Cache(xbmcup.system.fs('sandbox://'+CACHE_DATABASE))
 SQL = xbmcup.db.SQL(xbmcup.system.fs('sandbox://'+CACHE_DATABASE))
 
+# fix if cache file delete
+SQL.set('CREATE TABLE IF NOT EXISTS cache(id varchar(255) unique, expire integer, data blob)')
+SQL.set('CREATE INDEX IF NOT EXISTS dataindex ON cache(expire)')
+
 class AbstactList(xbmcup.app.Handler, HttpData, Render):
     def add_movies(self, response, ifempty=30111):
         if(len(response['data']) > 0):
