@@ -496,7 +496,12 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
         info = {
                 'Genre'     : self.movieInfo['genres'],
                 'year'      : self.movieInfo['year'],
+                # 'rating'    : self.movieInfo['ratingValue'],
+                # 'userrating'    : int(self.movieInfo['ratingValue']),
+                'duration'  : self.movieInfo['durarion'],
+                # 'votes'     : self.movieInfo['ratingCount'],
                 'director'  : self.movieInfo['director'],
+                # 'title'     : self.movieInfo['title'],
                 'plot'      : self.movieInfo['description'][:350]+u'...'
                 }
 

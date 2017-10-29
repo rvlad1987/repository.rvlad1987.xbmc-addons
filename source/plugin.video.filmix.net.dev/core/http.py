@@ -137,7 +137,7 @@ class HttpData:
 
                 dop_information = []
                 try:
-                    likes = soup.find(class_='like', attrs={'data-id' : movie_id}).find('span').get_text()
+                    likes = soup.find(class_='like', attrs={'data-id' : movie_id}).find('div').get_text()
                     i_likes = int(likes)
                     if i_likes != 0:
                         if i_likes > 0:
@@ -327,19 +327,25 @@ class HttpData:
                 movieInfo['originaltitle'] = ''
 
             try:
-                r_kinopoisk = soup.find('span', class_='kinopoisk btn-tooltip icon-kinopoisk').find('div').get_text().strip()
-                if r_kinopoisk == '0': r_kinopoisk = '-'
+                r_kinopoisk = soup.find('span', class_='kinopoisk btn-tooltip icon-kinopoisk').find('p').get_text().strip()
+                if r_kinopoisk == '0': r_kinopoisk = ''
             except:
-                r_kinopoisk = '-'
+                r_kinopoisk = ''
 
             try:
-                r_imdb = soup.find('span', class_='imdb btn-tooltip icon-imdb').find('div').get_text().strip()
-                if r_imdb == '0': r_imdb = '-'
+                r_imdb = soup.find('span', class_='imdb btn-tooltip icon-imdb').find('p').get_text().strip()
+                movieInfo['ratingValue'] = float(r_imdb)
+                movieInfo['ratingCount'] = r_imdb
             except:
-                r_imdb = '-'
+                r_imdb = ''
+                movieInfo['ratingValue'] = 0
 
+            if r_kinopoisk != '': r_kinopoisk = ' [COLOR orange]Кинопоиск[/COLOR] : '.decode('cp1251') + r_kinopoisk
+            if movieInfo['ratingValue'] != 0: r_imdb = ' [COLOR yellow]IMDB[/COLOR] : ' + r_imdb
+            if movieInfo['ratingValue'] != 0 or r_kinopoisk != '': s_rating = r_kinopoisk + r_imdb + '\n'
+            
             try:
-                movieInfo['description'] = '[COLOR orange]Кинопоиск[/COLOR] : '.decode('cp1251') + r_kinopoisk + ' [COLOR yellow]IMDB[/COLOR] : ' +r_imdb + '\n' + soup.find('div', class_='full-story').get_text().strip()
+                movieInfo['description'] = s_rating + soup.find('div', class_='full-story').get_text().strip()
             except:
                 movieInfo['description'] = ''
 
@@ -372,15 +378,15 @@ class HttpData:
             except:
                 movieInfo['durarion'] = ''
 
-            try:
-                movieInfo['ratingValue'] = float(soup.find(attrs={'itemprop' : 'ratingValue'}).get_text())
-            except:
-                movieInfo['ratingValue'] = 0
+            # try:
+                # movieInfo['ratingValue'] = float(soup.find(attrs={'itemprop' : 'ratingValue'}).get_text())
+            # except:
+                # movieInfo['ratingValue'] = 0
 
-            try:
-                movieInfo['ratingCount'] = int(soup.find(attrs={'itemprop' : 'ratingCount'}).get_text())
-            except:
-                movieInfo['ratingCount'] = 0
+            # try:
+                # movieInfo['ratingCount'] = int(soup.find(attrs={'itemprop' : 'ratingCount'}).get_text())
+            # except:
+                # movieInfo['ratingCount'] = 0
 
             try:
                 movieInfo['director'] = []
