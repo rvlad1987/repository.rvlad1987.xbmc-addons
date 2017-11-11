@@ -137,7 +137,7 @@ class HttpData:
 
                 dop_information = []
                 try:
-                    likes = soup.find(class_='like', attrs={'data-id' : movie_id}).find('div').get_text()
+                    likes = soup.find(class_='like', attrs={'data-id' : movie_id}).find('span').get_text()
                     i_likes = int(likes)
                     if i_likes != 0:
                         if i_likes > 0:
@@ -164,7 +164,7 @@ class HttpData:
                 if(len(dop_information) > 0):
                     information = '[COLOR white]['+', '.join(dop_information)+'][/COLOR]'
 
-                movieposter = href.find('img', class_='poster').get('src')
+                movieposter = href.find('img', class_='poster poster-tooltip').get('src')
 
                 result['data'].append({
                         'url': movie_url,
@@ -173,7 +173,7 @@ class HttpData:
                         'quality': self.format_quality(quality),
                         'year': information,
                         'name': movie_name.strip(),
-                        'img': None if not movieposter else movieposter
+                        'img': None if not movieposter else SITE_URL + movieposter
                     })
         except:
             print traceback.format_exc()
@@ -263,6 +263,8 @@ class HttpData:
                 player_data =  json.loads(js_string, 'utf-8')
                 # player_data = player_data['message']['translations']['flash']
                 player_data = player_data['message']['translations']['html5']
+                if player_data == []:
+                    movieInfo['no_files'] = xbmcup.app.lang[34026].encode('utf8')
             except:
                 movieInfo['no_files'] = xbmcup.app.lang[34026].encode('utf8')
                 raise
@@ -350,11 +352,11 @@ class HttpData:
                 movieInfo['description'] = ''
 
             try:
-                movieInfo['fanart'] = SITE_URL+soup.find('ul', class_='frames-list').find('a').get('href')
+                movieInfo['fanart'] = SITE_URL + soup.find('ul', class_='frames-list').find('a').get('href')
             except:
                 movieInfo['fanart'] = ''
             try:
-                movieInfo['cover'] = soup.find('img', class_='poster poster-tooltip').get('src')
+                movieInfo['cover'] = soup.find('a', class_='fancybox').get('href')
             except:
                 movieInfo['cover'] = ''
 
@@ -433,7 +435,7 @@ class HttpData:
              movieInfo['title'] = '%s / %s' % (movieInfo['title'],  movieInfo['originaltitle'])
 
         try:
-            movieInfo['poster'] = soup.find('img', class_='poster').get('src')
+            movieInfo['poster'] = SITE_URL + soup.find('img', class_='poster poster-tooltip').get('src')
         except:
             movieInfo['poster'] = ''
 

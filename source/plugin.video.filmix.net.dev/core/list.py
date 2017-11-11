@@ -165,7 +165,7 @@ class SearchList(AbstactList):
         response = CACHE(str(md5.hexdigest()), self.get_movies, page_url, page, '', False, usersearch)
         '''
         post_data={'search_word' : params['vsearch']}
-        post_result = self.ajax('https://filmix.me/api/search/suggest',post_data)
+        post_result = self.ajax(SITE_URL + '/api/search/suggest',post_data)
         json_result = json.loads(post_result)
         # print json_result
         response = {'page': {}, 'data': []}
@@ -421,6 +421,10 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                     for quality in self.movieInfo['movies'][self.def_dir]['movies']:
                         if quality == '1080p':
                             i_quality = 1080
+                        elif quality == '1440p':
+                            i_quality = 1440
+                        elif quality == '2160p':
+                            i_quality = 2160
                         else:
                             i_quality = int(quality)
 
@@ -457,8 +461,8 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
 
         resolutions = []
         for movie in movies:
-            if(movie != "1080p" or self.movieInfo['is_proplus'] > 0):
-                resolutions.append(int(movie))
+            if( movie not in ['1080p', '1440p', '2160p'] or self.movieInfo['is_proplus'] > 0):
+                resolutions.append(int( movie ))
 
         resolutions.sort()
 
