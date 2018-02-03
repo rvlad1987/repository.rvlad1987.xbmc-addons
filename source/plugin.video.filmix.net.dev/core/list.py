@@ -165,7 +165,7 @@ class SearchList(AbstactList):
         response = CACHE(str(md5.hexdigest()), self.get_movies, page_url, page, '', False, usersearch)
         '''
         post_data={'search_word' : params['vsearch']}
-        post_result = self.ajax(SITE_URL + '/api/search/suggest',post_data)
+        post_result = self.ajax(SITE_URL + '/api/search/suggest',post_data, SITE_URL + '/')
         json_result = json.loads(post_result)
         # print json_result
         response = {'page': {}, 'data': []}
