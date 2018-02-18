@@ -24,7 +24,8 @@
 	<string id="30132">Origin: [COLOR blue]%s[/COLOR]</string>
 	<string id="30133">[COLOR green][Apply selected filters][/COLOR]</string>
 	<string id="30134">[COLOR yellow]Search result [COLOR blue][Страница %s][/COLOR]:[/COLOR]</string>
-	
+	<string id="30173">[COLOR yellow]My Collections[/COLOR]</string>
+  	<string id="30174">No Collections</string>
 
 	<string id="30135">Any</string>
 	<string id="30136">Doesn't matter</string>

@@ -229,6 +229,25 @@ class HttpData:
         except:
             return '0'.split()
 
+    def get_collections_info(self):
+        html = self.load(COLLECTIONS_URL)
+        collectionsInfo = []
+        
+        html = html.encode('utf-8')
+        soup = xbmcup.parser.html(self.strip_scripts(html))
+        
+        collections = soup.find_all('a', class_='poster-link poster-hover')
+        for collection in collections:
+            url_collection = collection.get('href').replace(SITE_URL,'')
+            obj_poster = collection.find(class_ = 'poster')
+            title_collection = obj_poster.get('alt')
+            img_collection = SITE_URL + obj_poster.get('src')
+            if img_collection.find('/none.png') > 0: img_collection = cover.treetv
+            
+            collectionsInfo.append({'url':url_collection, 'img':img_collection, 'title':title_collection});
+
+        return collectionsInfo
+
     def get_movie_info(self, url):
         html = self.load(url)
 
@@ -330,7 +349,7 @@ class HttpData:
 
             try:
                 r_kinopoisk = soup.find('span', class_='kinopoisk btn-tooltip icon-kinopoisk').find('p').get_text().strip()
-                if r_kinopoisk == '0': r_kinopoisk = ''
+                if float(r_kinopoisk) == 0: r_kinopoisk = ''
             except:
                 r_kinopoisk = ''
 
@@ -341,10 +360,16 @@ class HttpData:
             except:
                 r_imdb = ''
                 movieInfo['ratingValue'] = 0
+                movieInfo['ratingCount'] = 0
 
             if r_kinopoisk != '': r_kinopoisk = ' [COLOR orange]Кинопоиск[/COLOR] : '.decode('cp1251') + r_kinopoisk
-            if movieInfo['ratingValue'] != 0: r_imdb = ' [COLOR yellow]IMDB[/COLOR] : ' + r_imdb
-            if movieInfo['ratingValue'] != 0 or r_kinopoisk != '': s_rating = r_kinopoisk + r_imdb + '\n'
+
+            if movieInfo['ratingValue'] != 0:
+                r_imdb = ' [COLOR yellow]IMDB[/COLOR] : ' + r_imdb
+            else:
+                r_imdb = ''
+
+            s_rating = r_kinopoisk + r_imdb + ' \n '
             
             try:
                 movieInfo['description'] = s_rating + soup.find('div', class_='full-story').get_text().strip()

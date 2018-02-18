@@ -67,6 +67,8 @@
 	<string id="30170">Всё просмотрено</string>
 	<string id="30171">Не удалось добавить в БД просмотренных</string>
 	<string id="30172">Эпизоды добавлены в БД</string>
+	<string id="30173">[COLOR yellow]Мои подборки[/COLOR]</string>
+  	<string id="30174">Нет подборок</string>
 
 	<!-- Settings -->
 	<string id="31001">Общие</string>

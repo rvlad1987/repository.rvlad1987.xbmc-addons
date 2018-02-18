@@ -237,7 +237,7 @@ class BookmarkList(AbstactList):
     def show_movies(self, url, page):
         params = {}
         params['url'] = url
-        url = 'favorites'
+        url = 'favorites'#'playlist/22517-pervyy'#'favorites'
         md5 = hashlib.md5()
         md5.update(url+'?v='+xbmcup.app.addon['version'])
         response = CACHE(str(md5.hexdigest()), self.get_movies, url, page, 'dle-content', True)
@@ -302,6 +302,64 @@ class Watch_Later(AbstactList):
         params['page'] = page+1
         if(response['page']['maxpage'] >= response['page']['pagenum']+1):
             self.item(u'[COLOR green]'+xbmcup.app.lang[30107]+'[/COLOR]', self.replace('watch_later', params), cover=cover.next, folder=True)
+
+
+
+class Collections(AbstactList):
+
+    def handle(self):
+        Auth().autorize()
+
+        try:
+            params = self.argv[0]
+        except:
+            params = {}
+
+        try:
+            url = params['url']
+        except:
+            url = ''
+
+        try:
+            page = params['page']
+        except:
+            page = 0
+
+        if(xbmcup.app.setting['is_logged'] == 'false'):
+            xbmcup.gui.message(xbmcup.app.lang[30149].encode('utf-8'))
+            return False
+
+        if url == '':
+            collectionsInfo = self.get_collections_info()
+            if collectionsInfo == []:
+                self.item(u'[COLOR red]['+xbmcup.app.lang[30174]+'][/COLOR]', self.link('null'), folder=False, cover=cover.info)
+            else:            
+                for collectionInfo in collectionsInfo:
+                    self.item(collectionInfo['title'], self.link('collections',  {'url' : collectionInfo['url']}), folder=True, cover=collectionInfo['img'])
+        else:
+            self.show_movies(url, page)
+
+        self._variables['is_item'] = False
+        self.render(cache=False)
+
+
+    def show_movies(self, url, page):
+        params = {}
+        params['url'] = url
+        md5 = hashlib.md5()
+        md5.update(url+'?v='+xbmcup.app.addon['version'])
+        response = CACHE(str(md5.hexdigest()), self.get_movies, url, page, 'dle-content', True)
+
+        if(page > 0):
+            params['page'] = page-1
+            self.item('[COLOR green]'+xbmcup.app.lang[30106]+'[/COLOR]', self.replace('bookmarks', params), cover=cover.prev, folder=True)
+            params['page'] = page+1
+
+        self.add_movies(response, 34026)
+
+        params['page'] = page+1
+        if(response['page']['maxpage'] >= response['page']['pagenum']+1):
+            self.item(u'[COLOR green]'+xbmcup.app.lang[30107]+'[/COLOR]', self.replace('bookmarks', params), cover=cover.next, folder=True)
 
 
 
@@ -485,9 +543,9 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                 'Genre'     : self.movieInfo['genres'],
                 'year'      : self.movieInfo['year'],
                 'director'  : self.movieInfo['director'],
-                'rating'    : self.movieInfo['ratingValue'],
+                # 'rating'    : self.movieInfo['ratingValue'],
                 'duration'  : self.movieInfo['durarion'],
-                'votes'     : self.movieInfo['ratingCount'],
+                # 'votes'     : self.movieInfo['ratingCount'],
                 'plot'      : self.movieInfo['description'],
                 'title'     : self.movieInfo['title'],
                 'originaltitle' : self.movieInfo['title']
