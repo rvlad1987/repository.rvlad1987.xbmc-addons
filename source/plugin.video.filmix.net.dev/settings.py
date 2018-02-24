@@ -2,9 +2,10 @@
 #очистка кеша
 
 import sys, xbmc, xbmcaddon
-from core.defines import *
-sys.argv[0] = PLUGIN_ID
+
+sys.argv[0] = 'plugin.video.filmix.net.dev'#PLUGIN_ID
 import os, xbmcup.app, xbmcup.system, xbmcup.db, xbmcup.gui
+from core.defines import *
 
 from core.auth import Auth
 import core.cover
