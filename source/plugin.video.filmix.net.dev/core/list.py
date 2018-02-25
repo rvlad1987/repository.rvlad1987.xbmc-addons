@@ -352,14 +352,14 @@ class Collections(AbstactList):
 
         if(page > 0):
             params['page'] = page-1
-            self.item('[COLOR green]'+xbmcup.app.lang[30106]+'[/COLOR]', self.replace('bookmarks', params), cover=cover.prev, folder=True)
+            self.item('[COLOR green]'+xbmcup.app.lang[30106]+'[/COLOR]', self.replace('collections', params), cover=cover.prev, folder=True)
             params['page'] = page+1
 
         self.add_movies(response, 34026)
 
         params['page'] = page+1
         if(response['page']['maxpage'] >= response['page']['pagenum']+1):
-            self.item(u'[COLOR green]'+xbmcup.app.lang[30107]+'[/COLOR]', self.replace('bookmarks', params), cover=cover.next, folder=True)
+            self.item(u'[COLOR green]'+xbmcup.app.lang[30107]+'[/COLOR]', self.replace('collections', params), cover=cover.next, folder=True)
 
 
 
