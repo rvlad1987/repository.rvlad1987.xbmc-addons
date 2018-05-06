@@ -12,6 +12,7 @@ class Index(xbmcup.app.Handler):
         if(xbmcup.app.setting['is_logged'] == 'true'):
             self.item(xbmcup.app.lang[30146], self.link('bookmarks',  {'url' : ''}),       folder=True, cover=cover.treetv)
             self.item(xbmcup.app.lang[30173], self.link('collections',  {'url' : ''}),       folder=True, cover=cover.treetv)
+            self.item(xbmcup.app.lang[30175], self.link('my_news',  {'url' : ''}),       folder=True, cover=cover.treetv)
             self.item(xbmcup.app.lang[30162], self.link('watch_later',  {'url' : ''}),       folder=True, cover=cover.treetv)
 
             self.item(xbmcup.app.lang[30160], self.link('null', {}),       folder=True, cover=cover.treetv)

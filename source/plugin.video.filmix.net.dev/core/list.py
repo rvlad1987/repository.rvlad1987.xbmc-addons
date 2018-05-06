@@ -304,6 +304,54 @@ class Watch_Later(AbstactList):
             self.item(u'[COLOR green]'+xbmcup.app.lang[30107]+'[/COLOR]', self.replace('watch_later', params), cover=cover.next, folder=True)
 
 
+class My_News(AbstactList):
+
+    def handle(self):
+        Auth().autorize()
+
+        try:
+            params = self.argv[0]
+        except:
+            params = {}
+
+        try:
+            url = params['url']
+        except:
+            url = ''
+
+        try:
+            page = params['page']
+        except:
+            page = 0
+
+        if(xbmcup.app.setting['is_logged'] == 'false'):
+            xbmcup.gui.message(xbmcup.app.lang[30149].encode('utf-8'))
+            return False
+
+        self.show_news(url, page)
+        self._variables['is_item'] = False
+        self.render(cache=False)
+
+
+    def show_news(self, url, page):
+        params = {}
+        params['url'] = url
+        url = 'my_news'
+        md5 = hashlib.md5()
+        md5.update(url+'?v='+xbmcup.app.addon['version'])
+        response = CACHE(str(md5.hexdigest()), self.get_my_news, url, page, 'dle-content', True)
+        
+        if(page > 0):
+            params['page'] = page-1
+            self.item('[COLOR green]'+xbmcup.app.lang[30106]+'[/COLOR]', self.replace('my_news', params), cover=cover.prev, folder=True)
+            params['page'] = page+1
+
+        self.add_movies(response, 30152)
+
+        params['page'] = page+1
+        if(response['page']['maxpage'] >= response['page']['pagenum']+1):
+            self.item(u'[COLOR green]'+xbmcup.app.lang[30107]+'[/COLOR]', self.replace('my_news', params), cover=cover.next, folder=True)
+
 
 class Collections(AbstactList):
 
@@ -349,7 +397,7 @@ class Collections(AbstactList):
         md5 = hashlib.md5()
         md5.update(url+'?v='+xbmcup.app.addon['version'])
         response = CACHE(str(md5.hexdigest()), self.get_movies, url, page, 'dle-content', True)
-
+        
         if(page > 0):
             params['page'] = page-1
             self.item('[COLOR green]'+xbmcup.app.lang[30106]+'[/COLOR]', self.replace('collections', params), cover=cover.prev, folder=True)

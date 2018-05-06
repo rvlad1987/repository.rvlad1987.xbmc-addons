@@ -68,6 +68,7 @@
 	<string id="30170">All watched</string>
 	<string id="30171">Failed to add to watched database</string>
 	<string id="30172">Episodes added to database</string>
+	<string id="30175">[COLOR yellow]My news[/COLOR]</string>
 
 	<!-- Settings -->
 	<string id="31001">General</string>

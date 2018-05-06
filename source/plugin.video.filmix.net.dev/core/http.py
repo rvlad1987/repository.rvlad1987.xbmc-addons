@@ -87,6 +87,55 @@ class HttpData:
         else:
             return response.text if response.status_code == 200 else None
 
+
+    def get_my_news(self, url, page, idname='dle-content', nocache=False, search="", itemclassname="shortstory"):
+        page = int(page)
+
+        url = SITE_URL+"/api/notifications/get"
+
+        if(page > 0 and search == ''):
+            page += 1
+        else:
+            page = 1
+
+        post_data={'page' : page}
+
+        html = self.ajax(url, post_data, SITE_URL + '/')
+
+        if not html:
+            return None, {'page': {'pagenum' : 0, 'maxpage' : 0}, 'data': []}
+        result = {'page': {'pagenum' : page, 'maxpage' : 10000}, 'data': []}
+
+        try:
+            json_result = json.loads(html)
+            result['page']['maxpage'] = len(json_result['message']['items'])
+
+            for item_news in json_result['message']['items']:
+                movie_name = item_news['data']['movie_name']
+                movie_url = item_news['data']['movie_link']
+                movie_id = item_news['id']
+                quality_s = item_news['date_string']
+                dop_info = 'S'+str(item_news['data']['season']) + 'E'+ str(item_news['data']['episode'])
+                not_movie = False
+
+                result['data'].append({
+                        'url': movie_url,
+                        'id': movie_id,
+                        'not_movie': not_movie,
+                        'quality': '[COLOR ff3BADEE]'+quality_s+'[/COLOR]',
+                        'year': '[COLOR ffFFB119]'+dop_info+'[/COLOR]',
+                        'name': movie_name.strip(),
+                        'img': None
+                    })
+        except:
+            print traceback.format_exc()
+
+        if(nocache):
+            return None, result
+        else:
+            return cache_minutes, result
+
+
     def get_movies(self, url, page, idname='dle-content', nocache=False, search="", itemclassname="shortstory"):
         page = int(page)
 
