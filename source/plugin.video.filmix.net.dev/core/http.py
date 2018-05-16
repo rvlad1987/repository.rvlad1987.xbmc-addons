@@ -222,7 +222,7 @@ class HttpData:
                         'quality': self.format_quality(quality),
                         'year': information,
                         'name': movie_name.strip(),
-                        'img': None if not movieposter else SITE_URL + movieposter
+                        'img': None if not movieposter else movieposter
                     })
         except:
             print traceback.format_exc()
