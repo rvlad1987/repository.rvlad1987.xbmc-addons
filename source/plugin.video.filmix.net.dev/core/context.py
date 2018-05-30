@@ -3,6 +3,7 @@
 import os, re, sys, json, urllib, hashlib, traceback
 import xbmcup.app, xbmcup.db, xbmcup.system, xbmcup.net, xbmcup.parser, xbmcup.gui
 import xbmc, cover, xbmcplugin, xbmcgui
+
 from http import HttpData
 from auth import Auth
 from wmodal import MovieInfo
@@ -81,6 +82,7 @@ class ContextMenu(xbmcup.app.Handler, HttpData, Render):
         xbmc.executebuiltin('Container.Refresh()')
 
     def show_movieinfo(self, params):
+        # xbmc.executebuiltin("RunScript(script.extendedinfo,info=%s,name=%s)" % ("extendedinfo",params['movie']['name']))
         movieInfo = self.get_modal_info(params['movie']['url'])
         if(movieInfo['error']):
             xbmcup.gui.message(xbmcup.app.lang[34031].encode('utf8'))

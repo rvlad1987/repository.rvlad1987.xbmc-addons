@@ -213,7 +213,7 @@ class HttpData:
                 if(len(dop_information) > 0):
                     information = '[COLOR white]['+', '.join(dop_information)+'][/COLOR]'
 
-                movieposter = href.find('img', class_='poster poster-tooltip').get('src')
+                movieposter = SITE_URL + href.find('img', class_='poster poster-tooltip').get('src')
 
                 result['data'].append({
                         'url': movie_url,
@@ -545,7 +545,7 @@ class HttpData:
 
         try:
             desc = soup.find('div', class_='full-story').get_text().strip()
-            movieInfo['desc'] += '\n[COLOR blue]%s[/COLOR]\n%s' % (xbmcup.app.lang[34027], desc)
+            movieInfo['desc'] = '\n[COLOR blue]%s[/COLOR]\n%s' % (xbmcup.app.lang[34027], desc) + '\n' + movieInfo['desc']
         except:
             movieInfo['desc'] = traceback.format_exc()
 

@@ -25,6 +25,7 @@ class MovieInfo(xbmcgui.WindowXMLDialog, HttpData):
 
     def onInit(self):
         print "onInit(): Window Initialized"
+        # print self.movieInfo
         self.getControl(1).setLabel(self.movieInfo['title'])
         self.getControl(32).setText(self.movieInfo['desc'])
         self.getControl(31).setImage(self.movieInfo['poster'])
