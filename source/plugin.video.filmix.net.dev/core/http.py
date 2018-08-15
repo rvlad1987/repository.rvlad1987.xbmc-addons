@@ -290,7 +290,7 @@ class HttpData:
             url_collection = collection.get('href').replace(SITE_URL,'')
             obj_poster = collection.find(class_ = 'poster')
             title_collection = obj_poster.get('alt')
-            img_collection = SITE_URL + obj_poster.get('src')
+            img_collection = obj_poster.get('src')
             if img_collection.find('/none.png') > 0: img_collection = cover.treetv
             
             collectionsInfo.append({'url':url_collection, 'img':img_collection, 'title':title_collection});
@@ -509,7 +509,7 @@ class HttpData:
              movieInfo['title'] = '%s / %s' % (movieInfo['title'],  movieInfo['originaltitle'])
 
         try:
-            movieInfo['poster'] = SITE_URL + soup.find('img', class_='poster poster-tooltip').get('src')
+            movieInfo['poster'] = soup.find('img', class_='poster poster-tooltip').get('src')
         except:
             movieInfo['poster'] = ''
 
