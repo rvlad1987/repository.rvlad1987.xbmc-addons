@@ -93,10 +93,10 @@
     <string id="31019">Use https</string>
 
     <string id="34017">Always ask</string>
-    <string id="34018">360</string>
-    <string id="34019">480</string>
-    <string id="34020">720</string>
-    <string id="34021">1080</string>
+    <string id="34018">SD[360]</string>
+    <string id="34019">SD[480]</string>
+    <string id="34020">HD[720]</string>
+    <string id="34021">FHD[1080]</string>
     <string id="34022">Search history</string>
     <string id="34023">Number of last search requests</string>
     <string id="34024">Select quality as equal or less</string>
@@ -109,6 +109,8 @@
 	<string id="34031">Failed to load info</string>
 	<string id="34032">Failed to find link to trailer</string>
 	<string id="34033">Movie info</string>
+    <string id="34034">WQHD[1440]</string>
+    <string id="34035">UHD[2160]</string>
 	
 	<string id="37000">[COLOR red]Like this addon?[/COLOR]</string>
 	<string id="37001">Additional</string>

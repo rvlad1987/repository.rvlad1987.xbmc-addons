@@ -213,7 +213,7 @@ class HttpData:
                 if(len(dop_information) > 0):
                     information = '[COLOR white]['+', '.join(dop_information)+'][/COLOR]'
 
-                movieposter = SITE_URL + href.find('img', class_='poster poster-tooltip').get('src')
+                movieposter = href.find('img', class_='poster poster-tooltip').get('src')
 
                 result['data'].append({
                         'url': movie_url,

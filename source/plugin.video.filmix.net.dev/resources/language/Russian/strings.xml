@@ -94,10 +94,10 @@
     <string id="31019">Использовать https</string>
 
     <string id="34017">Всегда спрашивать</string>
-    <string id="34018">360</string>
-    <string id="34019">480</string>
-    <string id="34020">720</string>
-    <string id="34021">1080</string>
+    <string id="34018">SD[360]</string>
+    <string id="34019">SD[480]</string>
+    <string id="34020">HD[720]</string>
+    <string id="34021">FHD[1080]</string>
     <string id="34022">История поиска</string>
     <string id="34023">Количество последних поисковых запросов</string>
     <string id="34024">Выбирать равное или меньшее качество</string>
@@ -110,6 +110,8 @@
 	<string id="34031">Не удалось загрузить информацию</string>
 	<string id="34032">Не удалось найти ссылку на трейлер</string>
 	<string id="34033">Информация о фильме</string>
+    <string id="34034">WQHD[1440]</string>
+    <string id="34035">UHD[2160]</string>
 	
 	<string id="37000">[COLOR red]Нравится плагин?[/COLOR]</string>
 	<string id="37001">Дополнительные</string>

@@ -12,4 +12,4 @@ CACHE_DATABASE = 'filmix.cache.db'
 COOKIE_FILE = 'filmix_cookie.txt'
 
 SORT_TYPES = ['view', 'rate', 'new']
-QUALITYS = [None, '360', '480', '720', '1080']
+QUALITYS = [None, '360', '480', '720', '1080p', '1440p', '2160p']

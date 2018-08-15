@@ -447,7 +447,7 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
         default_quality = QUALITYS[quality_settings]
 
         try:
-            self.params['quality_dir'] = int(self.params['quality_dir'])
+            self.params['quality_dir'] = self.int_quality(self.params['quality_dir'])
         except:
             self.params['quality_dir'] = None
 
@@ -458,22 +458,22 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
 
         if(default_quality != None and self.params['quality_dir'] == None):
             try:
-                test = self.movieInfo['movies'][self.def_dir]['movies'][str(default_quality)]
-                self.params['quality_dir'] = str(default_quality)
+                test = self.movieInfo['movies'][self.def_dir]['movies'][self.str_quality(default_quality)]
+                self.params['quality_dir'] = self.str_quality(default_quality)
             except:
                 if(xbmcup.app.setting['lowest_quality'] == 'true'):
                     quality_settings -= 1
                     if(quality_settings > 1):
                         try:
                             default_quality = str(QUALITYS[quality_settings])
-                            test = self.movieInfo['movies'][self.def_dir]['movies'][default_quality]
+                            test = self.movieInfo['movies'][self.def_dir]['movies'][self.str_quality(default_quality)]
                             self.params['quality_dir'] = default_quality
                         except:
                             quality_settings -= 1
                             if(quality_settings > 1):
                                 try:
                                     default_quality = str(QUALITYS[quality_settings])
-                                    test = self.movieInfo['movies'][self.def_dir]['movies'][default_quality]
+                                    test = self.movieInfo['movies'][self.def_dir]['movies'][self.str_quality(default_quality)]
                                     self.params['quality_dir'] = default_quality
                                 except:
                                     pass
@@ -512,6 +512,30 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
         else:
             self.item(u'[COLOR red]['+self.movieInfo['no_files'].decode('utf-8')+'][/COLOR]', self.link('null'), folder=False, cover=cover.info)
 
+    def int_quality(self, quality):
+        if quality == '1080p':
+            i_quality = 1080
+        elif quality == '1440p':
+            i_quality = 1440
+        elif quality == '2160p':
+            i_quality = 2160
+        else:
+            i_quality = int(quality)
+        return i_quality
+
+    def str_quality(self, quality):
+        if quality == 1080:
+            s_quality = '1080p'
+        elif quality == 1440:
+            s_quality = '1440p'
+        elif quality == 2160:
+            s_quality = '2160p'
+        else:
+            s_quality = str(quality)
+        return s_quality
+
+    def check_proplus_quality(self, quality):
+        return self.int_quality(quality) < 1080 or self.movieInfo['is_proplus'] > 0
 
     def show_episodes(self):
         show_first_quality = False
@@ -525,16 +549,7 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                         if max_episode < movie[2]: max_episode = movie[2]
                 for episode_num in xrange(1, max_episode + 1):
                     for quality in self.movieInfo['movies'][self.def_dir]['movies']:
-                        if quality == '1080p':
-                            i_quality = 1080
-                        elif quality == '1440p':
-                            i_quality = 1440
-                        elif quality == '2160p':
-                            i_quality = 2160
-                        else:
-                            i_quality = int(quality)
-
-                        if int(self.params['quality_dir']) >= i_quality:
+                        if self.int_quality(self.params['quality_dir']) >= self.int_quality(quality) and self.check_proplus_quality(quality):
                             for movie in self.movieInfo['movies'][self.def_dir]['movies'][quality]:
                                 episode_exist = False
                                 for _movie in movies:
@@ -543,7 +558,7 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                                         break
                                 if episode_num == movie[2] and not episode_exist: movies.append(movie)
             else:
-                movies = self.movieInfo['movies'][self.def_dir]['movies'][str(self.params['quality_dir'])]
+                movies = self.movieInfo['movies'][self.def_dir]['movies'][self.str_quality(self.params['quality_dir'])]
         else:
             show_first_quality = True
             movies = self.movieInfo['movies'][self.def_dir]['movies']
@@ -567,8 +582,8 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
 
         resolutions = []
         for movie in movies:
-            if( movie not in ['1080p', '1440p', '2160p'] or self.movieInfo['is_proplus'] > 0):
-                resolutions.append(int( movie ))
+            if( self.check_proplus_quality(movie) ):
+                resolutions.append( self.int_quality(movie) )
 
         resolutions.sort()
 
