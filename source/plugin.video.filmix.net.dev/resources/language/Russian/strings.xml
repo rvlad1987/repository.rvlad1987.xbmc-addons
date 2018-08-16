@@ -93,6 +93,12 @@
     <string id="31018">Домен Filmix'a</string>    
     <string id="31019">Использовать https</string>
 
+    <string id="32001">Кеш успешно очищен</string>
+    <string id="32002">Вы успешно авторизованы</string>
+    <string id="32003">Войти не удалось, проверьте логин и пароль</string>
+    <string id="32004">Вы успешно вышли</string>    
+    <string id="32005">Параметры списков установлены</string>
+
     <string id="34017">Всегда спрашивать</string>
     <string id="34018">SD[360]</string>
     <string id="34019">SD[480]</string>
@@ -118,5 +124,8 @@
 	<string id="37002">Скрыть пункт "Нравится плагин?"</string>
 	<string id="37003">Формировать ссылки на видео для strm-файлов</string>
 	<string id="37004">Вести БД просмотренных эпизодов</string>
+	<string id="37005">Настройки вывода списка:</string>
+	<string id="37006">Количество элементов</string>
+	<string id="37007">Применить настройки вывода</string>
 
 </strings>

@@ -92,6 +92,12 @@
     <string id="31018">Domain Filmix'a</string>    
     <string id="31019">Use https</string>
 
+    <string id="32001">Cache successfully cleared</string>
+    <string id="32002">You have been successfully authorized</string>
+    <string id="32003">Login failed, check login and password</string>
+    <string id="32004">You have successfully signed out</string>    
+    <string id="32005">List options are set</string>
+
     <string id="34017">Always ask</string>
     <string id="34018">SD[360]</string>
     <string id="34019">SD[480]</string>
@@ -117,5 +123,8 @@
 	<string id="37002">Disable "Like this addon?" item</string>
 	<string id="37003">Create links for strm-files</string>
 	<string id="37004">Update database for watched episodes</string>
+	<string id="37005">List display settings:</string>
+	<string id="37006">Amount of elements</string>
+	<string id="37007">Apply output settings</string>
 
 </strings>

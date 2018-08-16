@@ -34,5 +34,9 @@
 		<setting type="text" id="us_command" visible="false" default="keyword=" />
 		<setting id="strm_url" type="bool" visible="true" label="37003" default="false" />
 		<setting id="watched_db" type="bool" visible="true" enable="eq(-1,true)" label="37004" default="false" />
+
+		<setting label="37005" type="lsep"/>
+		<setting label="37006" type="enum" id="per_page_news" default="15" values="15|30|45|60"/>
+		<setting label="37007" type="action" action="RunScript($CWD/settings.py, apply_list_settings)"/>
 	</category>
 </settings>
