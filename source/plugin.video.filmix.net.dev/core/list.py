@@ -41,6 +41,9 @@ class AbstactList(xbmcup.app.Handler, HttpData, Render):
                 else:
                     menu.append([xbmcup.app.lang[30164], self.link('context', {'action': 'del_watch_later', 'id' : movie['id']})])
 
+                if xbmcup.app.setting['library_folder']:
+                    menu.append([xbmcup.app.lang[30176], self.link('generate-strm', {'id': movie['id'], 'url': movie['url']})])
+
                 not_movie = ''
                 if(movie['not_movie'] == True):
                     not_movie = xbmcup.app.lang[34028]+' '

@@ -69,6 +69,8 @@
 	<string id="30171">Failed to add to watched database</string>
 	<string id="30172">Episodes added to database</string>
 	<string id="30175">[COLOR yellow]My news[/COLOR]</string>
+	<string id="30176">Save to .strm</string>
+	<string id="30177">Select path to library</string>
 
 	<!-- Settings -->
 	<string id="31001">General</string>
@@ -126,5 +128,8 @@
 	<string id="37005">List display settings:</string>
 	<string id="37006">Amount of elements</string>
 	<string id="37007">Apply output settings</string>
+
+	<string id="38000">STRM generate</string>
+	<string id="38001">Path to library</string>
 
 </strings>

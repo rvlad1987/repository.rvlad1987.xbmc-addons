@@ -411,7 +411,7 @@ class HttpData:
                 movieInfo['ratingValue'] = 0
                 movieInfo['ratingCount'] = 0
 
-            if r_kinopoisk != '': r_kinopoisk = ' [COLOR orange]Кинопоиск[/COLOR] : '.decode('cp1251') + r_kinopoisk
+            if r_kinopoisk != '': r_kinopoisk = ' [COLOR orange]пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ[/COLOR] : '.decode('cp1251') + r_kinopoisk
 
             if movieInfo['ratingValue'] != 0:
                 r_imdb = ' [COLOR yellow]IMDB[/COLOR] : ' + r_imdb
@@ -590,8 +590,8 @@ class HttpData:
 
     def strip_scripts(self, html):
         html = re.compile(r'<head[^>]*>(.*?)</head>', re.S).sub('<head></head>', html)
-        #удаляет все теги <script></script> и их содержимое
-        #сделал для того, что бы html parser не ломал голову на тегах в js
+        #пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ <script></script> пїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        #пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅ html parser пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ js
         return re.compile(r'<script[^>]*>(.*?)</script>', re.S).sub('', html)
 
     def format_rating(self, rating):

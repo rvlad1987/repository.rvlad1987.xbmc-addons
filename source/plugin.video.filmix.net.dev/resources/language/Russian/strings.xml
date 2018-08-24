@@ -70,6 +70,8 @@
 	<string id="30173">[COLOR yellow]Мои подборки[/COLOR]</string>
 	<string id="30174">Нет подборок</string>
 	<string id="30175">[COLOR yellow]Мои новости[/COLOR]</string>
+	<string id="30176">Созранить в .strm</string>
+	<string id="30177">Укажите путь до библиотеки</string>
 
 	<!-- Settings -->
 	<string id="31001">Общие</string>
@@ -127,5 +129,8 @@
 	<string id="37005">Настройки вывода списка:</string>
 	<string id="37006">Количество элементов</string>
 	<string id="37007">Применить настройки вывода</string>
+
+	<string id="38000">STRM генератор</string>
+	<string id="38001">Путь до библиотеки</string>
 
 </strings>
