@@ -6,10 +6,14 @@ from defines import *
 
 class Auth:
     def __init__(self):
-        self.success = 'AUTH_OK'
+        self.success = 'AUTHORIZED'#'AUTH_OK'
         self.cookie_file = xbmcup.system.fs('sandbox://'+COOKIE_FILE).decode('utf-8')
         self.login = xbmcup.app.setting['username']
         self.password = xbmcup.app.setting['password']
+        try:
+            self.per_page_news = int(xbmcup.app.setting['per_page_news']) * 15 + 15
+        except:
+            self.per_page_news = 15
         #xbmcup.system.fs.delete('sandbox://'+COOKIE_FILE)
 
     def autorize(self):
@@ -20,6 +24,7 @@ class Auth:
             url = '%s/engine/ajax/user_auth.php' % (SITE_URL)
             data = {'login' : 'submit', 'login_name' : self.login, 'login_password' : self.password, 'login_not_save' : '1'}
             response = xbmcup.net.http.post(url, data, verify=False)
+            response.cookies.set('per_page_news', str(self.per_page_news), domain='.'+SITE_DOMAIN)
         except xbmcup.net.http.exceptions.RequestException:
             return False
         else:

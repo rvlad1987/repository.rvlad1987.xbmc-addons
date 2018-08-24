@@ -64,7 +64,12 @@
 	<string id="30167">Не удалось добавить в "Посмотреть позже"</string>
 	<string id="30168">Не удалось удалить из "Посмотреть позже"</string>
 	<string id="30169">Авторизуйтесь, для использования "Посмотреть позже"</string>
-
+	<string id="30170">Всё просмотрено</string>
+	<string id="30171">Не удалось добавить в БД просмотренных</string>
+	<string id="30172">Эпизоды добавлены в БД</string>
+	<string id="30173">[COLOR yellow]Мои подборки[/COLOR]</string>
+	<string id="30174">Нет подборок</string>
+	<string id="30175">[COLOR yellow]Мои новости[/COLOR]</string>
 
 	<!-- Settings -->
 	<string id="31001">Общие</string>
@@ -84,11 +89,21 @@
     
     <string id="31015">Настройки качества</string>
     <string id="31016">Если доступно, автоматически выбирать</string>
+    <string id="31017">Натройки доменного имени</string>
+    <string id="31018">Домен Filmix'a</string>    
+    <string id="31019">Использовать https</string>
+
+    <string id="32001">Кеш успешно очищен</string>
+    <string id="32002">Вы успешно авторизованы</string>
+    <string id="32003">Войти не удалось, проверьте логин и пароль</string>
+    <string id="32004">Вы успешно вышли</string>    
+    <string id="32005">Параметры списков установлены</string>
+
     <string id="34017">Всегда спрашивать</string>
-    <string id="34018">360</string>
-    <string id="34019">480</string>
-    <string id="34020">720</string>
-    <string id="34021">1080</string>
+    <string id="34018">SD[360]</string>
+    <string id="34019">SD[480]</string>
+    <string id="34020">HD[720]</string>
+    <string id="34021">FHD[1080]</string>
     <string id="34022">История поиска</string>
     <string id="34023">Количество последних поисковых запросов</string>
     <string id="34024">Выбирать равное или меньшее качество</string>
@@ -101,10 +116,16 @@
 	<string id="34031">Не удалось загрузить информацию</string>
 	<string id="34032">Не удалось найти ссылку на трейлер</string>
 	<string id="34033">Информация о фильме</string>
+    <string id="34034">WQHD[1440]</string>
+    <string id="34035">UHD[2160]</string>
 	
 	<string id="37000">[COLOR red]Нравится плагин?[/COLOR]</string>
 	<string id="37001">Дополнительные</string>
 	<string id="37002">Скрыть пункт "Нравится плагин?"</string>
 	<string id="37003">Формировать ссылки на видео для strm-файлов</string>
+	<string id="37004">Вести БД просмотренных эпизодов</string>
+	<string id="37005">Настройки вывода списка:</string>
+	<string id="37006">Количество элементов</string>
+	<string id="37007">Применить настройки вывода</string>
 
 </strings>

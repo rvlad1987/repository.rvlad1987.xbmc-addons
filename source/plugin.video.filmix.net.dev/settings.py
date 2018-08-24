@@ -2,12 +2,31 @@
 #очистка кеша
 
 import sys, xbmc, xbmcaddon
-from core.defines import *
-sys.argv[0] = PLUGIN_ID
+
+sys.argv[0] = 'plugin.video.filmix.net.dev'#PLUGIN_ID
 import os, xbmcup.app, xbmcup.system, xbmcup.db, xbmcup.gui
+from core.defines import *
 
 from core.auth import Auth
 import core.cover
+
+
+# log = open(xbmcup.system.fs('sandbox://myprog.log').decode('utf-8'), "a")
+# sys.stdout = log
+
+def clear_cache_db():
+    CACHE = xbmcup.db.Cache(xbmcup.system.fs('sandbox://'+CACHE_DATABASE))
+    CACHE.flush()
+    SQL = xbmcup.db.SQL(xbmcup.system.fs('sandbox://'+CACHE_DATABASE))
+    try:
+        SQL.set('DELETE FROM search')
+    except:
+        pass
+
+
+def show_message(key):
+    xbmcup.gui.message( xbmcup.app.lang[key].encode('utf-8') )
+
 
 def openAddonSettings(addonId, id1=None, id2=None):
     xbmc.executebuiltin('Addon.OpenSettings(%s)' % addonId)
@@ -17,26 +36,26 @@ def openAddonSettings(addonId, id1=None, id2=None):
         xbmc.executebuiltin('SetFocus(%i)' % (id2 + 100))
 
 if(sys.argv[1] == 'clear_cache'):
-    CACHE = xbmcup.db.Cache(xbmcup.system.fs('sandbox://'+CACHE_DATABASE))
-    CACHE.flush()
-    SQL = xbmcup.db.SQL(xbmcup.system.fs('sandbox://'+CACHE_DATABASE))
-    try:
-        SQL.set('DELETE FROM search')
-    except:
-        pass
-    xbmcup.gui.message('Кеш успешно очищен')
+    clear_cache_db()
+    show_message(32001)
 
 if(sys.argv[1] == 'login'):
     is_logged = Auth().autorize()
     if(is_logged):
-        xbmcup.gui.message('Вы успешно авторизованы')
+        show_message(32002)
     else:
-        xbmcup.gui.message('Войти не удалось, проверьте логин и пароль')
+        show_message(32003)
     openAddonSettings(PLUGIN_ID, 1, 0)
 
 
 if(sys.argv[1] == 'logout'):
     Auth().reset_auth(True)
-    xbmcup.gui.message('Вы успешно вышли')
+    show_message(32004)
+    openAddonSettings(PLUGIN_ID, 1, 0)
+
+
+if(sys.argv[1] == 'apply_list_settings'):
+    clear_cache_db()
+    show_message(32005)
     openAddonSettings(PLUGIN_ID, 1, 0)
 

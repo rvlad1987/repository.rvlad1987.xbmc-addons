@@ -6,6 +6,7 @@ import xbmc, cover, xbmcplugin, xbmcgui
 from common import Render
 from auth import Auth
 from defines import *
+from watched_db import Watched
 from itertools import izip_longest
 
 try:
@@ -86,6 +87,55 @@ class HttpData:
         else:
             return response.text if response.status_code == 200 else None
 
+
+    def get_my_news(self, url, page, idname='dle-content', nocache=False, search="", itemclassname="shortstory"):
+        page = int(page)
+
+        url = SITE_URL+"/api/notifications/get"
+
+        if(page > 0 and search == ''):
+            page += 1
+        else:
+            page = 1
+
+        post_data={'page' : page}
+
+        html = self.ajax(url, post_data, SITE_URL + '/')
+
+        if not html:
+            return None, {'page': {'pagenum' : 0, 'maxpage' : 0}, 'data': []}
+        result = {'page': {'pagenum' : page, 'maxpage' : 10000}, 'data': []}
+
+        try:
+            json_result = json.loads(html)
+            result['page']['maxpage'] = len(json_result['message']['items'])
+
+            for item_news in json_result['message']['items']:
+                movie_name = item_news['data']['movie_name']
+                movie_url = item_news['data']['movie_link']
+                movie_id = item_news['id']
+                quality_s = item_news['date_string']
+                dop_info = 'S'+str(item_news['data']['season']) + 'E'+ str(item_news['data']['episode'])
+                not_movie = False
+
+                result['data'].append({
+                        'url': movie_url,
+                        'id': movie_id,
+                        'not_movie': not_movie,
+                        'quality': '[COLOR ff3BADEE]'+quality_s+'[/COLOR]',
+                        'year': '[COLOR ffFFB119]'+dop_info+'[/COLOR]',
+                        'name': movie_name.strip(),
+                        'img': None
+                    })
+        except:
+            print traceback.format_exc()
+
+        if(nocache):
+            return None, result
+        else:
+            return cache_minutes, result
+
+
     def get_movies(self, url, page, idname='dle-content', nocache=False, search="", itemclassname="shortstory"):
         page = int(page)
 
@@ -163,7 +213,7 @@ class HttpData:
                 if(len(dop_information) > 0):
                     information = '[COLOR white]['+', '.join(dop_information)+'][/COLOR]'
 
-                movieposter = href.find('img', class_='poster').get('src')
+                movieposter = href.find('img', class_='poster poster-tooltip').get('src')
 
                 result['data'].append({
                         'url': movie_url,
@@ -228,6 +278,25 @@ class HttpData:
         except:
             return '0'.split()
 
+    def get_collections_info(self):
+        html = self.load(COLLECTIONS_URL)
+        collectionsInfo = []
+        
+        html = html.encode('utf-8')
+        soup = xbmcup.parser.html(self.strip_scripts(html))
+        
+        collections = soup.find_all('a', class_='poster-link poster-hover')
+        for collection in collections:
+            url_collection = collection.get('href').replace(SITE_URL,'')
+            obj_poster = collection.find(class_ = 'poster')
+            title_collection = obj_poster.get('alt')
+            img_collection = obj_poster.get('src')
+            if img_collection.find('/none.png') > 0: img_collection = cover.treetv
+            
+            collectionsInfo.append({'url':url_collection, 'img':img_collection, 'title':title_collection});
+
+        return collectionsInfo
+
     def get_movie_info(self, url):
         html = self.load(url)
 
@@ -256,11 +325,14 @@ class HttpData:
         try:
             try:
                 film_id = re.compile('film_id ?= ?([\d]+);', re.S).findall(html)[0].decode('string_escape').decode('utf-8')
+                movieInfo['movie_id'] = int( film_id )
                 js_string = self.ajax(SITE_URL+'/api/movies/player_data', {'post_id' : film_id}, url)
                 # print js_string
                 player_data =  json.loads(js_string, 'utf-8')
                 # player_data = player_data['message']['translations']['flash']
                 player_data = player_data['message']['translations']['html5']
+                if player_data == []:
+                    movieInfo['no_files'] = xbmcup.app.lang[34026].encode('utf8')
             except:
                 movieInfo['no_files'] = xbmcup.app.lang[34026].encode('utf8')
                 raise
@@ -273,7 +345,7 @@ class HttpData:
                     playlist = self.decode_direct_media_url(self.load(js_string))
 
                     movies = json.loads(playlist, 'utf-8')
-
+                    # print movies
                     for season in movies['playlist']:
                         current_movie = {'folder_title' : season['comment']+' ('+translate+')', 'movies': {}}
 
@@ -325,28 +397,40 @@ class HttpData:
                 movieInfo['originaltitle'] = ''
 
             try:
-                r_kinopoisk = soup.find('span', class_='kinopoisk btn-tooltip icon-kinopoisk').find('div').get_text().strip()
-                if r_kinopoisk == '0': r_kinopoisk = '-'
+                r_kinopoisk = soup.find('span', class_='kinopoisk btn-tooltip icon-kinopoisk').find('p').get_text().strip()
+                if float(r_kinopoisk) == 0: r_kinopoisk = ''
             except:
-                r_kinopoisk = '-'
+                r_kinopoisk = ''
 
             try:
-                r_imdb = soup.find('span', class_='imdb btn-tooltip icon-imdb').find('div').get_text().strip()
-                if r_imdb == '0': r_imdb = '-'
+                r_imdb = soup.find('span', class_='imdb btn-tooltip icon-imdb').find('p').get_text().strip()
+                movieInfo['ratingValue'] = float(r_imdb)
+                movieInfo['ratingCount'] = r_imdb
             except:
-                r_imdb = '-'
+                r_imdb = ''
+                movieInfo['ratingValue'] = 0
+                movieInfo['ratingCount'] = 0
 
+            if r_kinopoisk != '': r_kinopoisk = ' [COLOR orange]Кинопоиск[/COLOR] : '.decode('cp1251') + r_kinopoisk
+
+            if movieInfo['ratingValue'] != 0:
+                r_imdb = ' [COLOR yellow]IMDB[/COLOR] : ' + r_imdb
+            else:
+                r_imdb = ''
+
+            s_rating = r_kinopoisk + r_imdb + ' \n '
+            
             try:
-                movieInfo['description'] = '[COLOR orange]Кинопоиск[/COLOR] : '.decode('cp1251') + r_kinopoisk + ' [COLOR yellow]IMDB[/COLOR] : ' +r_imdb + '\n' + soup.find('div', class_='full-story').get_text().strip()
+                movieInfo['description'] = s_rating + soup.find('div', class_='full-story').get_text().strip()
             except:
                 movieInfo['description'] = ''
 
             try:
-                movieInfo['fanart'] = SITE_URL+soup.find('ul', class_='frames-list').find('a').get('href')
+                movieInfo['fanart'] = SITE_URL + soup.find('ul', class_='frames-list').find('a').get('href')
             except:
                 movieInfo['fanart'] = ''
             try:
-                movieInfo['cover'] = soup.find('img', class_='poster poster-tooltip').get('src')
+                movieInfo['cover'] = soup.find('a', class_='fancybox').get('href')
             except:
                 movieInfo['cover'] = ''
 
@@ -370,15 +454,15 @@ class HttpData:
             except:
                 movieInfo['durarion'] = ''
 
-            try:
-                movieInfo['ratingValue'] = float(soup.find(attrs={'itemprop' : 'ratingValue'}).get_text())
-            except:
-                movieInfo['ratingValue'] = 0
+            # try:
+                # movieInfo['ratingValue'] = float(soup.find(attrs={'itemprop' : 'ratingValue'}).get_text())
+            # except:
+                # movieInfo['ratingValue'] = 0
 
-            try:
-                movieInfo['ratingCount'] = int(soup.find(attrs={'itemprop' : 'ratingCount'}).get_text())
-            except:
-                movieInfo['ratingCount'] = 0
+            # try:
+                # movieInfo['ratingCount'] = int(soup.find(attrs={'itemprop' : 'ratingCount'}).get_text())
+            # except:
+                # movieInfo['ratingCount'] = 0
 
             try:
                 movieInfo['director'] = []
@@ -425,7 +509,7 @@ class HttpData:
              movieInfo['title'] = '%s / %s' % (movieInfo['title'],  movieInfo['originaltitle'])
 
         try:
-            movieInfo['poster'] = soup.find('img', class_='poster').get('src')
+            movieInfo['poster'] = soup.find('img', class_='poster poster-tooltip').get('src')
         except:
             movieInfo['poster'] = ''
 
@@ -461,7 +545,7 @@ class HttpData:
 
         try:
             desc = soup.find('div', class_='full-story').get_text().strip()
-            movieInfo['desc'] += '\n[COLOR blue]%s[/COLOR]\n%s' % (xbmcup.app.lang[34027], desc)
+            movieInfo['desc'] = '\n[COLOR blue]%s[/COLOR]\n%s' % (xbmcup.app.lang[34027], desc) + '\n' + movieInfo['desc']
         except:
             movieInfo['desc'] = traceback.format_exc()
 
@@ -589,6 +673,16 @@ class HttpData:
 
         return info
 
+    def get_movie_id(self, url):
+        result = re.findall(r'\/([\d]+)\-', url)
+        
+        try:
+            result = int(result[0])
+        except:
+            result = 0
+            
+        return result
+
 class ResolveLink(xbmcup.app.Handler, HttpData):
 
     playerKeyParams = {
@@ -611,8 +705,9 @@ class ResolveLink(xbmcup.app.Handler, HttpData):
                     if(q == resolution):
                         if(movies['folder_title'] == folder or folder == ''):
                             for episode in movies['movies'][q]:
-#                                if isinstance(episode, basestring):
-#                                    if episode.find(self.params['file']) != -1: return episode
-#                                else:
-                                if episode[0].find(self.params['file']) != -1: return episode[0]
-        return None        
+                                if episode[0].find( self.params['file'] ) != -1: 
+                                    movie_id = self.get_movie_id( movieInfo['page_url'] )
+                                    if movie_id != 0 and xbmcup.app.setting['watched_db'] == 'true' and xbmcup.app.setting['strm_url'] == 'true':
+                                        Watched().set_watched( movie_id, season=episode[1], episode=episode[2] )
+                                    return episode[0]
+        return None

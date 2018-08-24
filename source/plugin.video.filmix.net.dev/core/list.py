@@ -7,6 +7,7 @@ from http import HttpData
 from auth import Auth
 from common import Render
 from defines import *
+from watched_db import Watched
 
 try:
     from sqlite3 import dbapi2 as sqlite
@@ -16,12 +17,20 @@ except:
 CACHE = xbmcup.db.Cache(xbmcup.system.fs('sandbox://'+CACHE_DATABASE))
 SQL = xbmcup.db.SQL(xbmcup.system.fs('sandbox://'+CACHE_DATABASE))
 
+# fix if cache file delete
+SQL.set('CREATE TABLE IF NOT EXISTS cache(id varchar(255) unique, expire integer, data blob)')
+SQL.set('CREATE INDEX IF NOT EXISTS dataindex ON cache(expire)')
+
 class AbstactList(xbmcup.app.Handler, HttpData, Render):
     def add_movies(self, response, ifempty=30111):
         if(len(response['data']) > 0):
             for movie in response['data']:
                 menu = []
+                
                 menu.append([xbmcup.app.lang[34033], self.link('context', {'action': 'show_movieinfo', 'movie' : movie})])
+                if xbmcup.app.setting['watched_db'] == 'true' and xbmcup.app.setting['strm_url'] == 'true':
+                    menu.append([xbmcup.app.lang[30170], self.link('context', {'action': 'add_episodes_to_watched_db', 'movie' : movie})])
+
                 if(self.__class__.__name__ != 'BookmarkList'):
                     menu.append([xbmcup.app.lang[30147], self.link('context', {'action': 'add_bookmark', 'id' : movie['id']})])
                 else:
@@ -156,7 +165,7 @@ class SearchList(AbstactList):
         response = CACHE(str(md5.hexdigest()), self.get_movies, page_url, page, '', False, usersearch)
         '''
         post_data={'search_word' : params['vsearch']}
-        post_result = self.ajax('https://filmix.me/api/search/suggest',post_data)
+        post_result = self.ajax(SITE_URL + '/api/search/suggest',post_data, SITE_URL + '/')
         json_result = json.loads(post_result)
         # print json_result
         response = {'page': {}, 'data': []}
@@ -228,7 +237,7 @@ class BookmarkList(AbstactList):
     def show_movies(self, url, page):
         params = {}
         params['url'] = url
-        url = 'favorites'
+        url = 'favorites'#'playlist/22517-pervyy'#'favorites'
         md5 = hashlib.md5()
         md5.update(url+'?v='+xbmcup.app.addon['version'])
         response = CACHE(str(md5.hexdigest()), self.get_movies, url, page, 'dle-content', True)
@@ -295,6 +304,112 @@ class Watch_Later(AbstactList):
             self.item(u'[COLOR green]'+xbmcup.app.lang[30107]+'[/COLOR]', self.replace('watch_later', params), cover=cover.next, folder=True)
 
 
+class My_News(AbstactList):
+
+    def handle(self):
+        Auth().autorize()
+
+        try:
+            params = self.argv[0]
+        except:
+            params = {}
+
+        try:
+            url = params['url']
+        except:
+            url = ''
+
+        try:
+            page = params['page']
+        except:
+            page = 0
+
+        if(xbmcup.app.setting['is_logged'] == 'false'):
+            xbmcup.gui.message(xbmcup.app.lang[30149].encode('utf-8'))
+            return False
+
+        self.show_news(url, page)
+        self._variables['is_item'] = False
+        self.render(cache=False)
+
+
+    def show_news(self, url, page):
+        params = {}
+        params['url'] = url
+        url = 'my_news'
+        md5 = hashlib.md5()
+        md5.update(url+'?v='+xbmcup.app.addon['version'])
+        response = CACHE(str(md5.hexdigest()), self.get_my_news, url, page, 'dle-content', True)
+        
+        if(page > 0):
+            params['page'] = page-1
+            self.item('[COLOR green]'+xbmcup.app.lang[30106]+'[/COLOR]', self.replace('my_news', params), cover=cover.prev, folder=True)
+            params['page'] = page+1
+
+        self.add_movies(response, 30152)
+
+        params['page'] = page+1
+        if(response['page']['maxpage'] >= response['page']['pagenum']+1):
+            self.item(u'[COLOR green]'+xbmcup.app.lang[30107]+'[/COLOR]', self.replace('my_news', params), cover=cover.next, folder=True)
+
+
+class Collections(AbstactList):
+
+    def handle(self):
+        Auth().autorize()
+
+        try:
+            params = self.argv[0]
+        except:
+            params = {}
+
+        try:
+            url = params['url']
+        except:
+            url = ''
+
+        try:
+            page = params['page']
+        except:
+            page = 0
+
+        if(xbmcup.app.setting['is_logged'] == 'false'):
+            xbmcup.gui.message(xbmcup.app.lang[30149].encode('utf-8'))
+            return False
+
+        if url == '':
+            collectionsInfo = self.get_collections_info()
+            if collectionsInfo == []:
+                self.item(u'[COLOR red]['+xbmcup.app.lang[30174]+'][/COLOR]', self.link('null'), folder=False, cover=cover.info)
+            else:            
+                for collectionInfo in collectionsInfo:
+                    self.item(collectionInfo['title'], self.link('collections',  {'url' : collectionInfo['url']}), folder=True, cover=collectionInfo['img'])
+        else:
+            self.show_movies(url, page)
+
+        self._variables['is_item'] = False
+        self.render(cache=False)
+
+
+    def show_movies(self, url, page):
+        params = {}
+        params['url'] = url
+        md5 = hashlib.md5()
+        md5.update(url+'?v='+xbmcup.app.addon['version'])
+        response = CACHE(str(md5.hexdigest()), self.get_movies, url, page, 'dle-content', True)
+        
+        if(page > 0):
+            params['page'] = page-1
+            self.item('[COLOR green]'+xbmcup.app.lang[30106]+'[/COLOR]', self.replace('collections', params), cover=cover.prev, folder=True)
+            params['page'] = page+1
+
+        self.add_movies(response, 34026)
+
+        params['page'] = page+1
+        if(response['page']['maxpage'] >= response['page']['pagenum']+1):
+            self.item(u'[COLOR green]'+xbmcup.app.lang[30107]+'[/COLOR]', self.replace('collections', params), cover=cover.next, folder=True)
+
+
 
 class QualityList(xbmcup.app.Handler, HttpData, Render):
     movieInfo = None
@@ -310,14 +425,18 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
 
         # fix for old versions
         if 'movieInfo' in self.params and 'movie_page' not in self.params:
-            self.params['movie_page'] = self.params['movieInfo']['url'][2][0]['movieInfo']['page_url']
+            self.params['movie_page'] = self.params['movieInfo']['page_url']
             del self.params['movieInfo']
 
-        cache_key = 'movieInfo:%s' % self.params['movie_page']
+        md5 = hashlib.md5()
+        md5.update( 'movieInfo:%s?v=%s' % (self.params['movie_page'], xbmcup.app.addon['version']) )
+        cache_key = str( md5.hexdigest() )
         self.movieInfo = CACHE.get(cache_key)[cache_key]
+        # print 'try get from cache :', cache_key
         if not self.params.get('cache') or not self.movieInfo:
             self.movieInfo = self.get_movie_info(self.params['movie_page'])
-            CACHE.set('movieInfo:%s' % self.params['movie_page'], self.movieInfo, 60*60)
+            CACHE.set(cache_key, self.movieInfo, 60*60)
+            # print 'set to cache :', cache_key
 
         try:
             self.params['sub_dir'] = int(self.params['sub_dir'])
@@ -328,7 +447,7 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
         default_quality = QUALITYS[quality_settings]
 
         try:
-            self.params['quality_dir'] = int(self.params['quality_dir'])
+            self.params['quality_dir'] = str(self.params['quality_dir'])
         except:
             self.params['quality_dir'] = None
 
@@ -339,25 +458,21 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
 
         if(default_quality != None and self.params['quality_dir'] == None):
             try:
-                test = self.movieInfo['movies'][self.def_dir]['movies'][str(default_quality)]
-                self.params['quality_dir'] = str(default_quality)
+                test = self.movieInfo['movies'][self.def_dir]['movies'][default_quality]
+                self.params['quality_dir'] = default_quality
             except:
                 if(xbmcup.app.setting['lowest_quality'] == 'true'):
-                    quality_settings -= 1
-                    if(quality_settings > 1):
+                    while True:
                         try:
-                            default_quality = str(QUALITYS[quality_settings])
+                            default_quality = QUALITYS[quality_settings]
                             test = self.movieInfo['movies'][self.def_dir]['movies'][default_quality]
                             self.params['quality_dir'] = default_quality
+                            break
                         except:
-                            quality_settings -= 1
-                            if(quality_settings > 1):
-                                try:
-                                    default_quality = str(QUALITYS[quality_settings])
-                                    test = self.movieInfo['movies'][self.def_dir]['movies'][default_quality]
-                                    self.params['quality_dir'] = default_quality
-                                except:
-                                    pass
+                            pass
+                        quality_settings -= 1
+                        if(quality_settings < 0):
+                            break
 
         #если на сайте несколько папок с файлами
         if((len(self.movieInfo['movies']) > 1 and self.params['sub_dir'] == None) or self.movieInfo['no_files'] != None):
@@ -393,6 +508,19 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
         else:
             self.item(u'[COLOR red]['+self.movieInfo['no_files'].decode('utf-8')+'][/COLOR]', self.link('null'), folder=False, cover=cover.info)
 
+    def int_quality(self, quality):
+        if quality == '1080p':
+            i_quality = 1080
+        elif quality == '1440p':
+            i_quality = 1440
+        elif quality == '2160p':
+            i_quality = 2160
+        else:
+            i_quality = int(quality)
+        return i_quality
+
+    def check_proplus_quality(self, quality):
+        return self.int_quality(quality) < 1080 or self.movieInfo['is_proplus'] > 0
 
     def show_episodes(self):
         show_first_quality = False
@@ -404,14 +532,10 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                 for quality in self.movieInfo['movies'][self.def_dir]['movies']:
                     for movie in self.movieInfo['movies'][self.def_dir]['movies'][quality]:
                         if max_episode < movie[2]: max_episode = movie[2]
-                for episode_num in xrange(1, max_episode + 1):
-                    for quality in self.movieInfo['movies'][self.def_dir]['movies']:
-                        if quality == '1080p':
-                            i_quality = 1080
-                        else:
-                            i_quality = int(quality)
-
-                        if int(self.params['quality_dir']) >= i_quality:
+                
+                for episode_num in xrange( 1, max_episode + 1 ):
+                    for quality in sorted( self.movieInfo['movies'][self.def_dir]['movies'].keys(), key = lambda x: self.int_quality( x ), reverse=True ):#self.movieInfo['movies'][self.def_dir]['movies']:
+                        if self.int_quality(self.params['quality_dir']) >= self.int_quality(quality) and self.check_proplus_quality(quality):
                             for movie in self.movieInfo['movies'][self.def_dir]['movies'][quality]:
                                 episode_exist = False
                                 for _movie in movies:
@@ -420,11 +544,12 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                                         break
                                 if episode_num == movie[2] and not episode_exist: movies.append(movie)
             else:
-                movies = self.movieInfo['movies'][self.def_dir]['movies'][str(self.params['quality_dir'])]
+                movies = self.movieInfo['movies'][self.def_dir]['movies'][self.params['quality_dir']]
         else:
             show_first_quality = True
             movies = self.movieInfo['movies'][self.def_dir]['movies']
 
+        print movies
         if(show_first_quality):
             for quality in movies:
                 for movie in movies[quality]:
@@ -444,13 +569,13 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
 
         resolutions = []
         for movie in movies:
-            if(movie != "1080p" or self.movieInfo['is_proplus'] > 0):
-                resolutions.append(int(movie))
+            if( self.check_proplus_quality(movie) ):
+                resolutions.append( movie )
 
         resolutions.sort()
 
         for movie in resolutions:
-            self.item((str(movie) if movie != 0 else 'FLV'),
+            self.item((movie if movie != '0' else 'FLV'),
                 self.link('quality-list',
                     {
                         'sub_dir' : self.params['sub_dir'],
@@ -468,9 +593,9 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                 'Genre'     : self.movieInfo['genres'],
                 'year'      : self.movieInfo['year'],
                 'director'  : self.movieInfo['director'],
-                'rating'    : self.movieInfo['ratingValue'],
+                # 'rating'    : self.movieInfo['ratingValue'],
                 'duration'  : self.movieInfo['durarion'],
-                'votes'     : self.movieInfo['ratingCount'],
+                # 'votes'     : self.movieInfo['ratingCount'],
                 'plot'      : self.movieInfo['description'],
                 'title'     : self.movieInfo['title'],
                 'originaltitle' : self.movieInfo['title']
@@ -479,21 +604,29 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                 # 'count' : 12
             }
 
-    def get_info_strm(self):
-        return {
+    def get_info_strm(self, movie):
+        info = {
                 'Genre'     : self.movieInfo['genres'],
                 'year'      : self.movieInfo['year'],
+                # 'rating'    : self.movieInfo['ratingValue'],
+                # 'userrating'    : int(self.movieInfo['ratingValue']),
+                'duration'  : self.movieInfo['durarion'],
+                # 'votes'     : self.movieInfo['ratingCount'],
                 'director'  : self.movieInfo['director'],
-                #'rating'    : self.movieInfo['ratingValue'],
-                #'duration'  : self.movieInfo['durarion'],
-                #'votes'     : self.movieInfo['ratingCount'],
+                # 'title'     : self.movieInfo['title'],
                 'plot'      : self.movieInfo['description'][:350]+u'...'
-                #'title'     : self.movieInfo['title'],
-                #'originaltitle' : self.movieInfo['title']
-                # 'playcount' : 1,
-                # 'date': '%d.%m.%Y',
-                # 'count' : 12
-            }
+                }
+
+        if xbmcup.app.setting['watched_db'] == 'true' and xbmcup.app.setting['strm_url'] == 'true':
+            try:
+                movie_id = self.movieInfo['movie_id']
+            except:
+                movie_id = self.get_movie_id( self.movieInfo['page_url'] )
+            
+            if Watched().is_watched( movie_id, movie[1], movie[2] ):
+                info['playcount'] = 1
+
+        return info
 
     def get_name(self, file_name):
         result = re.match(r'^(.*?)(?:s(?P<s>\d+))?(?:e(?P<e>[\d-]+))?(?:_(?P<q>\d+))?$', file_name)
@@ -503,7 +636,8 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
         return file_name
 
     def add_playable_item(self, movie):
-        file_name = os.path.basename( os.path.splitext(str(movie[0]))[0] )
+        file_name        = os.path.basename( os.path.splitext(str(movie[0]))[0] )
+        filmix_file_name = file_name
 
         try:
             file_name = self.get_name(file_name)
@@ -533,7 +667,7 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                             'page_url'      : self.movieInfo['page_url'],
                             'resolution'    : quality,
                             'folder'        : folder_title,
-                            'file'          : file_name
+                            'file'          : filmix_file_name
                         }
             )
 
@@ -541,7 +675,7 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
                                play_url,
                                folder=False,
                                media='video',
-                               info=self.get_info_strm(),
+                               info=self.get_info_strm(movie),
                                cover = self.movieInfo['cover'],
                                fanart = self.movieInfo['fanart']
             )

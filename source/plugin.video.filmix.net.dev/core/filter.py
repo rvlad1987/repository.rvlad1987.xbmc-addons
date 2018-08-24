@@ -10,6 +10,12 @@ from http import HttpData
 
 CACHE = xbmcup.db.Cache(xbmcup.system.fs('sandbox://'+CACHE_DATABASE))
 
+# fix if cache file delete
+SQL = xbmcup.db.SQL(xbmcup.system.fs('sandbox://'+CACHE_DATABASE))
+SQL.set('CREATE TABLE IF NOT EXISTS cache(id varchar(255) unique, expire integer, data blob)')
+SQL.set('CREATE INDEX IF NOT EXISTS dataindex ON cache(expire)')
+del SQL
+
 #кешируем загружаемые фильтры на неделю
 CACHE_TIME = 60*60*24*7
 
@@ -127,7 +133,7 @@ class Filter(FilterData, AbstactList):
         award       = filter.get('awards',   [xbmcup.app.lang[30136]])
         production  = filter.get('productions', [xbmcup.app.lang[30136]])
 
-        print filter
+        # print filter
 
         self.item(xbmcup.app.lang[30128] % rubric[0],      self.replace('filter', {'window' : 'rubrics', 'filter' : filter}),  folder=True, cover=cover.search)
         self.item(xbmcup.app.lang[30129] % genre[0],       self.replace('filter', {'window' : 'genre',   'filter' : filter}),  folder=True, cover=cover.search)
