@@ -3,6 +3,7 @@
 import urlparse, urllib,sys, xbmc,traceback
 
 #process STRM files
+
 split_vars = sys.argv[0].split('/')
 if(split_vars[-1] == 'play'):
     split_vars[-1] = ''
@@ -34,6 +35,7 @@ from core.http import ResolveLink
 from core.filter import Filter
 from core.context import ContextMenu
 from core.donate import Donate
+from core.strm_generator import STRMGenerator
 
 # log = open(xbmcup.system.fs('sandbox://myprog.log').decode('utf-8'), "a")
 # sys.stdout = log
@@ -52,5 +54,6 @@ plugin.route('collections', Collections)
 plugin.route('context', ContextMenu)
 plugin.route('resolve', ResolveLink)
 plugin.route('donate', Donate)
+plugin.route('generate-strm', STRMGenerator)
 
 plugin.run()

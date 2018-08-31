@@ -39,4 +39,8 @@
 		<setting label="37006" type="enum" id="per_page_news" default="15" values="15|30|45|60"/>
 		<setting label="37007" type="action" action="RunScript($CWD/settings.py, apply_list_settings)"/>
 	</category>
+
+	<category label="38000">
+		<setting id="library_folder" type="folder" label="38001" source="auto" option="writeable"/>
+	</category>
 </settings>
