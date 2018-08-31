@@ -213,7 +213,7 @@ class HttpData:
                 if(len(dop_information) > 0):
                     information = '[COLOR white]['+', '.join(dop_information)+'][/COLOR]'
 
-                movieposter = href.find('img', class_='poster poster-tooltip').get('src')
+                movieposter = self.format_poster_link( href.find('img', class_='poster poster-tooltip').get('src') )
 
                 result['data'].append({
                         'url': movie_url,
@@ -267,6 +267,12 @@ class HttpData:
         except:
             return False
 
+    def format_poster_link(self, link):
+        # fix for .cc
+        r_link = link.replace('https://filmix.co' , SITE_URL)
+        # fix for .live .co .net
+        return r_link if r_link.find( SITE_URL ) != -1 else SITE_URL + r_link
+
     def format_direct_link(self, source_link, q):
         regex = re.compile("\[([^\]]+)\]", re.IGNORECASE)
         return regex.sub(q, source_link)
@@ -290,7 +296,7 @@ class HttpData:
             url_collection = collection.get('href').replace(SITE_URL,'')
             obj_poster = collection.find(class_ = 'poster')
             title_collection = obj_poster.get('alt')
-            img_collection = obj_poster.get('src')
+            img_collection = self.format_poster_link( obj_poster.get('src') )
             if img_collection.find('/none.png') > 0: img_collection = cover.treetv
             
             collectionsInfo.append({'url':url_collection, 'img':img_collection, 'title':title_collection});
@@ -411,7 +417,7 @@ class HttpData:
                 movieInfo['ratingValue'] = 0
                 movieInfo['ratingCount'] = 0
 
-            if r_kinopoisk != '': r_kinopoisk = ' [COLOR orange]пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ[/COLOR] : '.decode('cp1251') + r_kinopoisk
+            if r_kinopoisk != '': r_kinopoisk = ' [COLOR orange]Кинопоиск[/COLOR] : '.decode('cp1251') + r_kinopoisk
 
             if movieInfo['ratingValue'] != 0:
                 r_imdb = ' [COLOR yellow]IMDB[/COLOR] : ' + r_imdb
@@ -509,7 +515,7 @@ class HttpData:
              movieInfo['title'] = '%s / %s' % (movieInfo['title'],  movieInfo['originaltitle'])
 
         try:
-            movieInfo['poster'] = soup.find('img', class_='poster poster-tooltip').get('src')
+            movieInfo['poster'] = self.format_poster_link( soup.find('img', class_='poster poster-tooltip').get('src') )
         except:
             movieInfo['poster'] = ''
 
@@ -590,8 +596,8 @@ class HttpData:
 
     def strip_scripts(self, html):
         html = re.compile(r'<head[^>]*>(.*?)</head>', re.S).sub('<head></head>', html)
-        #пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ <script></script> пїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-        #пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅ html parser пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ js
+        #удаляет все теги <script></script> и их содержимое
+        #сделал для того, что бы html parser не ломал голову на тегах в js
         return re.compile(r'<script[^>]*>(.*?)</script>', re.S).sub('', html)
 
     def format_rating(self, rating):
