@@ -23,7 +23,7 @@ class STRMGenerator(xbmcup.app.Handler, HttpData):
 
         self.lib_folder = xbmcup.app.setting['library_folder']
         if not self.lib_folder:
-            xbmcup.gui.message(xbmcup.app.lang[30176])
+            xbmcup.gui.message(xbmcup.app.lang[30176].encode('utf-8'))
             return
 
         self.movieInfo = self.get_movie_info(params['url'])
@@ -44,7 +44,7 @@ class STRMGenerator(xbmcup.app.Handler, HttpData):
                 for episode in episodes:
                     episode_file_name = self.generate_strm(episode)
                     self.generate_episode_nfo(episode_file_name)
-                xbmcup.gui.message(xbmcup.app.lang[30181].format(len(episodes)))
+                xbmcup.gui.message(xbmcup.app.lang[30181].format(len(episodes)).encode('utf-8'))
             else:
                 episodes = self.get_episodes()
                 if episodes:
@@ -57,7 +57,7 @@ class STRMGenerator(xbmcup.app.Handler, HttpData):
                     self.generate_movie_nfo(movie_file_name)
 
         except CancelSave:
-            xbmcup.gui.message(xbmcup.app.lang[30180])
+            xbmcup.gui.message(xbmcup.app.lang[30180].encode('utf-8'))
 
     def get_episodes(self):
         quality_settings = int(xbmcup.app.setting['quality'] or 4)
