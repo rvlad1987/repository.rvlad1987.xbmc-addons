@@ -70,8 +70,11 @@
 	<string id="30173">[COLOR yellow]Мои подборки[/COLOR]</string>
 	<string id="30174">Нет подборок</string>
 	<string id="30175">[COLOR yellow]Мои новости[/COLOR]</string>
-	<string id="30176">Созранить в .strm</string>
+	<string id="30176">Сохранить</string>
 	<string id="30177">Укажите путь до библиотеки</string>
+	<string id="30179">{} - Сезонов: {}</string>
+	<string id="30180">Отмена</string>
+	<string id="30181">Сохранено {} эпизодов</string>
 
 	<!-- Settings -->
 	<string id="31001">Общие</string>

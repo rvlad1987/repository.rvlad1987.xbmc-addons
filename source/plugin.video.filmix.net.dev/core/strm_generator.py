@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import codecs
 import json
@@ -7,10 +6,15 @@ import os
 import re
 import sys
 import urllib
+from collections import Counter
 
 import xbmcup
 from core.defines import QUALITYS
 from core.http import HttpData
+
+
+class CancelSave(Exception):
+    pass
 
 
 class STRMGenerator(xbmcup.app.Handler, HttpData):
@@ -23,24 +27,48 @@ class STRMGenerator(xbmcup.app.Handler, HttpData):
             return
 
         self.movieInfo = self.get_movie_info(params['url'])
+        # xbmc.log(json.dumps(self.movieInfo, indent=2), level=7)
 
-        self.folder = os.path.join(self.lib_folder, 'Shows',
-                                   self.movieInfo.get('originaltitle', '') or self.movieInfo['title'])
-        if not os.path.exists(self.folder):
-            os.mkdir(self.folder)
+        try:
 
-        self.generate_tvshow_nfo()
-        episodes = self.get_episodes()
-        for episode in episodes:
-            episode_file_name = self.generate_strm(episode)
-            self.generate_episode_nfo(episode_file_name)
+            if self.movieInfo.get('is_serial'):
+                episodes = self.get_episodes()
+
+                self.folder = os.path.join(self.lib_folder, 'Shows',
+                                           self.movieInfo.get('originaltitle', '') or self.movieInfo['title'])
+                if not os.path.exists(self.folder):
+                    os.mkdir(self.folder)
+
+                self.generate_tvshow_nfo()
+
+                for episode in episodes:
+                    episode_file_name = self.generate_strm(episode)
+                    self.generate_episode_nfo(episode_file_name)
+                xbmcup.gui.message(xbmcup.app.lang[30181].format(len(episodes)))
+            else:
+                episodes = self.get_episodes()
+                if episodes:
+                    self.folder = os.path.join(self.lib_folder, 'Movies',
+                                               self.movieInfo.get('originaltitle', '') or self.movieInfo['title'])
+                    if not os.path.exists(self.folder):
+                        os.mkdir(self.folder)
+
+                    movie_file_name = self.generate_strm(episodes[0])
+                    self.generate_movie_nfo(movie_file_name)
+
+        except CancelSave:
+            xbmcup.gui.message(xbmcup.app.lang[30180])
 
     def get_episodes(self):
         quality_settings = int(xbmcup.app.setting['quality'] or 4)
         default_quality = QUALITYS[quality_settings]
 
         result = []
-        for folder in self.movieInfo['movies']:
+        current_translation = self.choice_translation(self.movieInfo)
+        if not current_translation:
+            raise CancelSave()
+
+        for folder in filter(lambda f: f['translate'] == current_translation, self.movieInfo['movies']):
             season_episodes = []
             max_episode = 1
             for quality, movies in folder['movies'].items():
@@ -92,27 +120,41 @@ class STRMGenerator(xbmcup.app.Handler, HttpData):
         file_name = os.path.splitext(episode_file_name)[0] + '.nfo'
         params = self.movieInfo
         params.update(match.groupdict())
-        content = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' \
-                  '<episodedetails>\n' \
-                  '<title>{title}</title>\n' \
-                  '<season>{season}</season>\n' \
-                  '<episode>{episode}</episode>\n' \
-                  '<art><thumb>{cover}</thumb></art>\n' \
-                  '</episodedetails>'.format(**params)
+        content = u'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' \
+                  u'<episodedetails>\n' \
+                  u'<title>{title}</title>\n' \
+                  u'<season>{season}</season>\n' \
+                  u'<episode>{episode}</episode>\n' \
+                  u'<art><thumb>{cover}</thumb></art>\n' \
+                  u'</episodedetails>'.format(**params)
         with codecs.open(os.path.join(self.folder, file_name), 'w', 'utf8') as fd:
             fd.write(content)
 
     def generate_tvshow_nfo(self):
         file_name = 'tvshow.nfo'
-        content = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' \
-                  '<tvshow>\n' \
-                  '<title>{title}</title>\n' \
-                  '<originaltitle>{originaltitle}</originaltitle>\n' \
-                  '<thumb aspect="poster" preview="{cover}">{cover}</thumb>\n' \
-                  '<fanart url="">' \
-                  '<thumb preview="{fanart}">{fanart}</thumb>\n' \
-                  '</fanart>' \
-                  '</tvshow>'.format(**self.movieInfo)
+        content = u'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' \
+                  u'<tvshow>\n' \
+                  u'<title>{title}</title>\n' \
+                  u'<originaltitle>{originaltitle}</originaltitle>\n' \
+                  u'<thumb aspect="poster" preview="{cover}">{cover}</thumb>\n' \
+                  u'<fanart url="">' \
+                  u'<thumb preview="{fanart}">{fanart}</thumb>\n' \
+                  u'</fanart>' \
+                  u'</tvshow>'.format(**self.movieInfo)
+        with codecs.open(os.path.join(self.folder, file_name), 'w', 'utf8') as fd:
+            fd.write(content)
+
+    def generate_movie_nfo(self, movie_file_name):
+        file_name = os.path.splitext(movie_file_name)[0] + '.nfo'
+        content = u'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' \
+                  u'<movie>\n' \
+                  u'<title>{title}</title>\n' \
+                  u'<originaltitle>{originaltitle}</originaltitle>\n' \
+                  u'<thumb aspect="poster" preview="{cover}">{cover}</thumb>\n' \
+                  u'<fanart url="">' \
+                  u'<thumb preview="{fanart}">{fanart}</thumb>\n' \
+                  u'</fanart>' \
+                  u'</movie>'.format(**self.movieInfo)
         with codecs.open(os.path.join(self.folder, file_name), 'w', 'utf8') as fd:
             fd.write(content)
 
@@ -134,5 +176,19 @@ class STRMGenerator(xbmcup.app.Handler, HttpData):
         result = re.match(r'^(.*?)(?:s(?P<s>\d+))?(?:e(?P<e>[\d-]+))?(?:_(?P<q>\d+))?$', file_name)
         if result and result.groupdict()['s'] and result.groupdict()['e']:
             title = self.movieInfo.get('originaltitle', '') or self.movieInfo['title']
-            return '{title} S{s}E{e}.strm'.format(title=title.encode('utf8'), **result.groupdict(''))
+            return u'{title} S{s}E{e}.strm'.format(title=title.encode('utf8'), **result.groupdict(''))
         return file_name
+
+    @staticmethod
+    def choice_translation(movieInfo):
+        translations = Counter([f['translate'] for f in movieInfo['movies']])
+        if len(translations) > 1:
+            translations_select = []
+            for trans, seasons in translations.most_common():
+                if seasons > 1:
+                    translations_select.append((trans, xbmcup.app.lang[30179].format(trans, seasons)))
+                else:
+                    translations_select.append((trans, trans))
+            return xbmcup.gui.select(movieInfo['title'], translations_select)
+        else:
+            return translations.most_common()[0][0]
