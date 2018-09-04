@@ -69,8 +69,11 @@
 	<string id="30171">Failed to add to watched database</string>
 	<string id="30172">Episodes added to database</string>
 	<string id="30175">[COLOR yellow]My news[/COLOR]</string>
-	<string id="30176">Save to .strm</string>
+	<string id="30176">Save</string>
 	<string id="30177">Select path to library</string>
+	<string id="30179">{} - Seasons: {}</string>
+	<string id="30180">Cancel</string>
+	<string id="30181">Saved {} episodes</string>
 
 	<!-- Settings -->
 	<string id="31001">General</string>

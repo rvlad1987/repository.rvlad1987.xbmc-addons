@@ -353,7 +353,7 @@ class HttpData:
                     movies = json.loads(playlist, 'utf-8')
                     # print movies
                     for season in movies['playlist']:
-                        current_movie = {'folder_title' : season['comment']+' ('+translate+')', 'movies': {}}
+                        current_movie = {'folder_title' : season['comment']+' ('+translate+')', 'movies': {}, 'translate': translate}
 
                         for movie in season['playlist']:
                             avail_quality = self.get_qualitys(movie['file'])
@@ -376,6 +376,7 @@ class HttpData:
                                 except:
                                     current_movie['movies'][q] = []
                                     current_movie['movies'][q].append([direct_link, iseason, iserieId])
+                                current_movie['season'] = iseason
 
                         #for resulut in current_movie['movies']:
                         #    current_movie['movies'][resulut] = current_movie['movies'][resulut][0]
@@ -384,7 +385,7 @@ class HttpData:
 
                 elif(js_string.find('http://') != -1 or js_string.find('https://') != -1):
                     avail_quality = self.get_qualitys(js_string)
-                    current_movie = {'folder_title' : translate, 'movies': {}}
+                    current_movie = {'folder_title': translate, 'translate': translate, 'movies': {}}
                     for q in avail_quality:
                         if(q == ''): continue
                         direct_link = self.format_direct_link(js_string, q) if q != 0 else js_string
@@ -459,6 +460,8 @@ class HttpData:
                 movieInfo['durarion'] = int(movieInfo['durarion'])*60
             except:
                 movieInfo['durarion'] = ''
+
+            movieInfo['is_serial'] = soup.find('div', class_='item xfgiven_added') is not None
 
             # try:
                 # movieInfo['ratingValue'] = float(soup.find(attrs={'itemprop' : 'ratingValue'}).get_text())
