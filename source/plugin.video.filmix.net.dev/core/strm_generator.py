@@ -111,7 +111,7 @@ class STRMGenerator(xbmcup.app.Handler, HttpData):
             'parent': {},
             'url': file_url
         }))
-        with open(os.path.join(self.folder, file_name), 'w') as fd:
+        with open(os.path.join(self.folder, file_name + '.strm'), 'w') as fd:
             fd.write(url)
         return file_name
 
