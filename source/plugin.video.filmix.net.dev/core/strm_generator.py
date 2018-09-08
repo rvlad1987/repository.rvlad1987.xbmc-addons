@@ -22,6 +22,7 @@ class STRMGenerator(xbmcup.app.Handler, HttpData):
         params = self.argv[0] or {}
 
         self.lib_folder = xbmcup.app.setting['library_folder']
+        self.is_win_platform = ( (sys.platform == 'win32') or (sys.platform == 'win64') )
 
         if not self.lib_folder:
             xbmcup.gui.message(xbmcup.app.lang[30176].encode('utf-8'))
@@ -56,6 +57,12 @@ class STRMGenerator(xbmcup.app.Handler, HttpData):
         except CancelSave:
             xbmcup.gui.message(xbmcup.app.lang[30180].encode('utf-8'))
 
+    def encode_for_platform(self, file_name):
+        if not self.is_win_platform:
+            return file_name.encode('utf8')
+        else:
+            return file_name
+
     def del_invalid_chars(self, file_name):
         return re.sub(r'[\\/:*?"<>|]', r'', file_name)
 
@@ -71,7 +78,7 @@ class STRMGenerator(xbmcup.app.Handler, HttpData):
 
         folder_name = self.del_invalid_chars( self.movieInfo.get('originaltitle', '') or self.movieInfo['title'] )
 
-        self.folder = os.path.join(self.folder, folder_name)
+        self.folder = os.path.join( self.folder, self.encode_for_platform(folder_name) )
 
         if not os.path.exists(self.folder):
             os.mkdir(self.folder)
@@ -131,8 +138,10 @@ class STRMGenerator(xbmcup.app.Handler, HttpData):
             'parent': {},
             'url': file_url
         }))
-        with open(os.path.join(self.folder, file_name), 'w') as fd:
+
+        with open(os.path.join( self.folder, self.encode_for_platform(file_name) ), 'w') as fd:
             fd.write(url)
+
         return file_name
 
     def generate_episode_nfo(self, episode_file_name):
@@ -147,7 +156,8 @@ class STRMGenerator(xbmcup.app.Handler, HttpData):
                   u'<episode>{episode}</episode>\n' \
                   u'<art><thumb>{cover}</thumb></art>\n' \
                   u'</episodedetails>'.format(**params)
-        with codecs.open(os.path.join(self.folder, file_name), 'w', 'utf8') as fd:
+
+        with codecs.open(os.path.join( self.folder, self.encode_for_platform(file_name) ), 'w', 'utf8') as fd:
             fd.write(content)
 
     def generate_tvshow_nfo(self):
@@ -161,6 +171,7 @@ class STRMGenerator(xbmcup.app.Handler, HttpData):
                   u'<thumb preview="{fanart}">{fanart}</thumb>\n' \
                   u'</fanart>' \
                   u'</tvshow>'.format(**self.movieInfo)
+
         with codecs.open(os.path.join(self.folder, file_name), 'w', 'utf8') as fd:
             fd.write(content)
 
@@ -175,7 +186,8 @@ class STRMGenerator(xbmcup.app.Handler, HttpData):
                   u'<thumb preview="{fanart}">{fanart}</thumb>\n' \
                   u'</fanart>' \
                   u'</movie>'.format(**self.movieInfo)
-        with codecs.open(os.path.join(self.folder, file_name), 'w', 'utf8') as fd:
+
+        with codecs.open(os.path.join( self.folder, self.encode_for_platform(file_name) ), 'w', 'utf8') as fd:
             fd.write(content)
 
     def int_quality(self, quality):
