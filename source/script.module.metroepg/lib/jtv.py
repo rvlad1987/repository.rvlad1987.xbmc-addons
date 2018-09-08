@@ -156,7 +156,7 @@ def getjtv(urljtv, tmp_path, locat, urlm3u, nxmltv, codepage, show_progress=Fals
 
     webFile = urllib.urlopen(urlm3u)
     buf = webFile.read()
-    qqq=re.compile(' tvg-name="(.*)" group-title="(.*)",(.*)').findall(buf)
+    qqq=re.compile(' tvg-id="(.*)" group-title="(.*)",(.*)').findall(buf)
     webFile.close()
 
     if show_progress:
