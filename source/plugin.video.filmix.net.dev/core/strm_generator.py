@@ -6,11 +6,12 @@ import os
 import re
 import sys
 import urllib
-from collections import Counter
+# from collections import Counter
 
 import xbmcup
 from core.defines import QUALITYS
 from core.http import HttpData
+from lib.counter import Counter
 
 
 class CancelSave(Exception):

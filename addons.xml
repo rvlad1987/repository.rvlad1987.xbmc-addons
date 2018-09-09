@@ -25,10 +25,10 @@
 
 	<addon id="plugin.video.filmix.net.dev"
        name="Filmix.Net"
-       version="0.4.5"
+       version="0.4.6"
        provider-name="Evgenii Devisok aka evgen_dev">
 	<requires>
-		<import addon="xbmc.python" version="2.1.0"/>
+		<import addon="xbmc.python" version="2.5.0"/>
 		<import addon="script.module.xbmcup" version="0.1.1"/>
 	</requires>
 	<extension point="xbmc.python.pluginsource" provides="video" library="addon.py">
