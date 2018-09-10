@@ -8,7 +8,7 @@
     <string id="31004">Интервал обновления (дни)</string>
     <string id="31005">[B]МетроEPG[/B]</string>
     <string id="31006">Город</string>
-    <string id="31007">[B]МетроEPG и PVR Simple Client[/B]</string>    
+    <string id="31007">[B]МетроEPG и PVR Simple Client[/B]</string>
 
     <string id="31008">Логотипы</string>
     <string id="31009">Брать логотипы каналов из папки МетроEPG</string>
@@ -19,18 +19,22 @@
     <string id="31103">Радужный</string>
     <string id="31104">Нефтеюганск</string>
     <string id="31105">Стрежевой</string>
-    <string id="31106">Ноябрьск</string>    
-    
+    <string id="31106">Ноябрьск</string>
+
+    <string id="31200">UDP прокси</string>
+    <string id="31201">Воспроизводить каналы через UDP прокси сервер</string>
+    <string id="31202">IP-адрес сервера</string>
+    <string id="31203">Порт сервера</string>
 
     <string id="32001">Дополнительно</string>
     <string id="32002">Кодировка</string>
     <string id="32003">Не оповещать об обновлении телепрограммы</string>
     <string id="32004">[B]Обновить телепрограмму сейчас[/B]</string>
     <string id="32005">[B]Искать недостающие значки[/B]</string>
-    <string id="32006">[B]Загрузить пакет логотипов с GitHub[/B]</string>    
+    <string id="32006">[B]Загрузить пакет логотипов с GitHub[/B]</string>
     
     <string id="33001">Быстрые команды:</string>
-    <string id="33002">Применить настройки для:</string>    
+    <string id="33002">Применить настройки для:</string>
 
     <string id="34001">Иконки обновлены</string>
     <string id="34002">Телепрограмма обновлена</string>

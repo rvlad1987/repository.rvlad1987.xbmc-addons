@@ -7,7 +7,7 @@
 __author__ = 'rvlad1987'
 __all__ = ['MetroEPG']
 
-import os, io
+import os, io, re, codecs
 import sys, urllib, zipfile
 
 import xbmc, xbmcaddon, xbmcgui
@@ -27,13 +27,15 @@ class Base:
     _addon_patch     = xbmc.translatePath(_addon.getAddonInfo('path'))
     _tmp_path        = xbmc.translatePath( os.path.join( "special://temp", PLUGIN_ID ) )
     _addon_data_path = xbmc.translatePath( os.path.join( "special://profile/addon_data", PLUGIN_ID) )
-    
+    _local_m3u_file  = os.path.join( _addon_data_path, 'iptv.m3u' )
     
     if IS_WIN:
         _addon_patch = _addon_patch.decode('utf-8')
         _tmp_path     = _tmp_path.decode('utf-8')
-        _addon_data_path = _addon_data_path.decode('utf-8')    
-    
+        _addon_data_path = _addon_data_path.decode('utf-8')
+        _local_m3u_file  = _local_m3u_file.decode('utf-8')
+
+
     if not os.path.exists(_tmp_path): os.makedirs(_tmp_path)
     
     _xmltv_file_path = os.path.join( _addon_data_path, 'xmltv.xml' )
@@ -99,6 +101,9 @@ class MetroEPG(Base):
             if self.setting.enabled: self.addjob()
 
         elif sys.argv[1] == 'onTimer':    
+            if self.setting.udp_proxy_enabled:
+                self.get_local_m3u()
+
             getjtv( JTV_URL, self._tmp_path, '1', self._m3uUrl, self._xmltv_file_path, self.setting.codepage, not self.setting.notalert)
             
             nextstart = datetime.now()+timedelta(days=self.setting.interval)
@@ -127,6 +132,16 @@ class MetroEPG(Base):
         else:
             self._addon.openSettings()
     
+    def get_local_m3u(self):
+        ff = urllib.URLopener()
+        ff.retrieve(self._m3uUrl, self._local_m3u_file)
+        f = open(self._local_m3u_file, 'r')
+        buf = f.read()
+        f.close()
+        f = open(self._local_m3u_file, 'w')
+        f.write( re.sub('udp://@', 'http://'+self.setting.proxy_ip+':'+self.setting.proxy_port+'/udp/', buf) )
+        f.close()
+
     def notification(self, message, title = FRIENDLY_NAME, time = 20):
         xbmc.executebuiltin('XBMC.Notification(%s ,%s, %i, %s)' % (title, message, time, self._icon_))
     
@@ -214,9 +229,12 @@ class Setting(Base):
         if IS_WIN:
             f_xmltv = Base._xmltv_file_path.encode('utf-8')
             f_logo  = self.logo_path.encode('utf-8')
+            f_m3u   = Base._local_m3u_file.encode('utf-8')
         else:
             f_xmltv = Base._xmltv_file_path
             f_logo  = self.logo_path
+            f_m3u   = Base._local_m3u_file
+
         
         f_set = io.open(fname_new_setting , 'wb')
         f_set.write('<settings>\n')
@@ -232,8 +250,8 @@ class Setting(Base):
         f_set.write( self.get_xml_str('logoPath',      f_logo) )
         f_set.write( self.get_xml_str('logoPathType',  '0') )
         f_set.write( self.get_xml_str('m3uCache',      'true') )
-        f_set.write( self.get_xml_str('m3uPath',       '') )
-        f_set.write( self.get_xml_str('m3uPathType',   '1') )
+        f_set.write( self.get_xml_str('m3uPath',       f_m3u) )
+        f_set.write( self.get_xml_str('m3uPathType',   '0' if self.udp_proxy_enabled else '1') )
         f_set.write( self.get_xml_str('m3uUrl',        Base._m3uUrl) )
         f_set.write( self.get_xml_str('sep1',          '') )
         f_set.write( self.get_xml_str('sep2',          '') )
@@ -257,7 +275,10 @@ class Setting(Base):
         self.notalert       = self.vbool( self.get("notalert") )
         self.codepage       = self.get("codepage").strip()
         self.myfolderlogo   = self.vbool( self.get("myfolderlogo") )
-        
+        self.udp_proxy_enabled = self.vbool( self.get("proxysrv") )
+        self.proxy_ip          = self.get("proxy_ip").strip()
+        self.proxy_port        = self.get("proxy_port").strip()
+
         if self.myfolderlogo:
             self.logo_path = os.path.join( Base._addon_data_path, 'logo_tv' )
         else:
