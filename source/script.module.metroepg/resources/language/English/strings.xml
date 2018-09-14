@@ -19,8 +19,12 @@
     <string id="31103">Raduzhnyy</string>
     <string id="31104">Nefteyugansk</string>
     <string id="31105">Strezhevoy</string>
-    <string id="31106">Noyabrsk</string>    
-    
+    <string id="31106">Noyabrsk</string>
+
+    <string id="31200">UDP proxy</string>
+    <string id="31201">Play channels via UDP proxy server</string>
+    <string id="31202">Server IP address</string>
+    <string id="31203">Server Port</string>
 
     <string id="32001">Additionally</string>
     <string id="32002">Encoding</string>

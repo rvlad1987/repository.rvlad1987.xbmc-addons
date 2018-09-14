@@ -25,5 +25,10 @@
         <setting label="33001" type="lsep"/>
         <setting label="32005" type="action" action="RunScript(script.module.metroepg, update_icon)" />
         <setting label="32006" type="action" action="RunScript(script.module.metroepg, downloadlogo)" />        
-    </category>    
+    </category>
+    <category label="31200">
+        <setting id="proxysrv"   label="31201" type="bool"   default="false" />
+        <setting id="proxy_ip"  label="31202" type="text" enable="eq(-1,true)" default="192.168.1.1" />
+        <setting id="proxy_port"  label="31203" type="number" enable="eq(-2,true)" default="4022" />
+    </category>
 </settings>
