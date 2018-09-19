@@ -35,7 +35,7 @@ from core.http import ResolveLink
 from core.filter import Filter
 from core.context import ContextMenu
 from core.donate import Donate
-from core.strm_generator import STRMGenerator
+from core.strm_generator import SaveMovieHandler
 
 # log = open(xbmcup.system.fs('sandbox://myprog.log').decode('utf-8'), "a")
 # sys.stdout = log
@@ -54,6 +54,6 @@ plugin.route('collections', Collections)
 plugin.route('context', ContextMenu)
 plugin.route('resolve', ResolveLink)
 plugin.route('donate', Donate)
-plugin.route('generate-strm', STRMGenerator)
+plugin.route('generate-strm', SaveMovieHandler)
 
 plugin.run()
