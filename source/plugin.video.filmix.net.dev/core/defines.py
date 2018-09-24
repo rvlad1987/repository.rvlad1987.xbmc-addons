@@ -5,7 +5,8 @@ s_https = ''
 if xbmcup.app.setting['use_https'] == 'true': s_https = 's'
 
 SITE_DOMAIN = xbmcup.app.setting['site_domain']
-SITE_URL = 'http' + s_https + '://' + SITE_DOMAIN
+SITE_SCHEME = 'http' + s_https
+SITE_URL = SITE_SCHEME + '://' + SITE_DOMAIN
 COLLECTIONS_URL = SITE_URL + '/playlists/my'
 PLUGIN_ID = 'plugin.video.filmix.net.dev'
 CACHE_DATABASE = 'filmix.cache.db'
