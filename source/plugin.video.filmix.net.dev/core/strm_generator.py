@@ -7,14 +7,16 @@ import re
 import sys
 import urllib
 from collections import defaultdict
+from urlparse import urlsplit, urlunsplit
 
 import xbmc
 
 import xbmcup
-from core.defines import QUALITYS
+from core.defines import QUALITYS, SITE_URL, s_https, SITE_SCHEME, SITE_DOMAIN, PLUGIN_ID
 from core.http import HttpData
 from lib.counter import Counter
 from xbmcup.app import compile_link
+from xbmcup.log import notice
 
 IS_WIN_PLATFORM = (sys.platform == 'win32') or (sys.platform == 'win64')
 
@@ -51,52 +53,81 @@ class SaveMovieHandler(xbmcup.app.Handler, HttpData):
             xbmcup.gui.message(xbmcup.app.lang[30176].encode('utf-8'))
             return
 
-        movieInfo = self.get_movie_info(params['url'])
-
         try:
-            generator = StreamGenerator(movieInfo, query_translate=True)
-            generator.config = {
-                'url': movieInfo['page_url'],
-                'id': int(movieInfo['page_url'].rsplit('/', 1)[-1].split('-', 1)[0]),
-            }
-            total = generator.generate()
+            total = StreamGenerator(query_translate=True).from_url(params['url'])
             xbmcup.gui.message(xbmcup.app.lang[30181].format(total).encode('utf-8'))
         except CancelSave as exc:
             xbmcup.gui.message(exc.message or xbmcup.app.lang[30180].encode('utf-8'))
 
 
-class StreamGenerator(object):
+class WatchService(xbmcup.app.Service, HttpData):
+    def handle(self):
+        notice(PLUGIN_ID, 'Start filmix service')
+        self.lib_folder = xbmcup.app.setting['library_folder']
+        if not self.lib_folder:
+            notice(PLUGIN_ID, xbmcup.app.lang[30176].encode('utf-8'))
+            return
+
+        for movie_type in ['Movies', 'Shows']:
+            for folder in os.listdir(os.path.join(self.lib_folder, movie_type)):
+                folder = os.path.join(self.lib_folder, movie_type, folder)
+                if os.path.exists(os.path.join(folder, '_filmix_config.json')):
+                    try:
+                        total = StreamGenerator().from_folder(folder)
+                        notice(PLUGIN_ID, '%s - %s' % (folder, total))
+                    except CancelSave:
+                        pass
+        return 3600*6
+
+
+class StreamGenerator(HttpData, object):
     config_file_name = '_filmix_config.json'
 
-    def __init__(self, movieInfo, query_translate=False):
+    is_serial = False
+
+    def __init__(self, query_translate=False):
+        self.config = {}
         self.query_translate = query_translate
         self.lib_folder = xbmcup.app.setting['library_folder']
         self.quality_settings = int(xbmcup.app.setting['quality'] or 4)
         self.default_quality = QUALITYS[self.quality_settings]
-        self.movieInfo = movieInfo
-        self.is_serial = self.movieInfo.get('is_serial')
-        if self.movieInfo['no_files']:
-            raise CancelSave(self.movieInfo['no_files'])
+
+    def from_url(self, url):
+        self.config['url'] = self.replace_host(url)
+        return self.generate()
+
+    def from_folder(self, folder):
+        self.load_config(folder)
+        self.config['url'] = self.replace_host(self.config['url'])
+        return self.generate()
 
     @property
-    def config(self):
-        data = getattr(self, '_config', None)
+    def movieInfo(self):
+        data = getattr(self, '_movieInfo', None)
         if not data:
-            with codecs.open(os.path.join(self.content_folder, self.config_file_name), 'r', 'utf8') as fd:
-                data = fd.read()
-            data = json.loads(data)
-            setattr(self, '_config', data)
+            data = self.get_movie_info(self.config['url'])
+            setattr(self, '_movieInfo', data)
+            self.config['id'] = int(data['page_url'].rsplit('/', 1)[-1].split('-', 1)[0])
         return data
-
-    @config.setter
-    def config(self, value):
-        setattr(self, '_config', value)
 
     def save_config(self):
         with codecs.open(os.path.join(self.content_folder, self.config_file_name), 'w', 'utf8') as fd:
             fd.write(json.dumps(self.config, ensure_ascii=False))
 
+    def load_config(self, content_folder):
+        with codecs.open(os.path.join(content_folder, self.config_file_name), 'r', 'utf8') as fd:
+            data = fd.read()
+        self.config = json.loads(data)
+
+    def replace_host(self, url):
+        url_split = urlsplit(url)
+        return urlunsplit((SITE_SCHEME, SITE_DOMAIN, url_split[2], url_split[3], url_split[4]))
+
     def generate(self):
+        self.is_serial = self.movieInfo.get('is_serial')
+        if self.movieInfo['no_files']:
+            raise CancelSave(self.movieInfo['no_files'])
+
         translate = self.choice_translation(self.movieInfo, self.query_translate)
         self.config['translate'] = translate
         seasons = self.prepare_episodes()[translate]
