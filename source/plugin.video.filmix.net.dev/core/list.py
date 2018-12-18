@@ -512,12 +512,18 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
             self.item(u'[COLOR red]['+self.movieInfo['no_files'].decode('utf-8')+'][/COLOR]', self.link('null'), folder=False, cover=cover.info)
 
     def int_quality(self, quality):
-        if quality == '1080p':
+        if quality in ('1080p','1080 HD'):
             i_quality = 1080
-        elif quality == '1440p':
+        elif quality in ('1440','2K'):
             i_quality = 1440
-        elif quality == '2160p':
+        elif quality in ('2160p','4K UHD'):
             i_quality = 2160
+        elif quality == '720p':
+            i_quality = 720
+        elif quality == '480p':
+            i_quality = 480
+        elif quality == '360p':
+            i_quality = 360            
         else:
             i_quality = int(quality)
         return i_quality

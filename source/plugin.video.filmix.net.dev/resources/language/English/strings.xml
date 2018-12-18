@@ -134,5 +134,6 @@
 
 	<string id="38000">STRM generate</string>
 	<string id="38001">Path to library</string>
+	<string id="38002">Enable service</string>
 
 </strings>

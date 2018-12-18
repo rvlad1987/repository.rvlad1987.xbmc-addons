@@ -243,6 +243,15 @@ class HttpData:
             encoded_url = encoded_url.replace(b, a)
             encoded_url = encoded_url.replace('___', b)
         return base64.b64decode(encoded_url)
+        
+    def decode_base64_2(self, encoded_url):
+        tokens = ("//Y2VyY2EudHJvdmEuc2FnZ2V6emE=", "//c2ljYXJpby4yMi5tb3ZpZXM=", "//a2lub2NvdmVyLnc5OC5uamJo")
+        clean_encoded_url = encoded_url[2:].replace("\/","/")
+        
+        for token in tokens:
+            clean_encoded_url = clean_encoded_url.replace(token, "")
+        
+        return base64.b64decode(clean_encoded_url)
 
     def decode_unicode(self, encoded_url):
 
@@ -261,7 +270,10 @@ class HttpData:
 
         try:
             if encoded_url.find('#') != -1:
-                return self.decode_unicode(encoded_url)
+                if encoded_url[:2] == '#2':
+                    return self.decode_base64_2(encoded_url)
+                else:
+                    return self.decode_unicode(encoded_url)
             else:
                 return self.decode_base64(encoded_url)
         except:
@@ -274,15 +286,24 @@ class HttpData:
         return r_link if r_link.find( SITE_URL ) != -1 else SITE_URL + r_link
 
     def format_direct_link(self, source_link, q):
-        regex = re.compile("\[([^\]]+)\]", re.IGNORECASE)
-        return regex.sub(q, source_link)
+        # regex = re.compile("\[([^\]]+)\]", re.IGNORECASE)
+        # return regex.sub(q, source_link)
+        for link in source_link:
+            if link[0].find(q) != -1:
+                _or_ = link[1].find(b' or ')
+                if _or_ != -1:
+                    return link[1][_or_+4:]
+                else:
+                    return link[1]
 
     def get_qualitys(self, source_link):
         try:
-            avail_quality = re.compile("\[([^\]]+)\]", re.S).findall(source_link)[0]
-            return avail_quality.split(',')
+            avail_quality = re.compile("\[([^\]]+)\]", re.S).findall(source_link)
+            # return avail_quality.split(',')
+            return avail_quality
         except:
-            return '0'.split()
+            # return '0'.split()
+            return []
 
     def get_collections_info(self):
         html = self.load(COLLECTIONS_URL)
@@ -327,73 +348,95 @@ class HttpData:
         except:
             movieInfo['is_proplus'] = 0
 
-        # print self.strip_scripts(html)
         try:
             try:
                 film_id = re.compile('film_id ?= ?([\d]+);', re.S).findall(html)[0].decode('string_escape').decode('utf-8')
                 movieInfo['movie_id'] = int( film_id )
                 js_string = self.ajax(SITE_URL+'/api/movies/player_data', {'post_id' : film_id}, url)
-                # print js_string
                 player_data =  json.loads(js_string, 'utf-8')
                 # player_data = player_data['message']['translations']['flash']
-                player_data = player_data['message']['translations']['html5']
+                # player_data = player_data['message']['translations']['html5']
+                player_data = player_data['message']['translations']['video']
                 if player_data == []:
                     movieInfo['no_files'] = xbmcup.app.lang[34026].encode('utf8')
             except:
                 movieInfo['no_files'] = xbmcup.app.lang[34026].encode('utf8')
                 raise
 
+            serie_q = re.compile('(\d+)', re.S)
+            serie_num = re.compile('s(\d+)e(\d+)', re.S)
+
             for translate in player_data:
                 js_string = self.decode_direct_media_url(player_data[translate], True)
-                if(js_string == False):
+
+                if (js_string == False):
                     continue
-                if(js_string.find('.txt') != -1):
+                    
+                if (js_string.find('.txt') != -1):
                     playlist = self.decode_direct_media_url(self.load(js_string))
-
                     movies = json.loads(playlist, 'utf-8')
-                    # print movies
-                    for season in movies['playlist']:
-                        current_movie = {'folder_title' : season['comment']+' ('+translate+')', 'movies': {}, 'translate': translate}
 
-                        for movie in season['playlist']:
+                    for season in movies:
+                        current_movie = {'folder_title' : season['title']+' ('+translate+')', 'movies': {}, 'translate': translate}
+
+                        for movie in season['folder']:
                             avail_quality = self.get_qualitys(movie['file'])
+                            array_links = re.compile(b'\[([^\]]+)\]([^,]+)', re.S).findall(movie['file']);
                             for q in avail_quality:
+                                
                                 if(q == ''): continue
-                                direct_link = self.format_direct_link(movie['file'], q) if q != 0 else movie['file']
+                                
+                                direct_link = self.format_direct_link(array_links, q) if q != 0 else movie['file']
+
+                                serie_num_res = serie_num.findall(movie['id'])
                                 
                                 try:
-                                    iseason = int(movie['season'])
+                                    iseason = int(serie_num_res[0][0])
                                 except:
                                     iseason = 0
                                 
                                 try:
-                                    iserieId = int(movie['serieId'])
+                                    iserieId = int(serie_num_res[0][1])
                                 except:
                                     iserieId = 0
 
+                                if (q == '4K UHD'):
+                                    qq = '2160'
+                                elif (q == '2K'):
+                                    qq = '1440'
+                                else:
+                                    qq = serie_q.findall(q)[0]
+                                
                                 try:
-                                    current_movie['movies'][q].append([direct_link, iseason, iserieId])
+                                    current_movie['movies'][qq].append([direct_link, iseason, iserieId])
                                 except:
-                                    current_movie['movies'][q] = []
-                                    current_movie['movies'][q].append([direct_link, iseason, iserieId])
+                                    current_movie['movies'][qq] = []
+                                    current_movie['movies'][qq].append([direct_link, iseason, iserieId])
+                                
                                 current_movie['season'] = iseason
-
-                        #for resulut in current_movie['movies']:
-                        #    current_movie['movies'][resulut] = current_movie['movies'][resulut][0]
 
                         movieInfo['movies'].append(current_movie)
 
                 elif(js_string.find('http://') != -1 or js_string.find('https://') != -1):
                     avail_quality = self.get_qualitys(js_string)
+                    array_links = re.compile(b'\[([^\]]+)\]([^,]+)', re.S).findall(js_string);
                     current_movie = {'folder_title': translate, 'translate': translate, 'movies': {}}
                     for q in avail_quality:
                         if(q == ''): continue
-                        direct_link = self.format_direct_link(js_string, q) if q != 0 else js_string
+                        direct_link = self.format_direct_link(array_links, q) if q != 0 else js_string
+
+                        if (q == '4K UHD'):
+                            qq = '2160'
+                        elif (q == '2K'):
+                            qq = '1440'
+                        else:
+                            qq = serie_q.findall(q)[0]
+
                         try:
-                            current_movie['movies'][q].append([direct_link, 1, 1])
+                            current_movie['movies'][qq].append([direct_link, 1, 1])
                         except:
-                            current_movie['movies'][q] = []
-                            current_movie['movies'][q].append([direct_link, 1, 1])
+                            current_movie['movies'][qq] = []
+                            current_movie['movies'][qq].append([direct_link, 1, 1])
 
                     movieInfo['movies'].append(current_movie)
 

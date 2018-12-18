@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 	<addon id="plugin.video.filmix.net.dev"
        name="Filmix.Net"
-       version="0.4.6"
+       version="0.4.7"
        provider-name="Evgenii Devisok aka evgen_dev">
 	<requires>
 		<import addon="xbmc.python" version="2.5.0"/>
@@ -11,7 +11,7 @@
 		<provides>video</provides>
 	</extension>
 	<extension point="xbmc.service" library="service.py" start="[login|startup]"/>
-	<extension point="xbmc.addon.metadata">
+    <extension point="xbmc.addon.metadata">
 		<summary>Filmix.Net</summary>
 		<description>
 			 Filmix.Net - Вашему вниманию полнометражное кино и телесериалы, мультфильмы, трейлеры.

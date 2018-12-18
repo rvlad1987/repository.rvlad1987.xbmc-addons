@@ -135,5 +135,6 @@
 
 	<string id="38000">STRM генератор</string>
 	<string id="38001">Путь до библиотеки</string>
+	<string id="38002">Включить сервис</string>
 
 </strings>

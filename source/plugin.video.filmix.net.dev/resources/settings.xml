@@ -41,6 +41,7 @@
 	</category>
 
 	<category label="38000">
+  		<setting id="start_strm_service" type="bool" visible="true" label="38002" default="false" />
 		<setting id="library_folder" type="folder" label="38001" source="auto" option="writeable"/>
 	</category>
 </settings>
