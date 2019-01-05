@@ -168,15 +168,17 @@ class SearchList(AbstactList):
         response = CACHE(str(md5.hexdigest()), self.get_movies, page_url, page, '', False, usersearch)
         '''
         post_data={'search_word' : params['vsearch']}
-        post_result = self.ajax(SITE_URL + '/api/search/suggest',post_data, SITE_URL + '/')
+        # https://filmix.co/api/v2/suggestions?search_word=
+        post_result = self.ajax(SITE_URL + '/api/v2/suggestions?search_word='+params['vsearch'],{}, SITE_URL + '/')
         json_result = json.loads(post_result)
         # print json_result
         response = {'page': {}, 'data': []}
         re_info = re.compile('<.*?>')
-        for m in json_result['message']:
+        for m in json_result:
             year_info = ''
-            if(m['year'] != ''):
-                year_info = m['year']+', '
+            s_year = str(m['year'])
+            if( s_year != ''):
+                year_info =s_year+', '
             year_info += re.sub(re_info, '', m['categories'])
             
             response['data'].append({
@@ -186,7 +188,7 @@ class SearchList(AbstactList):
                     'not_movie': False,
                     'year': '[COLOR white]['+year_info+'][/COLOR]',
                     'quality': '',
-                    'id': m['id']
+                    'id': str(m['id'])
                 })
         
         if(is_united_search == 0):
