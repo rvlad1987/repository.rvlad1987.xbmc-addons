@@ -376,6 +376,11 @@ class HttpData:
                     playlist = self.decode_direct_media_url(self.load(js_string))
                     movies = json.loads(playlist, 'utf-8')
 
+                    try:
+                        folders = movies[0]['folder']
+                    except:
+                        movies = [{ 'folder' : movies, 'title' : 'Season 1' }]
+
                     for season in movies:
                         current_movie = {'folder_title' : season['title']+' ('+translate+')', 'movies': {}, 'translate': translate}
 
