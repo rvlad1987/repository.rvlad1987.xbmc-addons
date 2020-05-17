@@ -27,7 +27,7 @@ import resources.lib.diafilms as diafilms
 
 Addon = xbmcaddon.Addon(id='plugin.video.diafilms')
 
-#log = open('c:/test/_log.txt','ab')
+#log = open('/opt/retropie/configs/ports/kodi/temp/dia_log.txt','ab')
 #sys.stdout = log
 
 try:
@@ -140,16 +140,33 @@ def Get_Page_Number(url):
 def Get_List(params):
     # -- parameters
     url  = urllib.unquote_plus(params['url'])
-    xbmc.log(url)
+    #xbmc.log(url)
 
-    # get number of webpages to grab information
-    page_num = Get_Page_Number(url)
-
+    if 'page' in params:
+        page = int(params['page'])
+    else:
+        page = 1
+    
+    if 'maxpage' in params:
+        maxpage = int(params['maxpage'])
+    else:
+        maxpage = Get_Page_Number(url)
+        
     # get all serials
-    for count in range(1, page_num+1):
-        Get_List_by_Page(url + '/page/'+str(count)+'/')
+    
+    Get_List_by_Page(url + '/page/'+str(page)+'/')
 
-    xbmcplugin.addSortMethod(h, sortMethod=xbmcplugin.SORT_METHOD_LABEL)
+    page += 1
+    
+    if page <= maxpage:
+        i = xbmcgui.ListItem('[COLOR FF00FF00]Следующая страница '+str(page)+ ' из ' + str(maxpage) + ' >>>[/COLOR]', iconImage=icon, thumbnailImage=icon)
+        u = sys.argv[0] + '?mode=LIST'
+        u += '&url=%s' % urllib.quote_plus(url)
+        u += '&page=%i' % page   
+        u += '&maxpage=%i' % maxpage   
+        xbmcplugin.addDirectoryItem(h, u, i, True)
+
+#    xbmcplugin.addSortMethod(h, sortMethod=xbmcplugin.SORT_METHOD_LABEL)
     xbmcplugin.endOfDirectory(h)
 
 def Get_List_by_Page(url2):

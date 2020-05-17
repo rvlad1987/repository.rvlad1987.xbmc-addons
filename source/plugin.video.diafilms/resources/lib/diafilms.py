@@ -35,6 +35,7 @@ class Diafilm(xbmcgui.WindowXML):
     ACTION_DOWN = [4]
     ACTION_UP = [3]
     ACTION_0 = [58]
+    ACTION_CHANGE_SLIDE = [3, 4]
 
     def __init__(self, xmlFilename, scriptPath, defaultSkin, defaultRes):
         pass
@@ -71,13 +72,27 @@ class Diafilm(xbmcgui.WindowXML):
 
         df_nav = soup.find("div", { "class" : "cycle-slideshow" })
         for df in df_nav.findAll('img'):
-            self.Add_to_List('http://www.diafilmy.su'+df['src'], df['alt'])
+            self.Add_to_List('http://www.diafilmy.su'+df['src'], '', df['alt'])
 
         self.setFocus(self.getControl(self.CONTROL_MAIN_IMAGE))
 
     def onAction(self, action):
         if action in self.ACTION_EXIT_SCRIPT:
+            if xbmc.Player().isPlaying():
+                xbmc.Player().stop()
             self.close()
+
+        if action in self.ACTION_CHANGE_SLIDE:
+            alt_mp3 = self.getControl(self.CONTROL_MAIN_IMAGE).getSelectedItem().getProperty('alt_mp3')
+            if len(alt_mp3) >= 4:
+                if alt_mp3[-4:] == '.mp3':
+                    if xbmc.Player().isPlaying():
+                        xbmc.Player().stop()
+                        
+                    li_mp3 = xbmcgui.ListItem()
+                    li_mp3.setInfo('music', {'Title': 'Diafilm sound'})
+                    
+                    xbmc.Player().play(alt_mp3, li_mp3)
 
     def onClick(self, controlId):
         pass
@@ -85,7 +100,7 @@ class Diafilm(xbmcgui.WindowXML):
     def Clean_List(self):
         self.getControl(self.CONTROL_MAIN_IMAGE).reset()
 
-    def Add_to_List(self, url, title):
+    def Add_to_List(self, url, title, alt):
         li = xbmcgui.ListItem(label=title,
                               iconImage=url,
                               path = url)
@@ -93,4 +108,5 @@ class Diafilm(xbmcgui.WindowXML):
         li.setProperty('show_info', 'photo')
         li.setProperty('title', title)
         li.setProperty('aspectratio', 'keep')
+        li.setProperty('alt_mp3', alt)
         self.getControl(self.CONTROL_MAIN_IMAGE).addItem(li)
