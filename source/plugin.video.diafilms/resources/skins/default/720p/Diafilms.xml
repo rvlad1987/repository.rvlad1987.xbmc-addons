@@ -24,55 +24,34 @@
                 <posy>0</posy>
                 <width>1280</width>
                 <height>720</height>
-                <scrolltime>200</scrolltime>
-                <orientation>horizontal</orientation>
-                <preloaditems>10</preloaditems>
+                <scrolltime>500</scrolltime>
+                <orientation>vertical</orientation>
+                <preloaditems>3</preloaditems>
+                <visible>true</visible>
                 <itemlayout width="1280" height="720">
-                    <control type="image">
-                        <description>The Picture in ratio scale</description>
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>1280</width>
-                        <height>720</height>
-                        <fadetime>200</fadetime>
-                        <texture background="true">$INFO[ListItem.Icon]</texture>
-                        <aspectratio>scale</aspectratio>
-                        <visible>StringCompare(ListItem.Property(aspectratio),scale)</visible>
-                    </control>
                     <control type="image">
                         <description>The Picture in ratio keep</description>
                         <posx>0</posx>
                         <posy>0</posy>
                         <width>1280</width>
                         <height>720</height>
-                        <fadetime>200</fadetime>
+                        <fadetime>0</fadetime>
                         <texture background="true">$INFO[ListItem.Icon]</texture>
                         <aspectratio>keep</aspectratio>
-                        <visible>StringCompare(ListItem.Property(aspectratio),keep)</visible>
+                        <visible>true</visible>
                     </control>
                 </itemlayout>
                 <focusedlayout width="1280" height="720">
                     <control type="image">
-                        <description>The Picture in ratio scale</description>
-                        <posx>0</posx>
-                        <posy>0</posy>
-                        <width>1280</width>
-                        <height>720</height>
-                        <fadetime>200</fadetime>
-                        <texture background="true">$INFO[ListItem.Icon]</texture>
-                        <aspectratio>scale</aspectratio>
-                        <visible>StringCompare(ListItem.Property(aspectratio),scale)</visible>
-                    </control>
-                    <control type="image">
                         <description>The Picture in ratio keep</description>
                         <posx>0</posx>
                         <posy>0</posy>
                         <width>1280</width>
                         <height>720</height>
-                        <fadetime>200</fadetime>
+                        <fadetime>0</fadetime>
                         <texture background="true">$INFO[ListItem.Icon]</texture>
                         <aspectratio>keep</aspectratio>
-                        <visible>StringCompare(ListItem.Property(aspectratio),keep)</visible>
+                        <visible>true</visible>
                     </control>
                 </focusedlayout>
             </control>

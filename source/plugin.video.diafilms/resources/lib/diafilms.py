@@ -71,7 +71,7 @@ class Diafilm(xbmcgui.WindowXML):
 
         df_nav = soup.find("div", { "class" : "cycle-slideshow" })
         for df in df_nav.findAll('img'):
-            self.Add_to_List('http://www.diafilmy.su'+df['src'], df['title'])
+            self.Add_to_List('http://www.diafilmy.su'+df['src'], df['alt'])
 
         self.setFocus(self.getControl(self.CONTROL_MAIN_IMAGE))
 
