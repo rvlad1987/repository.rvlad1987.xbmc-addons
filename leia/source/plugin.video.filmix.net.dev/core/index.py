@@ -5,6 +5,7 @@ from auth import Auth
 
 class Index(xbmcup.app.Handler):
     def handle(self):
+        print('index')
         Auth().autorize()
         self.item(xbmcup.app.lang[30112], self.link('search'),                        folder=True, cover=cover.search)
         self.item(xbmcup.app.lang[30120], self.link('filter', {'window' : ''}),       folder=True, cover=cover.treetv)
@@ -22,5 +23,7 @@ class Index(xbmcup.app.Handler):
         self.item(' - '+xbmcup.app.lang[30116], self.link('list', {'dir' : 'multfilmy'}),   folder=True, cover=cover.treetv)
         self.item(' - '+xbmcup.app.lang[30117], self.link('list', {'dir' : 'multserialy'}),   folder=True, cover=cover.treetv)
 
+        print 'set'
+        print(xbmcup.app.setting)
         if(xbmcup.app.setting['hide_donate'] == 'false'):
             self.item(xbmcup.app.lang[37000], self.link('donate', {'hide' : '1'}), folder=True, cover=cover.treetv)

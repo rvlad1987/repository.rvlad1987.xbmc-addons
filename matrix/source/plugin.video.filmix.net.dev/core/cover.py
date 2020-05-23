@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import xbmcup.system
-from defines import *
+from .defines import *
 
 icons_path = 'home://addons/'+PLUGIN_ID+'/resources/media/icons/'
 

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-#очистка кеша
 
 import sys, xbmc, xbmcaddon
 

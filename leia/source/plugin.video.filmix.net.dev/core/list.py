@@ -23,8 +23,15 @@ SQL.set('CREATE INDEX IF NOT EXISTS dataindex ON cache(expire)')
 
 class AbstactList(xbmcup.app.Handler, HttpData, Render):
     def add_movies(self, response, ifempty=30111):
+        print(xbmcup.app.setting['hide_donate'])
         if(len(response['data']) > 0):
             for movie in response['data']:
+                if PROXIES:
+                    if DOWNLOAD_POSTERS_VIA_PROXY:
+                        self.imageloader.load_to_cache(movie['img'])
+                    else:
+                        movie['img'] = None                
+                
                 menu = []
                 
                 menu.append([xbmcup.app.lang[34033], self.link('context', {'action': 'show_movieinfo', 'movie' : movie})])

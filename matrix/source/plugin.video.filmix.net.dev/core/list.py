@@ -3,11 +3,11 @@
 import os, re, sys, json, urllib, hashlib, traceback
 import xbmcup.app, xbmcup.db, xbmcup.system, xbmcup.net, xbmcup.parser, xbmcup.gui
 import xbmc, cover, xbmcplugin, xbmcgui
-from http import HttpData
-from auth import Auth
-from common import Render
-from defines import *
-from watched_db import Watched
+from .http import HttpData
+from .auth import Auth
+from .common import Render
+from .defines import *
+from .watched_db import Watched
 
 try:
     from sqlite3 import dbapi2 as sqlite
@@ -23,8 +23,15 @@ SQL.set('CREATE INDEX IF NOT EXISTS dataindex ON cache(expire)')
 
 class AbstactList(xbmcup.app.Handler, HttpData, Render):
     def add_movies(self, response, ifempty=30111):
+        print(xbmcup.app.setting['hide_donate'])
         if(len(response['data']) > 0):
             for movie in response['data']:
+                if PROXIES:
+                    if DOWNLOAD_POSTERS_VIA_PROXY:
+                        self.imageloader.load_to_cache(movie['img'])
+                    else:
+                        movie['img'] = None                
+                
                 menu = []
                 
                 menu.append([xbmcup.app.lang[34033], self.link('context', {'action': 'show_movieinfo', 'movie' : movie})])

@@ -4,12 +4,12 @@ import os, re, sys, json, urllib, hashlib, traceback
 import xbmcup.app, xbmcup.db, xbmcup.system, xbmcup.net, xbmcup.parser, xbmcup.gui
 import xbmc, cover, xbmcplugin, xbmcgui
 
-from http import HttpData
-from auth import Auth
-from wmodal import MovieInfo
-from common import Render
-from defines import *
-from watched_db import Watched
+from .http import HttpData
+from .auth import Auth
+from .wmodal import MovieInfo
+from .common import Render
+from .defines import *
+from .watched_db import Watched
 
 class ContextMenu(xbmcup.app.Handler, HttpData, Render):
 
@@ -24,7 +24,7 @@ class ContextMenu(xbmcup.app.Handler, HttpData, Render):
             eval('self.'+params['action'])(params)
         except:
             xbmcup.gui.message('Addon internal error', title='Call to undefined method ContextMenu::%s()' % params['action'])
-            print traceback.format_exc()
+            print (traceback.format_exc())
 
     def add_bookmark(self, params):
 

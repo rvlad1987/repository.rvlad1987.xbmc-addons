@@ -44,4 +44,11 @@
   		<setting id="start_strm_service" type="bool" visible="true" label="38002" default="false" />
 		<setting id="library_folder" type="folder" label="38001" source="auto" option="writeable"/>
 	</category>
+    
+	<category label="39000">
+  		<setting id="use_proxy" type="bool" visible="true" label="39001" default="false" />
+		<setting id="http_proxy" type="text" label="39002" enable="eq(-1,true)" default="proxy-nossl.antizapret.prostovpn.org:29976" />
+		<setting id="https_proxy" type="text" label="39003" enable="eq(-2,true)" default="proxy-ssl.antizapret.prostovpn.org:3143" />
+  		<setting id="download_posters_via_proxy" type="bool" enable="eq(-3,true)" label="39004" default="true" />
+	</category>    
 </settings>

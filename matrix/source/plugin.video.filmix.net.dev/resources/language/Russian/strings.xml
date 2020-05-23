@@ -136,5 +136,10 @@
 	<string id="38000">STRM генератор</string>
 	<string id="38001">Путь до библиотеки</string>
 	<string id="38002">Включить сервис</string>
-
+    
+	<string id="39000">Прокси-сервер</string>
+	<string id="39001">Использовать прокси-сервер</string>
+	<string id="39002">HTTP</string>
+	<string id="39003">HTTPS</string>
+    <string id="39004">Загружать постеры и добавлять в кэш Kodi</string>
 </strings>

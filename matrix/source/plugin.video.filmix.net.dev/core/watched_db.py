@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import xbmcup.db
-from defines import *
+from .defines import *
 
 try:
     from sqlite3 import dbapi2 as sqlite

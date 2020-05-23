@@ -3,10 +3,10 @@
 import os, re, sys, hashlib, traceback, datetime, json
 import xbmcup.app, xbmcup.db, xbmcup.system, xbmcup.net, xbmcup.parser, xbmcup.gui
 import xbmc, cover, xbmcplugin, xbmcgui
-from common import Render
-from defines import *
-from list import AbstactList
-from http import HttpData
+from .common import Render
+from .defines import *
+from .list import AbstactList
+from .http import HttpData
 
 CACHE = xbmcup.db.Cache(xbmcup.system.fs('sandbox://'+CACHE_DATABASE))
 

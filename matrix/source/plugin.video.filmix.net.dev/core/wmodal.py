@@ -2,7 +2,7 @@
 
 import sys, urllib, urllib2, re, os, cookielib, traceback, datetime
 import xbmc, xbmcgui, xbmcaddon, xbmcup
-from http import HttpData
+from .http import HttpData
 
 KEY_BUTTON_BACK = 275
 KEY_KEYBOARD_ESC = 61467
