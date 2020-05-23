@@ -1,0 +1,51 @@
+<strings>
+    <string id="30106">Телепрограмма обновлена</string>
+
+    <!-- Settings -->
+    <string id="31001">Общие</string>
+    <string id="31002">Включить сервис</string>
+    <string id="31003">Обновлять телепрограмму при запуске Kodi</string>
+    <string id="31004">Интервал обновления (дни)</string>
+    <string id="31005">[B]МетроEPG[/B]</string>
+    <string id="31006">Город</string>
+    <string id="31007">[B]МетроEPG и PVR Simple Client[/B]</string>
+
+    <string id="31008">Логотипы</string>
+    <string id="31009">Брать логотипы каналов из папки МетроEPG</string>
+    <string id="31010">Брать логотипы каналов из папки:</string>
+    
+    <string id="31101">Нижневартовск</string>
+    <string id="31102">Сургут</string>
+    <string id="31103">Радужный</string>
+    <string id="31104">Нефтеюганск</string>
+    <string id="31105">Стрежевой</string>
+    <string id="31106">Ноябрьск</string>
+
+    <string id="31200">UDP прокси</string>
+    <string id="31201">Воспроизводить каналы через UDP прокси сервер</string>
+    <string id="31202">IP-адрес сервера</string>
+    <string id="31203">Порт сервера</string>
+
+    <string id="32001">Дополнительно</string>
+    <string id="32002">Кодировка</string>
+    <string id="32003">Не оповещать об обновлении телепрограммы</string>
+    <string id="32004">[B]Обновить телепрограмму сейчас[/B]</string>
+    <string id="32005">[B]Искать недостающие значки[/B]</string>
+    <string id="32006">[B]Загрузить пакет логотипов с GitHub[/B]</string>
+    
+    <string id="33001">Быстрые команды:</string>
+    <string id="33002">Применить настройки для:</string>
+
+    <string id="34001">Иконки обновлены</string>
+    <string id="34002">Телепрограмма обновлена</string>
+    <string id="34003">Ошибка! Выключен [B]PVR IPTV Simple Client[/B]</string>
+    <string id="34004">Загрузка плейлиста ...</string>
+    <string id="34005">Загрузка телепрограммы ...</string>
+    <string id="34006">Формирую файл телепрограммы ...</string>
+    <string id="34007">Распаковка телепрограммы ...</string>
+    <string id="34008">Настройки МетроEPG и IPTV Simple Client выполнены.</string>
+    <string id="34009">Для применения изменений необходимо дождаться формировку телепрограммы и [B]перезагрузить Kodi[/B]!</string>
+    <string id="34010">Загрузка пакета логотипов завершена!</string>
+    <string id="34011">Загрузка пакета логотипов ...</string>
+    <string id="34012">Распаковка логотипов ...</string>
+</strings>

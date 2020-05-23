@@ -1,0 +1,47 @@
+<strings>
+    <string id="30106">TV program updated</string>
+
+    <!-- Settings -->
+    <string id="31001">Сommon</string>
+    <string id="31002">Enable service</string>
+    <string id="31003">Update the TV program at startup Kodi</string>
+    <string id="31004">Refresh interval (days)</string>
+    <string id="31005">[B]MetroEPG[/B]</string>
+    <string id="31006">City</string>
+    <string id="31007">[B]MetroEPG and PVR Simple Client[/B]</string>    
+
+    <string id="31008">Logos</string>
+    <string id="31009">Take channel logos from a folder MetroEPG</string>
+    <string id="31010">Take channel logos from a folder:</string>
+    
+    <string id="31101">Nizhnevartovsk</string>
+    <string id="31102">Surgut</string>
+    <string id="31103">Raduzhnyy</string>
+    <string id="31104">Nefteyugansk</string>
+    <string id="31105">Strezhevoy</string>
+    <string id="31106">Noyabrsk</string>    
+    <string id="31107">Minsk</string>    
+
+    <string id="32001">Additionally</string>
+    <string id="32002">Encoding</string>
+    <string id="32003">Do not notify about the update of the TV program</string>
+    <string id="32004">[B]Update TV program now[/B]</string>
+    <string id="32005">[B]Search for missing icons[/B]</string>
+    <string id="32006">[B]Download the logos package with GitHub[/B]</string>    
+    
+    <string id="33001">Quick commands:</string>
+    <string id="33002">Apply settings for:</string>    
+
+    <string id="34001">Logos updated</string>
+    <string id="34002">TV program updated</string>
+    <string id="34003">Error! Switched off [B]PVR IPTV Simple Client[/B]</string>
+    <string id="34004">Downloading a playlist ...</string>
+    <string id="34005">Downloading a TV program ...</string>
+    <string id="34006">Create a TV program file ...</string>
+    <string id="34007">Unpacking the TV program ...</string>
+    <string id="34008">Settings MetroEPG and IPTV Simple Client fulfilled.</string>
+    <string id="34009">To apply the changes, you must wait for the formation of the TV program and [B]restart Kodi[/B]!</string>
+    <string id="34010">The download of the logo package is complete!</string>
+    <string id="34011">Downloading logo pack ...</string>
+    <string id="34012">Unpacking logos ...</string>
+</strings>

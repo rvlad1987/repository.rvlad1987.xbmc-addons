@@ -12,24 +12,24 @@ class Generator:
     """
     ZIPS_PATH = "./repo/"
     
-    def __init__( self ):
+    def __init__( self, version ):
         # generate files
-        self._generate_addons_file()
-        self._generate_md5_file()
-        self._generate_md5_zipfiles()
+        self._generate_addons_file(version)
+        self._generate_md5_file(None,version)
+        self._generate_md5_zipfiles(version)
         # notify user
         print "Finished updating addons xml and md5 files"
 
-    def _generate_addons_file( self ):
+    def _generate_addons_file( self, version ):
         # addon list
-        addons = os.listdir( "./source/" )
+        addons = os.listdir( "./" + version + "/source/" )
         #print addons
         # final addons text
         addons_xml = u"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<addons>\n"
         # loop thru and add each addons addon.xml file
         for addon in addons:
             try:
-                addon = "./source/"+addon
+                addon = "./" + version + "/source/"+addon
 				# skip any file or .svn folder
                 if ( not os.path.isdir( addon ) or addon == ".svn" ): continue
                 # create path
@@ -53,11 +53,11 @@ class Generator:
         # clean and add closing tag
         addons_xml = addons_xml.strip() + u"\n</addons>\n"
         # save file
-        self._save_file( addons_xml.encode( "UTF-8" ), file="addons.xml" )
+        self._save_file( addons_xml.encode( "UTF-8" ), file=os.path.join("./" + version + "/", "addons.xml" ))
 
-    def _generate_md5_file( self, fname = None):
+    def _generate_md5_file(self, fname, version):
         try:
-            if fname is None: fname = "addons.xml"
+            if fname is None: fname = "./"+version+"/addons.xml"
             # create a new md5 hash
             # m = md5.new( open( fname ).read() ).hexdigest()
             m = md5( open( fname ).read() ).hexdigest()
@@ -75,18 +75,21 @@ class Generator:
             # oops
             print "An error occurred saving %s file!\n%s" % ( file, e, )
             
-    def _generate_md5_zipfiles( self ):
+    def _generate_md5_zipfiles( self, version ):
         try:
+            self.ZIPS_PATH = "./" + version + "/repo/"
             dirs = os.listdir( self.ZIPS_PATH )
             for dir in dirs:
                 zips_path = os.path.join(self.ZIPS_PATH, dir)
                 zips = os.listdir( zips_path )
                 for zip_name in zips:
                     if zip_name.endswith(".zip"):
-                        self._generate_md5_file (fname = os.path.join(zips_path, zip_name ) )
+                        self._generate_md5_file (os.path.join(zips_path, zip_name ),version )
         except Exception, e:
             print "An error occurred creating md5 zip files!\n%s" % ( e, )
 
 if ( __name__ == "__main__" ):
     # start
-    Generator()
+    Generator('krypton')
+    Generator('leia')
+    Generator('matrix')
