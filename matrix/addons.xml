@@ -1,31 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="plugin.video.diafilms"
-       name="[COLOR FF00FF00]Диафильмы ([/COLOR][COLOR FFFFF000]diafilmy.su[/COLOR][COLOR FF00FF00])[/COLOR]"
-       version="1.19.8"
-       provider-name="Silen">
-  <requires>
-    <import addon="xbmc.python" version="2.1.0"/>
-  </requires>
-  <extension point="xbmc.python.pluginsource"
-             provides="video"
-             library="default.py">
-    <provides>video</provides>
-  </extension>
-  <extension point="xbmc.addon.metadata">
-    <summary>Диафильмы</summary>
-    <description>Диафильмы – возвращение в детство
-Окунитесь в Мир Детства, вспомните магию темной комнаты, горячего диапроектора и скрипа прокручивания пленки на следующий кадр,
-ваш восторг в ту секунду, когда на стене появляется первый кадр, и начинается сказка…
-
-</description>
-    <platform>all</platform>
-  </extension>
-</addon>
-
 	<addon id="plugin.video.filmix.net.dev"
        name="Filmix.Net"
-       version="6.19.0"
+       version="0.6.0"
        provider-name="Evgenii Devisok aka evgen_dev">
 	<requires>
 		<import addon="xbmc.python" version="2.26.0"/>
@@ -50,48 +27,6 @@
             <fanart>fanart.jpg</fanart>
         </assets>
 	</extension>
-</addon>
-
-<addon id="script.module.metroepg" name="MetroEPG" version="1.19.0" provider-name="Rudnitskii Vlad aka rvlad1987">
-    <requires>
-        <import addon="xbmc.python" version="2.1.0"/>
-    </requires>
-    <extension point="xbmc.python.pluginsource" library="default.py">
-        <provides>executable</provides>
-    </extension>
-    <extension point="xbmc.service" library="autostart.py" start="login" />
-    <extension point="xbmc.addon.metadata">
-    <extension point="xbmc.python.module" library="lib"/>
-        <summary>МетроEPG</summary>
-        <description>
-             МетроEPG - сервис, который позволяет автоматизировать настройку IPTV + EPG для Метросети. Настраиваются основные параметры IPTV Simple Client для получения списка канналов и телепрограммы.
-        </description>
-        <platform>all</platform>
-        <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
-        <forum></forum>
-        <email>rvlad1987@mail.ru</email>
-    </extension>
-</addon>
-
-<addon id="script.module.metroepg.onenet" name="MetroEPG (OneNet.By)" version="0.19.3" provider-name="Rudnitskii Vlad aka rvlad1987">
-    <requires>
-        <import addon="xbmc.python" version="2.1.0"/>
-    </requires>
-    <extension point="xbmc.python.pluginsource" library="default.py">
-        <provides>executable</provides>
-    </extension>
-    <extension point="xbmc.service" library="autostart.py" start="login" />
-    <extension point="xbmc.addon.metadata">
-    <extension point="xbmc.python.module" library="lib"/>
-        <summary>МетроEPG (OneNet.By)</summary>
-        <description>
-             МетроEPG - сервис, который позволяет автоматизировать настройку IPTV + EPG для OneNet. Настраиваются основные параметры IPTV Simple Client для получения списка канналов и телепрограммы.
-        </description>
-        <platform>all</platform>
-        <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
-        <forum></forum>
-        <email>rvlad1987@mail.ru</email>
-    </extension>
 </addon>
 
 <addon id="script.module.xbmcup" name="XbmcUp" version="0.2.1" provider-name="HAL9000">

@@ -1,0 +1,21 @@
+Текущие группы функционала (по файлам):
+----------------------------------------------------------------------
+app       | Plugin, Handler, Service, Lang, lang, Setting, setting, Addon, addon
+db        | SQL, NoSQL, Cache
+gui       | window, control, number, date, time, ip, select, confirm, setting, alert, prompt, password, captcha, browse, text, progress
+log       | log, debug, error, fatal, info, notice, severe, warning
+net       | http
+parser    | re, html
+play      | clean, sfx, Player
+skin      | name, condition, label, image, has, screenshot
+system    | sleep, isabort, sound, rpc, execute, server, restart, shutdown, config, monitor, FS, fs
+test      | Test, TestRun
+_window   | Window, XML, Dialog, DialogXML, wid, did, window, dialog
+_control  | Button, Check, Edit, Fade, Group, Image, Label, List, Progress, Radio, Slider, Text
+=======================================================================
+
+InfoTagMusic -> play(?)
+InfoTagVideo -> play(?)
+
+PlayList -> play (возможно переделать из объекта list)
+PlayListItem -> play

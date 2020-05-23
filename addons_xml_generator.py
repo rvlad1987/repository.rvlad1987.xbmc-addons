@@ -90,6 +90,5 @@ class Generator:
 
 if ( __name__ == "__main__" ):
     # start
-    Generator('krypton')
-    Generator('leia')
+    Generator('helix')
     Generator('matrix')

@@ -1,0 +1,18 @@
+Данный файлик не несет никакой пользы для пользователей XBMCup.
+Он является памяткой для разработчиков XBMCup по адаптированию BeautifulSoup
+к фреймфворку (в случае выхода новых версий BeautifulSoup).
+Если вы используете XBMCup в своих проектах, но не разрабатываете его (XBMCup), то эта информация
+Вам не нужна и они никак не повлияет на ваш проект.
+
+Необходимые шаги для переноса BeautifulSoup в XBMCup:
+
+1. Скопировать файлы __init__.py, dammit.py, element.py
+2. В файле element.py заменить строчку "from bs4.dammit import EntitySubstitution" на "from .dammit import EntitySubstitution"
+3. Скопировать файлы builder/__init__.py, builder/_htmlparser.py
+4. В файле builder/__init__.py заменить следующие строчки:
+    - "from bs4.element import (" на "from ..element import ("
+    - "this_module = sys.modules['bs4.builder']" на "this_module = sys.modules['xbmcup.bs4.builder']"
+5. В файле builder/_htmlparser.py заменить следующие строчки:
+    - "from bs4.element import (" на "from ..element import ("
+    - "from bs4.dammit import EntitySubstitution, UnicodeDammit" на "from ..dammit import EntitySubstitution, UnicodeDammit"
+    - "from bs4.builder import (" на "from ..builder import ("
