@@ -23,15 +23,14 @@ SQL.set('CREATE INDEX IF NOT EXISTS dataindex ON cache(expire)')
 
 class AbstactList(xbmcup.app.Handler, HttpData, Render):
     def add_movies(self, response, ifempty=30111):
-        print(xbmcup.app.setting['hide_donate'])
         if(len(response['data']) > 0):
             for movie in response['data']:
                 if PROXIES:
                     if DOWNLOAD_POSTERS_VIA_PROXY:
                         self.imageloader.load_to_cache(movie['img'])
                     else:
-                        movie['img'] = None                
-                
+                        movie['img'] = None
+
                 menu = []
                 
                 menu.append([xbmcup.app.lang[34033], self.link('context', {'action': 'show_movieinfo', 'movie' : movie})])
@@ -448,7 +447,7 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
         if not self.params.get('cache') or not self.movieInfo:
             self.movieInfo = self.get_movie_info(self.params['movie_page'])
             CACHE.set(cache_key, self.movieInfo, 60*60)
-            # print 'set to cache :', cache_key
+            #print 'set to cache :', cache_key
 
         try:
             self.params['sub_dir'] = int(self.params['sub_dir'])

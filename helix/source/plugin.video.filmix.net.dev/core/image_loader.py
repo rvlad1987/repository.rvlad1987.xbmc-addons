@@ -190,6 +190,8 @@ class ImageLoader:
         self.db = TexturesSQL( self.fs._path( 'database://Textures13.db' ) )
 
     def load_to_cache(self, url):
+        if not url:
+            return False
         if self.db.url_exists(url):
             return True
         

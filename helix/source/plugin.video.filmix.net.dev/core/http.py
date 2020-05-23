@@ -105,7 +105,7 @@ class HttpData:
         post_data={'page' : page}
 
         html = self.ajax(url, post_data, SITE_URL + '/')
-
+        #print html.decode('utf8')
         if not html:
             return None, {'page': {'pagenum' : 0, 'maxpage' : 0}, 'data': []}
         result = {'page': {'pagenum' : page, 'maxpage' : 10000}, 'data': []}
