@@ -24,7 +24,7 @@ class ContextMenu(xbmcup.app.Handler, HttpData, Render):
             eval('self.'+params['action'])(params)
         except:
             xbmcup.gui.message('Addon internal error', title='Call to undefined method ContextMenu::%s()' % params['action'])
-            print traceback.format_exc()
+            print( traceback.format_exc() )
 
     def add_bookmark(self, params):
 

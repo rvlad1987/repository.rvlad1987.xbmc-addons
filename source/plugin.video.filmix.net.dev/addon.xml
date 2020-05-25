@@ -1,17 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 	<addon id="plugin.video.filmix.net.dev"
        name="Filmix.Net"
-       version="0.5.0"
+       version="0.6.0"
        provider-name="Evgenii Devisok aka evgen_dev">
 	<requires>
-		<import addon="xbmc.python" version="2.5.0"/>
-		<import addon="script.module.xbmcup" version="0.1.1"/>
+		<import addon="xbmc.python" version="2.16.0"/>
+		<import addon="script.module.xbmcup" version="0.2.1"/>
 	</requires>
 	<extension point="xbmc.python.pluginsource" provides="video" library="addon.py">
 		<provides>video</provides>
 	</extension>
 	<extension point="xbmc.service" library="service.py" start="[login|startup]"/>
     <extension point="xbmc.addon.metadata">
+		<news>New ver. 0.6.0</news>
 		<summary>Filmix.Net</summary>
 		<description>
 			 Filmix.Net - Вашему вниманию полнометражное кино и телесериалы, мультфильмы, трейлеры.
@@ -19,6 +20,10 @@
 		<platform>all</platform>
 		<license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
 		<forum>http://xbmc.ru/forum/showthread.php?t=11719</forum>
-		<email>xbmc@devisok.org</email>
+		<email>rvlad1987@mail.ru, xbmc@devisok.org</email>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart>fanart.jpg</fanart>
+        </assets>    
 	</extension>
 </addon>

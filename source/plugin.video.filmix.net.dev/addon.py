@@ -20,7 +20,7 @@ if(split_vars[-1] == 'play'):
 try:
     search_vars = sys.argv[2].split('?')
     search_vars = search_vars[-1].split('&')
-    if search_vars[0] == 'usearch=True':
+    if 'usearch=True' in search_vars:
         params = urlparse.parse_qs(sys.argv[2].replace('?', ''))
         united_search = '{"url": ["link", "search", [{"vsearch": "'+(params['keyword'][0])+'", "usersearch": "'+(params['keyword'][0])+'", "page": 0, "is_united" : "1"}]], "source": "item", "folder": true, "parent" : {}}'
         sys.argv[2] = '?json'+urllib.quote_plus(united_search)
@@ -37,7 +37,7 @@ from core.context import ContextMenu
 from core.donate import Donate
 from core.strm_generator import SaveMovieHandler
 
-# log = open(xbmcup.system.fs('sandbox://myprog.log').decode('utf-8'), "a")
+# log = open(xbmcup.system.fs('sandbox://myprog1.log').decode('utf-8'), "a")
 # sys.stdout = log
 
 plugin = xbmcup.app.Plugin()

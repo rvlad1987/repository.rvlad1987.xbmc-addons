@@ -25,24 +25,30 @@ class AbstactList(xbmcup.app.Handler, HttpData, Render):
     def add_movies(self, response, ifempty=30111):
         if(len(response['data']) > 0):
             for movie in response['data']:
+                if PROXIES:
+                    if DOWNLOAD_POSTERS_VIA_PROXY:
+                        self.imageloader.load_to_cache(movie['img'])
+                    else:
+                        movie['img'] = None
+
                 menu = []
                 
-                menu.append([xbmcup.app.lang[34033], self.link('context', {'action': 'show_movieinfo', 'movie' : movie})])
+                menu.append(['[COLOR ff63cbff]' + xbmcup.app.lang[34033] + '[/COLOR]', self.link('context', {'action': 'show_movieinfo', 'movie' : movie})])
                 if xbmcup.app.setting['watched_db'] == 'true' and xbmcup.app.setting['strm_url'] == 'true':
-                    menu.append([xbmcup.app.lang[30170], self.link('context', {'action': 'add_episodes_to_watched_db', 'movie' : movie})])
+                    menu.append(['[COLOR ff63cbff]' + xbmcup.app.lang[30170] + '[/COLOR]', self.link('context', {'action': 'add_episodes_to_watched_db', 'movie' : movie})])
 
                 if(self.__class__.__name__ != 'BookmarkList'):
-                    menu.append([xbmcup.app.lang[30147], self.link('context', {'action': 'add_bookmark', 'id' : movie['id']})])
+                    menu.append(['[COLOR ff63cbff]' + xbmcup.app.lang[30147] + '[/COLOR]', self.link('context', {'action': 'add_bookmark', 'id' : movie['id']})])
                 else:
-                    menu.append([xbmcup.app.lang[30148], self.link('context', {'action': 'del_bookmark', 'id' : movie['id']})])
+                    menu.append(['[COLOR ff63cbff]' + xbmcup.app.lang[30148] + '[/COLOR]', self.link('context', {'action': 'del_bookmark', 'id' : movie['id']})])
                     
                 if(self.__class__.__name__ != 'Watch_Later'):
-                    menu.append([xbmcup.app.lang[30163], self.link('context', {'action': 'add_watch_later', 'id' : movie['id']})])
+                    menu.append(['[COLOR ff63cbff]' + xbmcup.app.lang[30163] + '[/COLOR]', self.link('context', {'action': 'add_watch_later', 'id' : movie['id']})])
                 else:
-                    menu.append([xbmcup.app.lang[30164], self.link('context', {'action': 'del_watch_later', 'id' : movie['id']})])
+                    menu.append(['[COLOR ff63cbff]' + xbmcup.app.lang[30164] + '[/COLOR]', self.link('context', {'action': 'del_watch_later', 'id' : movie['id']})])
 
                 if xbmcup.app.setting['library_folder']:
-                    menu.append([xbmcup.app.lang[30176], self.link('generate-strm', {'id': movie['id'], 'url': movie['url']})])
+                    menu.append(['[COLOR ff63cbff]' + xbmcup.app.lang[30176] + '[/COLOR]', self.link('generate-strm', {'id': movie['id'], 'url': movie['url']})])
 
                 not_movie = ''
                 if(movie['not_movie'] == True):
@@ -50,7 +56,7 @@ class AbstactList(xbmcup.app.Handler, HttpData, Render):
 
                 self.item(not_movie+movie['name']+' '+movie['year']+' '+movie['quality'],
                           self.link('quality-list', {'movie_page' : movie['url'], 'cover' : movie['img']}),
-                          folder=True, cover=movie['img'], menu=menu)
+                          folder=True, cover=movie['img'], icon = None, menu=menu)
         else:
             self.item(u'[COLOR red]['+xbmcup.app.lang[ifempty]+'][/COLOR]', self.link('null'), folder=False, cover=cover.info)
 
@@ -339,6 +345,7 @@ class My_News(AbstactList):
 
 
     def show_news(self, url, page):
+        #https://filmix.co/api/v2/clear_notifications
         params = {}
         params['url'] = url
         url = 'my_news'
@@ -441,7 +448,7 @@ class QualityList(xbmcup.app.Handler, HttpData, Render):
         if not self.params.get('cache') or not self.movieInfo:
             self.movieInfo = self.get_movie_info(self.params['movie_page'])
             CACHE.set(cache_key, self.movieInfo, 60*60)
-            # print 'set to cache :', cache_key
+            #print 'set to cache :', cache_key
 
         try:
             self.params['sub_dir'] = int(self.params['sub_dir'])

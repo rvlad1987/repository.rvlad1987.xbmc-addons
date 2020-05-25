@@ -8,6 +8,9 @@ from auth import Auth
 from defines import *
 from watched_db import Watched
 from itertools import izip_longest
+from image_loader import ImageLoader
+
+import musor
 
 try:
     cache_minutes = 60*int(xbmcup.app.setting['cache_time'])
@@ -17,17 +20,18 @@ except:
 class HttpData:
 
     mycookie = None
+    imageloader = ImageLoader()
 
     def load(self, url):
         try:
             self.auth = Auth()
             self.cookie = self.auth.get_cookies()
             cook = self.mycookie if self.cookie == None else self.cookie
-            response = xbmcup.net.http.get(url, cookies=cook, verify=False)
+            response = xbmcup.net.http.get(url, cookies=cook, verify=False, proxies=PROXIES)
             if(self.cookie == None):
                 self.mycookie = response.cookies
         except xbmcup.net.http.exceptions.RequestException:
-            print traceback.format_exc()
+            print( traceback.format_exc() )
             return None
         else:
             if(response.status_code == 200):
@@ -45,13 +49,13 @@ class HttpData:
             self.auth = Auth()
             self.cookie = self.auth.get_cookies()
             cook = self.mycookie if self.cookie == None else self.cookie
-            response = xbmcup.net.http.post(url, data, cookies=cook, verify=False)
+            response = xbmcup.net.http.post(url, data, cookies=cook, verify=False, proxies=PROXIES)
 
             if(self.cookie == None):
                 self.mycookie = response.cookies
 
         except xbmcup.net.http.exceptions.RequestException:
-            print traceback.format_exc()
+            print( traceback.format_exc() )
             return None
         else:
             if(response.status_code == 200):
@@ -74,15 +78,15 @@ class HttpData:
 
             cook = self.mycookie if self.cookie == None else self.cookie
             if(len(data) > 0):
-                response = xbmcup.net.http.post(url, data, cookies=cook, headers=headers, verify=False)
+                response = xbmcup.net.http.post(url, data, cookies=cook, headers=headers, verify=False, proxies=PROXIES)
             else:
-                response = xbmcup.net.http.get(url, cookies=cook, headers=headers, verify=False)
+                response = xbmcup.net.http.get(url, cookies=cook, headers=headers, verify=False, proxies=PROXIES)
 
             if(self.cookie == None):
                 self.mycookie = response.cookies
 
         except xbmcup.net.http.exceptions.RequestException:
-            print traceback.format_exc()
+            print( traceback.format_exc() )
             return None
         else:
             return response.text if response.status_code == 200 else None
@@ -101,7 +105,7 @@ class HttpData:
         post_data={'page' : page}
 
         html = self.ajax(url, post_data, SITE_URL + '/')
-
+        #print html.decode('utf8')
         if not html:
             return None, {'page': {'pagenum' : 0, 'maxpage' : 0}, 'data': []}
         result = {'page': {'pagenum' : page, 'maxpage' : 10000}, 'data': []}
@@ -128,7 +132,7 @@ class HttpData:
                         'img': None
                     })
         except:
-            print traceback.format_exc()
+            print( traceback.format_exc() )
 
         if(nocache):
             return None, result
@@ -207,14 +211,14 @@ class HttpData:
                     genre = div.find('div', class_='category').find(class_='item-content').get_text().strip()
                     dop_information.append(genre)
                 except:
-                    print traceback.format_exc()
+                    print( traceback.format_exc() )
 
                 information = ''
                 if(len(dop_information) > 0):
                     information = '[COLOR white]['+', '.join(dop_information)+'][/COLOR]'
 
                 movieposter = self.format_poster_link( href.find('img', class_='poster poster-tooltip').get('src') )
-
+                
                 result['data'].append({
                         'url': movie_url,
                         'id': movie_id,
@@ -225,7 +229,7 @@ class HttpData:
                         'img': None if not movieposter else movieposter
                     })
         except:
-            print traceback.format_exc()
+            print( traceback.format_exc() )
 
         if(nocache):
             return None, result
@@ -235,6 +239,7 @@ class HttpData:
     def decode_base64(self, encoded_url):
         codec_a = ("l", "u", "T", "D", "Q", "H", "0", "3", "G", "1", "f", "M", "p", "U", "a", "I", "6", "k", "d", "s", "b", "W", "5", "e", "y", "=")
         codec_b = ("w", "g", "i", "Z", "c", "R", "z", "v", "x", "n", "N", "2", "8", "J", "X", "t", "9", "V", "7", "4", "B", "m", "Y", "o", "L", "h")
+
         i = 0
         for a in codec_a:
             b = codec_b[i]
@@ -246,12 +251,34 @@ class HttpData:
         
     def decode_base64_2(self, encoded_url):
         tokens = ("//Y2VyY2EudHJvdmEuc2FnZ2V6emE=", "//c2ljYXJpby4yMi5tb3ZpZXM=", "//a2lub2NvdmVyLnc5OC5uamJo")
-        clean_encoded_url = encoded_url[2:].replace("\/","/")
+	def _log(s):
+		with open(xbmc.translatePath('special://temp/filmix_net_url.log'), 'a') as f:
+			try:
+				f.write(unicode(s).encode('utf-8'))
+			except:
+				f.write(s)
+			f.write('\n')
+        clean_encoded_url2 = encoded_url[2:].replace("\/","/")
         
-        for token in tokens:
-            clean_encoded_url = clean_encoded_url.replace(token, "")
-        
-        return base64.b64decode(clean_encoded_url)
+        #for token in tokens:
+        #    clean_encoded_url = clean_encoded_url2.replace(token, "")
+        clean_encoded_url = musor.Clear_Musor24(clean_encoded_url2)
+        #clean_encoded_url = None
+        if clean_encoded_url:
+           try:
+               return base64.b64decode(clean_encoded_url)
+           except:
+               clean_encoded_url = None
+
+        if clean_encoded_url is None:
+           clean_encoded_url = musor.Clear_Musor(clean_encoded_url2)
+
+        try:
+           return base64.b64decode(clean_encoded_url)
+        except:
+           xbmc.log(u'filmix.net encoded_url:'+ encoded_url, xbmc.LOGERROR)
+           _log(encoded_url)
+           xbmcgui.Dialog().ok('Filmix.Net', 'Не удалось декодировать ссылку (см. kodi.log):', encoded_url)
 
     def decode_unicode(self, encoded_url):
 
@@ -268,6 +295,7 @@ class HttpData:
         if(checkhttp == True and (encoded_url.find('http://') != -1 or encoded_url.find('https://') != -1)):
             return False
 
+        xbmc.log(u'Filmix.Net try decode url:'+ encoded_url)
         try:
             if encoded_url.find('#') != -1:
                 if encoded_url[:2] == '#2':
@@ -283,7 +311,20 @@ class HttpData:
         # fix for .cc
         r_link = link.replace('https://filmix.co' , SITE_URL)
         # fix for .live .co .net
-        return r_link if r_link.find( SITE_URL ) != -1 else SITE_URL + r_link
+        if r_link.find( SITE_URL ) != -1:
+             r_link = r_link
+        elif '://' in r_link:
+             r_link = r_link
+        else:
+             r_link = SITE_URL + r_link
+        
+        if PROXIES:
+            if DOWNLOAD_POSTERS_VIA_PROXY:
+                self.imageloader.load_to_cache(r_link)
+            else:
+                r_link = ''
+        
+        return r_link
 
     def format_direct_link(self, source_link, q):
         # regex = re.compile("\[([^\]]+)\]", re.IGNORECASE)
@@ -379,7 +420,11 @@ class HttpData:
                     try:
                         folders = movies[0]['folder']
                     except:
-                        movies = [{ 'folder' : movies, 'title' : 'Season 1' }]
+                        try: # fix bug site same serials("Ekaterina")
+                            folders = movies[1]['folder']
+                            movies.pop(0)
+                        except:
+                            movies = [{ 'folder' : movies, 'title' : 'Season 1' }]
 
                     for season in movies:
                         current_movie = {'folder_title' : season['title']+' ('+translate+')', 'movies': {}, 'translate': translate}
@@ -481,11 +526,11 @@ class HttpData:
                 movieInfo['description'] = ''
 
             try:
-                movieInfo['fanart'] = SITE_URL + soup.find('ul', class_='frames-list').find('a').get('href')
+                movieInfo['fanart'] = self.format_poster_link( soup.find('ul', class_='frames-list').find('a').get('href') )
             except:
                 movieInfo['fanart'] = ''
             try:
-                movieInfo['cover'] = soup.find('a', class_='fancybox').get('href')
+                movieInfo['cover'] = self.format_poster_link( soup.find('a', class_='fancybox').get('href') )
             except:
                 movieInfo['cover'] = ''
 
@@ -530,7 +575,7 @@ class HttpData:
             except:
                 movieInfo['director'] = ''
         except:
-            print traceback.format_exc()
+            print( traceback.format_exc() )
 
         #print movieInfo
 
@@ -604,7 +649,7 @@ class HttpData:
             desc = soup.find('div', class_='full-story').get_text().strip()
             movieInfo['desc'] = '\n[COLOR blue]%s[/COLOR]\n%s' % (xbmcup.app.lang[34027], desc) + '\n' + movieInfo['desc']
         except:
-            movieInfo['desc'] = traceback.format_exc()
+            pass
 
         try:
             movieInfo['trailer'] = soup.find('li', attrs={'data-id' : "trailers"}).find('a').get('href')
@@ -636,10 +681,16 @@ class HttpData:
         soup = xbmcup.parser.html(self.strip_scripts(html))
 
         link = self.decode_direct_media_url(soup.find('input', id='video5-link').get('value'))
-        avail_quality = max(map(self.my_int, self.get_qualitys(link)))
+        
+        s_qualitys = self.get_qualitys(link)[0]
+        avail_quality = str( max( map( self.my_int, s_qualitys.replace(',', ' ').split() ) ) )
+        
+        s_qualitys = '[' + s_qualitys + ']'
+        link = link.replace(s_qualitys, avail_quality)
+
         progress.update(100)
         progress.close()
-        return self.format_direct_link(link, str(avail_quality))
+        return link
 
     def format_desc_item(self, text):
         return re.compile(r'^([^:]+:)', re.S).sub('[COLOR blue]\\1[/COLOR] ', re.sub(r'\s+', ' ', text) )
@@ -691,12 +742,12 @@ class HttpData:
                     info['maxpage'] = info['pagenum']+1
             except:
                 info['maxpage'] = info['pagenum']
-                print traceback.format_exc()
+                print( traceback.format_exc() )
 
         except:
             info['pagenum'] = 1
             info['maxpage'] = 1
-            print traceback.format_exc()
+            print( traceback.format_exc() )
 
         return info
 
@@ -721,12 +772,12 @@ class HttpData:
                 info['maxpage'] = max(pages)
             except:
                 info['maxpage'] = info['pagenum']
-                print traceback.format_exc()
+                print( traceback.format_exc() )
 
         except:
             info['pagenum'] = 1
             info['maxpage'] = 1
-            print traceback.format_exc()
+            print( traceback.format_exc() )
 
         return info
 

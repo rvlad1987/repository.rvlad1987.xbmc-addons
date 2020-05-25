@@ -23,7 +23,7 @@ class Auth:
                 return False
             url = '%s/engine/ajax/user_auth.php' % (SITE_URL)
             data = {'login' : 'submit', 'login_name' : self.login, 'login_password' : self.password, 'login_not_save' : '1'}
-            response = xbmcup.net.http.post(url, data, verify=False)
+            response = xbmcup.net.http.post(url, data, verify=False, proxies=PROXIES)
             response.cookies.set('per_page_news', str(self.per_page_news), domain='.'+SITE_DOMAIN)
         except xbmcup.net.http.exceptions.RequestException:
             return False
@@ -64,5 +64,6 @@ class Auth:
 
 
     def check_auth(self, page):
-        reg = re.compile('/users/index/logout', re.S).findall(page)
+        # /users/index/logout # old pattern
+        reg = re.compile('/?action=logout', re.S).findall(page)
         return len(reg) > 0

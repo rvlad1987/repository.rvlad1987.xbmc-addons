@@ -12,14 +12,11 @@ from urlparse import urlsplit, urlunsplit
 import xbmc
 
 import xbmcup
-from core.defines import QUALITYS, SITE_URL, s_https, SITE_SCHEME, SITE_DOMAIN, PLUGIN_ID
+from core.defines import QUALITYS, SITE_URL, s_https, SITE_SCHEME, SITE_DOMAIN, PLUGIN_ID, IS_WIN_PLATFORM
 from core.http import HttpData
 from lib.counter import Counter
 from xbmcup.app import compile_link
 from xbmcup.log import notice
-
-IS_WIN_PLATFORM = (sys.platform == 'win32') or (sys.platform == 'win64')
-
 
 def encode_for_platform(file_name):
     if not IS_WIN_PLATFORM:

@@ -1,0 +1,526 @@
+# Kodi Media Center language file
+# Addon Name: Filmix.Net
+# Addon id: plugin.video.filmix.net.dev
+# Addon Provider: Evgenii Devisok aka evgen_dev
+msgid ""
+msgstr ""
+"Project-Id-Version: Kodi Addons\n"
+"Report-Msgid-Bugs-To: https://forum.kodi.tv/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Kodi Translation Team\n"
+"Language-Team: Team-Kodi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru_RU\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgctxt "#30106"
+msgid "<< Previous page"
+msgstr "<< Предыдущая страница"
+
+msgctxt "#30107"
+msgid "Next page >>"
+msgstr "Следующая страница >>"
+
+msgctxt "#30108"
+msgid "New search"
+msgstr "Новый поиск"
+
+msgctxt "#30109"
+msgid "Search by"
+msgstr "Поиск по запросу"
+
+msgctxt "#30110"
+msgid "No results for search"
+msgstr "Поиск не дал результатов"
+
+msgctxt "#30111"
+msgid "Category is empty"
+msgstr "Категория пуста"
+
+msgctxt "#30112"
+msgid "Search"
+msgstr "Поиск"
+
+msgctxt "#30113"
+msgid "Folder"
+msgstr "Папка"
+
+msgctxt "#30114"
+msgid "Films"
+msgstr "Фильмы"
+
+msgctxt "#30115"
+msgid "Serials"
+msgstr "Сериалы"
+
+msgctxt "#30116"
+msgid "Cartoons"
+msgstr "Мультфильмы"
+
+msgctxt "#30117"
+msgid "Cartoons serials"
+msgstr "Мультсериалы"
+
+msgctxt "#30119"
+msgid "[COLOR green]Collections of films[/COLOR]"
+msgstr "[COLOR green]Тематические подборки фильмов[/COLOR]"
+
+msgctxt "#30120"
+msgid "Advanced search"
+msgstr "Расширенный поиск"
+
+msgctxt "#30121"
+msgid "Queue for watching"
+msgstr "Очередь просмотра"
+
+msgctxt "#30128"
+msgid "Topic: [COLOR blue]%s[/COLOR]"
+msgstr "Рубрика: [COLOR blue]%s[/COLOR]"
+
+msgctxt "#30129"
+msgid "Genre: [COLOR blue]%s[/COLOR]"
+msgstr "Жанр: [COLOR blue]%s[/COLOR]"
+
+msgctxt "#30130"
+msgid "Quality: [COLOR blue]%s[/COLOR]"
+msgstr "Качество: [COLOR blue]%s[/COLOR]"
+
+msgctxt "#30131"
+msgid "Translation: [COLOR blue]%s[/COLOR]"
+msgstr "Перевод/озвучка: [COLOR blue]%s[/COLOR]"
+
+msgctxt "#30132"
+msgid "Origin: [COLOR blue]%s[/COLOR]"
+msgstr "Страна: [COLOR blue]%s[/COLOR]"
+
+msgctxt "#30133"
+msgid "[COLOR green][Apply selected filters][/COLOR]"
+msgstr "[COLOR green][Применить выбранные фильтры][/COLOR]"
+
+msgctxt "#30134"
+msgid "[COLOR yellow]Search result [COLOR blue][Страница %s][/COLOR]:[/COLOR]"
+msgstr "[COLOR yellow]Результаты поиска [COLOR blue][Страница %s][/COLOR]:[/COLOR]"
+
+msgctxt "#30135"
+msgid "Any"
+msgstr "Любой"
+
+msgctxt "#30136"
+msgid "Doesn't matter"
+msgstr "Не важно"
+
+msgctxt "#30137"
+msgid "Topic"
+msgstr "Рубрика"
+
+msgctxt "#30138"
+msgid "Genre"
+msgstr "Жанр"
+
+msgctxt "#30139"
+msgid "Quality"
+msgstr "Качество"
+
+msgctxt "#30140"
+msgid "Translation"
+msgstr "Перевод/озвучка"
+
+msgctxt "#30141"
+msgid "Production"
+msgstr "Производство"
+
+msgctxt "#30142"
+msgid "Russian"
+msgstr "Наше"
+
+msgctxt "#30143"
+msgid "Foreign"
+msgstr "Зарубежное"
+
+msgctxt "#30144"
+msgid "Year"
+msgstr "Год выпуска"
+
+msgctxt "#30145"
+msgid "Year: [COLOR blue]%s[/COLOR]"
+msgstr "Год выпуска: [COLOR blue]%s[/COLOR]"
+
+msgctxt "#30146"
+msgid "[COLOR yellow]My bookmarks[/COLOR]"
+msgstr "[COLOR yellow]Мои закладки[/COLOR]"
+
+msgctxt "#30147"
+msgid "Add to bookmarks"
+msgstr "Добавить в закладки"
+
+msgctxt "#30148"
+msgid "Delete from bookmarks"
+msgstr "Удалить из закладок"
+
+msgctxt "#30149"
+msgid "This section will be available after authorization"
+msgstr "Этот раздел станет доступным после авторизации"
+
+msgctxt "#30150"
+msgid "Bookmark added"
+msgstr "Закладка добавлена"
+
+msgctxt "#30151"
+msgid "Bookmark deleted"
+msgstr "Закладка удалена"
+
+msgctxt "#30152"
+msgid "No bookmarks"
+msgstr "Нет закладок"
+
+msgctxt "#30153"
+msgid "Authorize for bookmarks usage"
+msgstr "Авторизуйтесь, для использования закладок"
+
+msgctxt "#30154"
+msgid "Failed to add bookmark"
+msgstr "Не удалось добавить закладку"
+
+msgctxt "#30155"
+msgid "Failed to delete bookmark"
+msgstr "Не удалось удалить закладку"
+
+msgctxt "#30156"
+msgid "Add bookmark to..."
+msgstr "Добавить закладку в..."
+
+msgctxt "#30157"
+msgid "[COLOR blue][Create folder][/COLOR]"
+msgstr "[COLOR blue][Создать папку][/COLOR]"
+
+msgctxt "#30158"
+msgid "[COLOR red]Delete folder[/COLOR]"
+msgstr "[COLOR red]Удалить папку[/COLOR]"
+
+msgctxt "#30159"
+msgid "Bookmark folder deleted"
+msgstr "Папка закладок удалена"
+
+msgctxt "#30160"
+msgid "[COLOR blue]Topics:[/COLOR]"
+msgstr "[COLOR blue]Рубрики:[/COLOR]"
+
+msgctxt "#30161"
+msgid "Search history"
+msgstr "История поиска"
+
+msgctxt "#30162"
+msgid "[COLOR yellow]Watch later[/COLOR]"
+msgstr "[COLOR yellow]Посмотреть позже[/COLOR]"
+
+msgctxt "#30163"
+msgid "Add to "Watch later""
+msgstr "Добавить в "Посмотреть позже""
+
+msgctxt "#30164"
+msgid "Delete from "Watch later""
+msgstr "Удалить из "Посмотреть позже""
+
+msgctxt "#30165"
+msgid "Added to "Watch later""
+msgstr "Добавлено в "Посмотреть позже""
+
+msgctxt "#30166"
+msgid "Deleted from "Watch later""
+msgstr "Удаленно из "Посмотреть позже""
+
+msgctxt "#30167"
+msgid "Failed to add to "Watch later""
+msgstr "Не удалось добавить в "Посмотреть позже""
+
+msgctxt "#30168"
+msgid "Failed delete from "Watch later""
+msgstr "Не удалось удалить из "Посмотреть позже""
+
+msgctxt "#30169"
+msgid "Authorize for using "Watch later""
+msgstr "Авторизуйтесь, для использования "Посмотреть позже""
+
+msgctxt "#30170"
+msgid "All watched"
+msgstr "Всё просмотрено"
+
+msgctxt "#30171"
+msgid "Failed to add to watched database"
+msgstr "Не удалось добавить в БД просмотренных"
+
+msgctxt "#30172"
+msgid "Episodes added to database"
+msgstr "Эпизоды добавлены в БД"
+
+msgctxt "#30173"
+msgid "[COLOR yellow]My Collections[/COLOR]"
+msgstr "[COLOR yellow]Мои подборки[/COLOR]"
+
+msgctxt "#30174"
+msgid "No Collections"
+msgstr "Нет подборок"
+
+msgctxt "#30175"
+msgid "[COLOR yellow]My news[/COLOR]"
+msgstr "[COLOR yellow]Мои новости[/COLOR]"
+
+msgctxt "#30176"
+msgid "Save"
+msgstr "Сохранить"
+
+msgctxt "#30177"
+msgid "Select path to library"
+msgstr "Укажите путь до библиотеки"
+
+msgctxt "#30179"
+msgid "{} - Seasons: {}"
+msgstr "{} - Сезонов: {}"
+
+msgctxt "#30180"
+msgid "Cancel"
+msgstr "Отмена"
+
+msgctxt "#30181"
+msgid "Saved {} episodes"
+msgstr "Сохранено {} эпизодов"
+
+msgctxt "#31001"
+msgid "General"
+msgstr "Общие"
+
+msgctxt "#31002"
+msgid "Authorization"
+msgstr "Авторизация"
+
+msgctxt "#31003"
+msgid "Sort settings"
+msgstr "Настройки сортировки"
+
+msgctxt "#31004"
+msgid "Cache settings"
+msgstr "Настройки кеширования"
+
+msgctxt "#31005"
+msgid "by views"
+msgstr "по просмотрам"
+
+msgctxt "#31006"
+msgid "by rating"
+msgstr "по рейтингу"
+
+msgctxt "#31007"
+msgid "by date"
+msgstr "по дате добавления"
+
+msgctxt "#31008"
+msgid "Sort"
+msgstr "Сортировать"
+
+msgctxt "#31009"
+msgid "Time limit for caching (0 - turn off caching)"
+msgstr "Время жизни кеша в минутах (0 - откл. кеширование)"
+
+msgctxt "#31010"
+msgid "Clear cache"
+msgstr "Очистить кеш"
+
+msgctxt "#31011"
+msgid "Login"
+msgstr "Логин"
+
+msgctxt "#31012"
+msgid "Password"
+msgstr "Пароль"
+
+msgctxt "#31013"
+msgid "Log in"
+msgstr "Войти"
+
+msgctxt "#31014"
+msgid "Log out"
+msgstr "Выйти"
+
+msgctxt "#31015"
+msgid "Quality settings"
+msgstr "Настройки качества"
+
+msgctxt "#31016"
+msgid "Select by default if possible"
+msgstr "Если доступно, автоматически выбирать"
+
+msgctxt "#31017"
+msgid "Configure a domain name"
+msgstr "Натройки доменного имени"
+
+msgctxt "#31018"
+msgid "Domain Filmix'a"
+msgstr "Домен Filmix'a"
+
+msgctxt "#31019"
+msgid "Use https"
+msgstr "Использовать https"
+
+msgctxt "#32001"
+msgid "Cache successfully cleared"
+msgstr "Кеш успешно очищен"
+
+msgctxt "#32002"
+msgid "You have been successfully authorized"
+msgstr "Вы успешно авторизованы"
+
+msgctxt "#32003"
+msgid "Login failed, check login and password"
+msgstr "Войти не удалось, проверьте логин и пароль"
+
+msgctxt "#32004"
+msgid "You have successfully signed out"
+msgstr "Вы успешно вышли"
+
+msgctxt "#32005"
+msgid "List options are set"
+msgstr "Параметры списков установлены"
+
+msgctxt "#34017"
+msgid "Always ask"
+msgstr "Всегда спрашивать"
+
+msgctxt "#34018"
+msgid "SD[360]"
+msgstr "SD[360]"
+
+msgctxt "#34019"
+msgid "SD[480]"
+msgstr "SD[480]"
+
+msgctxt "#34020"
+msgid "HD[720]"
+msgstr "HD[720]"
+
+msgctxt "#34021"
+msgid "FHD[1080]"
+msgstr "FHD[1080]"
+
+msgctxt "#34022"
+msgid "Search history"
+msgstr "История поиска"
+
+msgctxt "#34023"
+msgid "Number of last search requests"
+msgstr "Количество последних поисковых запросов"
+
+msgctxt "#34024"
+msgid "Select quality as equal or less"
+msgstr "Выбирать равное или меньшее качество"
+
+msgctxt "#34025"
+msgid "FLV"
+msgstr "FLV"
+
+msgctxt "#34026"
+msgid "Video files are absent"
+msgstr "Видеофайлы отсутствуют"
+
+msgctxt "#34027"
+msgid "Description:"
+msgstr "Описание:"
+
+msgctxt "#34028"
+msgid "[COLOR red][Trailer][/COLOR]"
+msgstr "[COLOR red][Трейлер][/COLOR]"
+
+msgctxt "#34029"
+msgid "[COLOR blue]Kinopoisk:[/COLOR] [COLOR %s]%s[/COLOR] (%s)"
+msgstr "[COLOR blue]Кинопоиск:[/COLOR] [COLOR %s]%s[/COLOR] (%s)"
+
+msgctxt "#34030"
+msgid "[COLOR blue]IMDB:[/COLOR] [COLOR %s]%s[/COLOR] (%s)"
+msgstr "[COLOR blue]IMDB:[/COLOR] [COLOR %s]%s[/COLOR] (%s)"
+
+msgctxt "#34031"
+msgid "Failed to load info"
+msgstr "Не удалось загрузить информацию"
+
+msgctxt "#34032"
+msgid "Failed to find link to trailer"
+msgstr "Не удалось найти ссылку на трейлер"
+
+msgctxt "#34033"
+msgid "Movie info"
+msgstr "Информация о фильме"
+
+msgctxt "#34034"
+msgid "WQHD[1440]"
+msgstr "WQHD[1440]"
+
+msgctxt "#34035"
+msgid "UHD[2160]"
+msgstr "UHD[2160]"
+
+msgctxt "#37000"
+msgid "[COLOR red]Like this addon?[/COLOR]"
+msgstr "[COLOR red]Нравится плагин?[/COLOR]"
+
+msgctxt "#37001"
+msgid "Additional"
+msgstr "Дополнительные"
+
+msgctxt "#37002"
+msgid "Disable "Like this addon?" item"
+msgstr "Скрыть пункт "Нравится плагин?""
+
+msgctxt "#37003"
+msgid "Create links for strm-files"
+msgstr "Формировать ссылки на видео для strm-файлов"
+
+msgctxt "#37004"
+msgid "Update database for watched episodes"
+msgstr "Вести БД просмотренных эпизодов"
+
+msgctxt "#37005"
+msgid "List display settings:"
+msgstr "Настройки вывода списка:"
+
+msgctxt "#37006"
+msgid "Amount of elements"
+msgstr "Количество элементов"
+
+msgctxt "#37007"
+msgid "Apply output settings"
+msgstr "Применить настройки вывода"
+
+msgctxt "#38000"
+msgid "STRM generate"
+msgstr "STRM генератор"
+
+msgctxt "#38001"
+msgid "Path to library"
+msgstr "Путь до библиотеки"
+
+msgctxt "#38002"
+msgid "Enable service"
+msgstr "Включить сервис"
+
+msgctxt "#39000"
+msgid "Proxy-server"
+msgstr "Прокси-сервер"
+
+msgctxt "#39001"
+msgid "Use proxy-server"
+msgstr "Использовать прокси-сервер"
+
+msgctxt "#39002"
+msgid "HTTP"
+msgstr "HTTP"
+
+msgctxt "#39003"
+msgid "HTTPS"
+msgstr "HTTPS"
+
+msgctxt "#39004"
+msgid "Download posters and add to cache Kodi"
+msgstr "Загружать постеры и добавлять в кэш Kodi"
+

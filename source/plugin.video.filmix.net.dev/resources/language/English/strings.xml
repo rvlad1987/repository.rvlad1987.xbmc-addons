@@ -136,4 +136,9 @@
 	<string id="38001">Path to library</string>
 	<string id="38002">Enable service</string>
 
+	<string id="39000">Proxy-server</string>
+	<string id="39001">Use proxy-server</string>
+	<string id="39002">HTTP</string>
+	<string id="39003">HTTPS</string>
+    <string id="39004">Download posters and add to cache Kodi</string>
 </strings>

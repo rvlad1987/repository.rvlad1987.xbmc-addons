@@ -24,7 +24,7 @@ class MovieInfo(xbmcgui.WindowXMLDialog, HttpData):
         return '[COLOR blue]Рейтинг:[/COLOR] [COLOR '+ratingcolor+']'+str(rating)+'[/COLOR]'
 
     def onInit(self):
-        print "onInit(): Window Initialized"
+        # print "onInit(): Window Initialized"
         # print self.movieInfo
         self.getControl(1).setLabel(self.movieInfo['title'])
         self.getControl(32).setText(self.movieInfo['desc'])
@@ -68,7 +68,7 @@ class MovieInfo(xbmcgui.WindowXMLDialog, HttpData):
                 xbmcup.gui.message(xbmcup.app.lang[34032].encode('utf8'))
 
     def onFocus(self, controlID):
-        print "onFocus(): control %i" % controlID
+        # print "onFocus(): control %i" % controlID
         pass
 
 

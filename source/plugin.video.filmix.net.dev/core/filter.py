@@ -135,18 +135,18 @@ class Filter(FilterData, AbstactList):
 
         # print filter
 
-        self.item(xbmcup.app.lang[30128] % rubric[0],      self.replace('filter', {'window' : 'rubrics', 'filter' : filter}),  folder=True, cover=cover.search)
-        self.item(xbmcup.app.lang[30129] % genre[0],       self.replace('filter', {'window' : 'genre',   'filter' : filter}),  folder=True, cover=cover.search)
-        self.item(xbmcup.app.lang[30145] % year[0],       self.replace('filter', {'window' : 'years',   'filter' : filter}),  folder=True, cover=cover.search)
-        self.item(xbmcup.app.lang[30130] % qiality[0],     self.replace('filter', {'window' : 'qualitys','filter' : filter}),  folder=True, cover=cover.search)
-        self.item(xbmcup.app.lang[30132] % production[0],  self.replace('filter', {'window' : 'productions', 'filter' : filter}),  folder=True, cover=cover.search)
-        self.item(xbmcup.app.lang[30131] % award[0],       self.replace('filter', {'window' : 'awards',  'filter' : filter}),  folder=True, cover=cover.search)
+        self.item(xbmcup.app.lang[30128] % rubric[0],      self.replace('filter', {'window' : 'rubrics', 'filter' : filter}),  folder=True, cover=cover.rubrics)
+        self.item(xbmcup.app.lang[30129] % genre[0],       self.replace('filter', {'window' : 'genre',   'filter' : filter}),  folder=True, cover=cover.genre)
+        self.item(xbmcup.app.lang[30145] % year[0],       self.replace('filter', {'window' : 'years',   'filter' : filter}),  folder=True, cover=cover.years)
+        self.item(xbmcup.app.lang[30130] % qiality[0],     self.replace('filter', {'window' : 'qualitys','filter' : filter}),  folder=True, cover=cover.qualitys)
+        self.item(xbmcup.app.lang[30132] % production[0],  self.replace('filter', {'window' : 'productions', 'filter' : filter}),  folder=True, cover=cover.productions)
+        self.item(xbmcup.app.lang[30131] % award[0],       self.replace('filter', {'window' : 'awards',  'filter' : filter}),  folder=True, cover=cover.awards)
 
         self.item(xbmcup.app.lang[30133],
                   self.replace('filter', {'window' : '', 'filter' : filter, 'show_results' : True, 'page' : 0}),
                   folder=True, cover=cover.search)
 
-        self.item('', self.link('null'),  folder=False, cover=cover.search)
+        self.item('', self.link('null'),  folder=False, cover=cover.empty)
 
         #try:
         #    sort_by = SORT_TYPES[int(xbmcup.app.setting['sort_by'])]
@@ -171,7 +171,7 @@ class Filter(FilterData, AbstactList):
                 response['page']['maxpage'] = response['page']['pagenum']
 
             self.item(xbmcup.app.lang[30134] % (str(response['page']['pagenum'])),
-                      self.link('null'),  folder=False, cover=cover.search)
+                      self.link('null'),  folder=False, cover=cover.empty)
 
 
             if(response['page']['pagenum'] > 1):
