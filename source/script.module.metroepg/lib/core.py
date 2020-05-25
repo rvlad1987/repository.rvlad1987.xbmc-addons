@@ -70,33 +70,40 @@ class MetroEPG(Base):
         Base._PVR_data_path = check_win_path( xbmc.translatePath( os.path.join( "special://profile/addon_data", PVR_ID) ) )
     
     def run(self, autostart=False):
-        if autostart and (not self.setting.onstart or not self.setting.enabled): sys.exit()
+        #if autostart and not not self.setting.enabled: sys.exit()
         
-        if autostart and self.setting.enabled and self.setting.onstart:
-            xbmc.sleep(AUTOSTART_TIMEOUT)
-            getjtv( JTV_URL, self._tmp_path, '1', self._m3uUrl, self._xmltv_file_path, self.setting.codepage, not self.setting.notalert)
-            if not self.setting.notalert: self.notification( self.lang(34002) )
-            sys.exit()
-        
-        if sys.argv[1] == 'start':
+        if autostart and self.setting.enabled:
+            if self.setting.onstart:
+                xbmc.sleep(AUTOSTART_TIMEOUT)
+                getjtv( JTV_URL, self._tmp_path, '1', self._m3uUrl, self._xmltv_file_path, self.setting.codepage, not self.setting.notalert)
+                if not self.setting.notalert: self.notification( self.lang(34002) )
+                sys.exit()
+                
+            nowdate = datetime.now()
+            
             if not os.path.exists(self._addon_data_path): os.makedirs(self._addon_data_path)
 
             try:
                 dtsettings=datetime.strptime(self.setting.nextstart, "%Y-%m-%d %H:%M:%S") 
             except:
-                dtsettings=datetime.now()
-                self.setting.set("nextstart", dtsettings.strftime('%Y-%m-%d %H:%M:%S'))
+                dtsettings=nowdate
             
-            if (datetime.now() >= dtsettings):
-                self.addjob()
+            if (dtsettings > nowdate):
+                self.deljob()
+                nextstart = dtsettings - nowdate
+                nextstarts = nextstart.total_seconds()
+                if nextstarts < AUTOSTART_TIMEOUT // 1000: nextstarts = AUTOSTART_TIMEOUT // 1000
+                h = int(nextstarts//3600)
+                m = int((nextstarts//60)%60)
+                s = nextstarts % 60
+                self.addjob( h, m, s )
+                sys.exit()
             else:
-                nextstart = dtsettings - datetime.now()
-                nextstarts= nextstart.total_seconds()
-                h=int(nextstarts//3600)
-                m=int((nextstarts//60)%60)
-                self.addjob( h, m, 0 )
+                self.deljob()
+                self.addjob( s = AUTOSTART_TIMEOUT // 1000 )
+                sys.exit()
         
-        elif sys.argv[1] == 'chsettings':
+        if sys.argv[1] == 'chsettings':
             self.deljob()
             if self.setting.enabled: self.addjob()
 
@@ -109,6 +116,7 @@ class MetroEPG(Base):
             nextstart = datetime.now()+timedelta(days=self.setting.interval)
             self.setting.set("nextstart", nextstart.strftime('%Y-%m-%d %H:%M:%S'))
             self.deljob()
+            #self.addjob(0,self.setting.interval*1,0)
             self.addjob(self.setting.interval*24,0,0)
             
             if not self.setting.notalert: self.notification( self.lang(34002) )

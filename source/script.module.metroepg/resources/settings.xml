@@ -11,7 +11,7 @@
         <setting label="31005" type="action" option="close" action="RunScript(script.module.metroepg, chsettings)" />
         <setting label="31007" type="action" option="close" action="RunScript(script.module.metroepg, chsettingsiptv)" />
         
-        <setting id="nextstart"  type="number"   visible="false"  />
+        <setting id="nextstart"  type="text"   visible="false"  />
     </category>
     <category label="32001">
         <setting id="codepage" label="32002" default="cp1251" type="text" />
