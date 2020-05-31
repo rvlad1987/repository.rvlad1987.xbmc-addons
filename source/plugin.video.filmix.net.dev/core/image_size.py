@@ -16,11 +16,24 @@ get_image_size.py
     :Licence:     MIT
 
 """
-import collections
 import json
 import os
 import io
 import struct
+
+try:
+    from collections import namedtuple
+except ImportError:
+    # Python 2.4, 2.5 backport:
+    # http://code.activestate.com/recipes/500261/
+    from lib._namedtuple import namedtuple
+
+try:
+    from collections import OrderedDict
+except ImportError:
+    # Python 2.4, 2.5 backport:
+    # http://code.activestate.com/recipes/576693
+    from lib._ordereddict import OrderedDict
 
 #import xbmcvfs
 
@@ -31,7 +44,7 @@ class UnknownImageFormat(Exception):
     pass
 
 
-types = collections.OrderedDict()
+types = OrderedDict()
 BMP = types['BMP'] = 'BMP'
 GIF = types['GIF'] = 'GIF'
 ICO = types['ICO'] = 'ICO'
@@ -42,7 +55,7 @@ TIFF = types['TIFF'] = 'TIFF'
 image_fields = ['path', 'type', 'file_size', 'width', 'height']
 
 
-class Image(collections.namedtuple('Image', image_fields)):
+class Image(namedtuple('Image', image_fields)):
 
     def to_str_row(self):
         return ("%d\t%d\t%d\t%s\t%s" % (
